@@ -29,6 +29,11 @@ Goal: a usable, deployable app with filler content and synthetic progress.
 ### 1.3 Quiz engine
 - [x] Multiple-choice renderer.
 - [x] Short-answer renderer (text input + check).
+- [x] True/false renderer.
+- [x] Multi-select renderer.
+- [x] Ordering/sequencing renderer (mobile-friendly up/down buttons).
+- [x] Matching renderer (tap left then right to pair).
+- [x] Unified `QuestionRenderer` + scoring utility.
 - [x] Instant feedback paragraph after each answer.
 - [x] Heart loss on wrong answer; energy system.
 - [x] Streak counter and celebration triggers.

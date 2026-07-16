@@ -40,7 +40,7 @@ Use code **739104** on the parent onboarding step to simulate linking to the dem
 Elimu is built around **question-first learning**:
 
 1. Pick a topic.
-2. Answer the question (multiple choice or fill-in).
+2. Answer the question (multiple choice, fill-in, true/false, multi-select, ordering, or matching).
 3. Read the short explanation that tells you why the answer is right or wrong.
 4. Move to the next question.
 

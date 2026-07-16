@@ -62,11 +62,11 @@ export function updateStudyTime(minutes: number): void {
   });
 }
 
-export function recordAnswer(topicId: string, correct: boolean): void {
+export function recordAnswer(topicId: string, correct: boolean, partial = correct ? 1 : 0): void {
   const state = loadState();
   const tp = state.topicProgress[topicId] || { accuracy: 0, attempts: 0, lastAttempt: new Date().toISOString() };
   const attempts = tp.attempts + 1;
-  const correctSoFar = Math.round(tp.accuracy * tp.attempts) + (correct ? 1 : 0);
+  const correctSoFar = Math.round(tp.accuracy * tp.attempts) + partial;
   const accuracy = correctSoFar / attempts;
 
   saveState({
@@ -79,7 +79,7 @@ export function recordAnswer(topicId: string, correct: boolean): void {
           (state.progress.totalAttempts + 1)) *
           100
       ),
-      xp: state.progress.xp + (correct ? 10 : 2),
+      xp: state.progress.xp + Math.round((correct ? 10 : 2) + partial * 5),
     },
     topicProgress: {
       ...state.topicProgress,

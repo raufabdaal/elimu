@@ -3,24 +3,26 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
+import { checkAnswer } from "@/lib/scoring";
 import AppShell from "@/components/AppShell";
 import Hearts from "@/components/Hearts";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
+import QuestionRenderer, { getInitialState, isAnswered, QuestionState } from "@/components/QuestionRenderer";
 
 export default function Practice() {
   const router = useRouter();
-  const [state, setState] = useState(loadState());
+  const [appState, setAppState] = useState(loadState());
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [input, setInput] = useState("");
+  const [state, setState] = useState<QuestionState | null>(null);
   const [locked, setLocked] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState<"ok" | "bad" | "">("");
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [encourage, setEncourage] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -30,25 +32,22 @@ export default function Practice() {
 
   useEffect(() => {
     const s = loadState();
-    setState(s);
+    setAppState(s);
   }, []);
 
-  const normalize = (v: string) => v.trim().replace(/\s+/g, "").toLowerCase();
+  // Initialize state when question changes
+  if (!state || !q || state.type !== q.type) {
+    if (q) setState(getInitialState(q));
+    return null;
+  }
 
   const handleCheck = () => {
     if (locked || !q) return;
-
-    let correct = false;
-    if (q.type === "short_answer") {
-      correct = normalize(input) === normalize(q.answer || "");
-    } else {
-      const option = q.options?.find((o) => o.id === selectedOption);
-      correct = !!option?.correct;
-    }
+    const { correct, partial } = checkAnswer(q, state);
 
     setLocked(true);
-    recordAnswer(q.topicId, correct);
-    setState(loadState());
+    recordAnswer(q.topicId, correct, partial);
+    setAppState(loadState());
 
     if (correct) {
       setScore((s) => s + 1);
@@ -60,12 +59,13 @@ export default function Practice() {
       setFeedback("Not quite. " + q.explanation);
       setFeedbackType("bad");
       loseHeart();
-      setState(loadState());
+      setAppState(loadState());
     }
 
+    setShowExplanation(true);
     setTimeout(() => {
       nextQuestion();
-    }, 1600);
+    }, 2000);
   };
 
   const nextQuestion = () => {
@@ -77,16 +77,16 @@ export default function Practice() {
           streakDays: s.progress.streakDays + 1,
         },
       });
-      setState(loadState());
+      setAppState(loadState());
       setFinished(true);
       return;
     }
     setIndex((i) => i + 1);
-    setInput("");
-    setSelectedOption(null);
+    setState(getInitialState(questions[index + 1]));
     setLocked(false);
     setFeedback("");
     setFeedbackType("");
+    setShowExplanation(false);
     setCelebrate(false);
   };
 
@@ -95,7 +95,8 @@ export default function Practice() {
     setLocked(true);
     setFeedback("Skipped. " + q.explanation);
     setFeedbackType("");
-    setTimeout(nextQuestion, 900);
+    setShowExplanation(true);
+    setTimeout(nextQuestion, 1200);
   };
 
   if (finished) {
@@ -146,8 +147,8 @@ export default function Practice() {
 
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
         <div className="row-between mb-md">
-          <Hearts count={state.progress.hearts} max={state.progress.maxHearts} />
-          <span className="meta">XP {state.progress.xp}</span>
+          <Hearts count={appState.progress.hearts} max={appState.progress.maxHearts} />
+          <span className="meta">XP {appState.progress.xp}</span>
         </div>
 
         <div className="progress mb-md">
@@ -158,56 +159,26 @@ export default function Practice() {
         <p className="practice-q">{q.question}</p>
         {q.hint && <p className="meta mb-md">{q.hint}</p>}
 
-        <AnimatePresence mode="wait">
-          {q.type === "short_answer" ? (
-            <motion.div key={`input-${index}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <label className="sr-only" htmlFor="answer">
-                Your answer
-              </label>
-              <input
-                id="answer"
-                type="text"
-                inputMode={/\d/.test(q.answer || "") ? "numeric" : "text"}
-                autoComplete="off"
-                placeholder="?"
-                value={input}
-                disabled={locked}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleCheck()}
-                className="answer-input"
-              />
-            </motion.div>
-          ) : (
-            <motion.div key={`choices-${index}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="stack-sm">
-              {q.options?.map((opt) => {
-                const showCorrect = locked && opt.correct;
-                const showWrong = locked && selectedOption === opt.id && !opt.correct;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    disabled={locked}
-                    className={`choice ${selectedOption === opt.id ? "selected" : ""} ${showCorrect ? "correct" : ""} ${showWrong ? "wrong" : ""}`}
-                    onClick={() => setSelectedOption(opt.id)}
-                  >
-                    {opt.text}
-                  </button>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <QuestionRenderer
+          question={q}
+          state={state}
+          locked={locked}
+          onStateChange={setState}
+          onSubmit={handleCheck}
+        />
 
         <p className={`feedback ${feedbackType}`}>{feedback}</p>
 
-        <div className="btn-row mt-md">
-          <button type="button" className="btn btn-secondary" onClick={handleSkip} disabled={locked}>
-            Skip
-          </button>
-          <button type="button" className="btn btn-primary" onClick={handleCheck} disabled={locked || (q.type === "short_answer" ? !input : !selectedOption)}>
-            Check
-          </button>
-        </div>
+        {!showExplanation && (
+          <div className="btn-row mt-md">
+            <button type="button" className="btn btn-secondary" onClick={handleSkip} disabled={locked}>
+              Skip
+            </button>
+            <button type="button" className="btn btn-primary" onClick={handleCheck} disabled={locked || !isAnswered(q, state)}>
+              Check
+            </button>
+          </div>
+        )}
 
         <section className="card mt-lg">
           <div className="row-between">

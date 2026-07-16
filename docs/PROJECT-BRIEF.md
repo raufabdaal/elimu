@@ -14,7 +14,7 @@ Kids resist “study time.” They accept “quick questions + instant feedback 
 The user stated: *“take this as 20 percent of what it has to be and we work together to make the full 100.”*
 
 ### Included in this 20%
-- [x] Quiz/question-first UX with short-answer / multiple-choice questions.
+- [x] Quiz/question-first UX with short-answer, multiple-choice, true/false, multi-select, ordering, and matching questions.
 - [x] Instant feedback after each answer: a small paragraph explaining *why* the answer is right/wrong.
 - [x] Duolingo-level engagement: in-between encouragement (“You’re doing great!”), animations, hearts/energy bars, accountability mechanics.
 - [x] Homepage progress animations showing previous and upcoming completions.

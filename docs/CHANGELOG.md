@@ -29,3 +29,11 @@
   - Converted learning module to question-first flow: quiz question → answer → explanation paragraph → next question.
   - Added `assets/app.css` and `assets/app.js` to the project for reference.
 - `npm run build` succeeds; static export generated in `/dist`.
+- Added richer question types so the engine is solid before real content:
+  - Multiple choice
+  - Short answer / fill-in
+  - True / false
+  - Multi-select
+  - Ordering / sequencing (mobile-friendly up/down buttons)
+  - Matching (tap left then right to pair)
+  - Unified `QuestionRenderer`, scoring utility, and sample questions for every type.

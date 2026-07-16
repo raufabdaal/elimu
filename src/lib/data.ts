@@ -1,4 +1,4 @@
-import { ClassLevel, Subject } from "./types";
+import { ClassLevel, Subject, Question } from "./types";
 
 export const CLASS_LABELS: Record<ClassLevel, string> = {
   p4: "Primary 4",
@@ -7,22 +7,11 @@ export const CLASS_LABELS: Record<ClassLevel, string> = {
   p7: "Primary 7",
 };
 
-export interface TopicQuestion {
-  id: string;
-  type: "multiple_choice" | "short_answer";
-  question: string;
-  options?: { id: string; text: string; correct: boolean }[];
-  answer?: string;
-  hint?: string;
-  explanation: string;
-  deepDive?: string; // optional longer explanation paragraph
-}
-
 export interface TopicData {
   id: string;
   name: string;
   subjectId: "math" | "sst";
-  questions: TopicQuestion[];
+  questions: Question[];
 }
 
 const TOPICS: TopicData[] = [
@@ -56,16 +45,40 @@ const TOPICS: TopicData[] = [
       },
       {
         id: "f3",
-        type: "multiple_choice",
-        question: "How many quarters make one whole?",
-        options: [
-          { id: "a", text: "2", correct: false },
-          { id: "b", text: "3", correct: false },
-          { id: "c", text: "4", correct: true },
-        ],
-        explanation: "There are 4 quarters in one whole.",
+        type: "true_false",
+        question: "1/2 is bigger than 1/4.",
+        answer: "true",
+        explanation: "Yes. When the whole is split into fewer equal parts, each part is bigger.",
         deepDive:
-          "A quarter is one of four equal parts. Four quarters fit back together to make the whole thing again.",
+          "Imagine one chapati cut into 2 pieces versus the same chapati cut into 4 pieces. The half pieces are larger.",
+      },
+      {
+        id: "f4",
+        type: "ordering",
+        question: "Arrange these fractions from smallest to largest.",
+        items: [
+          { id: "quarter", text: "1/4" },
+          { id: "half", text: "1/2" },
+          { id: "three-quarters", text: "3/4" },
+          { id: "whole", text: "1" },
+        ],
+        correctOrder: ["quarter", "half", "three-quarters", "whole"],
+        explanation: "1/4 is smallest, then 1/2, then 3/4, then the whole 1.",
+        deepDive:
+          "As the denominator gets bigger, each part gets smaller. As the numerator gets closer to the denominator, the fraction gets closer to one whole.",
+      },
+      {
+        id: "f5",
+        type: "matching",
+        question: "Match each word with its meaning.",
+        pairs: [
+          { id: "p1", left: "Numerator", right: "Top number" },
+          { id: "p2", left: "Denominator", right: "Bottom number" },
+          { id: "p3", left: "Equivalent", right: "Same value" },
+        ],
+        explanation: "The numerator is the top number, denominator is the bottom number, and equivalent fractions have the same value.",
+        deepDive:
+          "For example, 1/2 and 2/4 are equivalent because they represent the same amount.",
       },
     ],
   },
@@ -87,6 +100,20 @@ const TOPICS: TopicData[] = [
         deepDive:
           "Decimals are another way to write fractions. The first digit after the point shows how many tenths you have.",
       },
+      {
+        id: "d2",
+        type: "multi_select",
+        question: "Select all the numbers that are equal to 0.5.",
+        options: [
+          { id: "a", text: "1/2", correct: true },
+          { id: "b", text: "5/10", correct: true },
+          { id: "c", text: "1/5", correct: false },
+          { id: "d", text: "50/100", correct: true },
+        ],
+        explanation: "1/2, 5/10, and 50/100 all equal 0.5. 1/5 equals 0.2.",
+        deepDive:
+          "Equivalent fractions look different but have the same value. You can simplify or expand them and they still mean the same thing.",
+      },
     ],
   },
   {
@@ -103,6 +130,21 @@ const TOPICS: TopicData[] = [
         explanation: "1 metre equals 100 centimetres.",
         deepDive:
           "We use metres and centimetres to measure length. A metre is bigger, so it takes 100 centimetres to make one metre.",
+      },
+      {
+        id: "m2",
+        type: "ordering",
+        question: "Arrange these units from smallest to largest.",
+        items: [
+          { id: "mm", text: "Millimetre" },
+          { id: "cm", text: "Centimetre" },
+          { id: "m", text: "Metre" },
+          { id: "km", text: "Kilometre" },
+        ],
+        correctOrder: ["mm", "cm", "m", "km"],
+        explanation: "Millimetre is smallest, then centimetre, then metre, then kilometre.",
+        deepDive:
+          "Milli- means one thousandth, centi- means one hundredth, kilo- means one thousand. That's why a kilometre is much bigger than a metre.",
       },
     ],
   },
@@ -135,6 +177,19 @@ const TOPICS: TopicData[] = [
         deepDive:
           "Kampala is the largest city in Uganda and the centre of government, business, and transport.",
       },
+      {
+        id: "u3",
+        type: "matching",
+        question: "Match each neighbour with the direction it lies from Uganda.",
+        pairs: [
+          { id: "p1", left: "Kenya", right: "East" },
+          { id: "p2", left: "South Sudan", right: "North" },
+          { id: "p3", left: "Rwanda", right: "South-west" },
+        ],
+        explanation: "Kenya is to the east, South Sudan to the north, and Rwanda to the south-west.",
+        deepDive:
+          "Knowing directions helps you read maps and understand where Uganda sits in East Africa.",
+      },
     ],
   },
   {
@@ -151,6 +206,15 @@ const TOPICS: TopicData[] = [
         explanation: "Lake Victoria is the large lake on Uganda's southern border.",
         deepDive:
           "Lake Victoria is Africa's largest lake by area. It is shared by Uganda, Kenya, and Tanzania.",
+      },
+      {
+        id: "mp2",
+        type: "true_false",
+        question: "A map always shows real places smaller than they are in real life.",
+        answer: "true",
+        explanation: "Yes. Maps are scaled-down drawings of real places.",
+        deepDive:
+          "A map scale tells you how much smaller the map is compared to real life. For example, 1 cm on the map might equal 1 km in real life.",
       },
     ],
   },
@@ -171,6 +235,20 @@ const TOPICS: TopicData[] = [
         explanation: "Temperature tells us how hot or cold the air is.",
         deepDive:
           "Weather describes the air outside right now. Climate is the pattern of weather over a long time.",
+      },
+      {
+        id: "w2",
+        type: "multi_select",
+        question: "Select all words that describe weather.",
+        options: [
+          { id: "a", text: "Rainy", correct: true },
+          { id: "b", text: "Sunny", correct: true },
+          { id: "c", text: "Hot", correct: true },
+          { id: "d", text: "Democratic", correct: false },
+        ],
+        explanation: "Rainy, sunny, and hot describe weather. Democratic describes a system of government.",
+        deepDive:
+          "Weather can be described by temperature, rainfall, wind, sunshine, and clouds.",
       },
     ],
   },

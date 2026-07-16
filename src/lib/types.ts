@@ -2,21 +2,68 @@ export type Role = "learner" | "parent";
 
 export type ClassLevel = "p4" | "p5" | "p6" | "p7";
 
+export type QuestionType =
+  | "multiple_choice"
+  | "short_answer"
+  | "true_false"
+  | "multi_select"
+  | "ordering"
+  | "matching";
+
 export interface Choice {
   id: string;
   text: string;
   correct: boolean;
 }
 
-export interface Question {
+export interface MultipleChoiceQuestion {
+  type: "multiple_choice";
+  options: Choice[];
+}
+
+export interface ShortAnswerQuestion {
+  type: "short_answer";
+  answer: string;
+}
+
+export interface TrueFalseQuestion {
+  type: "true_false";
+  answer: "true" | "false";
+}
+
+export interface MultiSelectQuestion {
+  type: "multi_select";
+  options: Choice[];
+}
+
+export interface OrderingQuestion {
+  type: "ordering";
+  items: { id: string; text: string }[];
+  correctOrder: string[];
+}
+
+export interface MatchingQuestion {
+  type: "matching";
+  pairs: { id: string; left: string; right: string }[];
+}
+
+export type QuestionData =
+  | MultipleChoiceQuestion
+  | ShortAnswerQuestion
+  | TrueFalseQuestion
+  | MultiSelectQuestion
+  | OrderingQuestion
+  | MatchingQuestion;
+
+export interface BaseQuestion {
   id: string;
-  type: "multiple_choice" | "short_answer";
   question: string;
   hint?: string;
-  answer?: string;
-  options?: Choice[];
   explanation: string;
+  deepDive?: string;
 }
+
+export type Question = BaseQuestion & QuestionData;
 
 export interface Topic {
   id: string;
@@ -24,7 +71,6 @@ export interface Topic {
   subtopicCount: number;
   completed: boolean;
   inProgress?: boolean;
-  questions?: Question[];
 }
 
 export interface Subject {
