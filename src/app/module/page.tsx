@@ -4,9 +4,10 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, recordAnswer, loseHeart } from "@/lib/store";
+import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
 import { getTopic } from "@/lib/data";
 import { checkAnswer } from "@/lib/scoring";
+import { playWrongSound, playHeartLossSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
@@ -52,6 +53,15 @@ function ModuleContent() {
 
   const handleCheck = () => {
     if (locked || !q) return;
+
+    // Use energy on every attempt
+    const hasEnergy = consumeEnergy(8);
+    if (!hasEnergy) {
+      // Could show a toast here later
+      alert("Not enough energy! Come back later.");
+      return;
+    }
+
     const { correct, partial } = checkAnswer(q, state);
 
     setLocked(true);
@@ -64,6 +74,8 @@ function ModuleContent() {
       setEncourage((n) => n + 1);
     } else {
       loseHeart();
+      playWrongSound();
+      playHeartLossSound();
       setFeedback("Not quite. " + q.explanation);
       setFeedbackType("bad");
     }
@@ -196,7 +208,7 @@ function ModuleContent() {
       </div>
 
       <Celebration show={celebrate} message="Correct!" onDone={() => setCelebrate(false)} />
-      <EncouragementToast trigger={encourage} />
+      <EncouragementToast trigger={encourage} playSound={true} />
     </AppShell>
   );
 }

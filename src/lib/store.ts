@@ -90,12 +90,14 @@ export function recordAnswer(topicId: string, correct: boolean, partial = correc
 
 export function loseHeart(): void {
   const state = loadState();
+  const newHearts = Math.max(0, state.progress.hearts - 1);
   saveState({
     progress: {
       ...state.progress,
-      hearts: Math.max(0, state.progress.hearts - 1),
+      hearts: newHearts,
     },
   });
+  return;
 }
 
 export function refillHearts(): void {
@@ -106,6 +108,35 @@ export function refillHearts(): void {
       hearts: state.progress.maxHearts,
     },
   });
+}
+
+// New: Energy system
+export function consumeEnergy(amount: number = 10): boolean {
+  const state = loadState();
+  if (state.progress.energy < amount) return false;
+
+  saveState({
+    progress: {
+      ...state.progress,
+      energy: Math.max(0, state.progress.energy - amount),
+    },
+  });
+  return true;
+}
+
+export function refillEnergy(): void {
+  const state = loadState();
+  saveState({
+    progress: {
+      ...state.progress,
+      energy: 100,
+    },
+  });
+}
+
+export function getTopicProgress(topicId: string) {
+  const state = loadState();
+  return state.topicProgress[topicId] || { accuracy: 0, attempts: 0, lastAttempt: "" };
 }
 
 export function linkParent(code: string): boolean {

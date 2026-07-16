@@ -47,6 +47,17 @@ From the user’s message:
 3. Open all HTML screens to understand the visual intent.
 4. Log every significant change in `CHANGELOG.md`.
 
+---
+
+## Agent Rule: File Change Communication
+**Every time the agent makes changes to any file**, it **must** tell the user exactly which files need to be overwritten on their local machine using this format:
+
+> **Files to overwrite on your PC:**
+> - `path/to/file.tsx`
+> - `src/lib/store.ts`
+
+This rule applies to all future work.
+
 ## Contact / context source
 - The user’s original request is quoted in `PROJECT-BRIEF.md`.
 - User location: Kampala, Uganda.

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import DemoBanner from "@/components/DemoBanner";
 
 export const metadata: Metadata = {
   title: "Elimu · Uganda Primary P4–P7",
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <DemoBanner />
+        {children}
+      </body>
     </html>
   );
 }

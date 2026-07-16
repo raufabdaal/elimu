@@ -34,7 +34,7 @@ export default function Home() {
   const { profile, progress, continue: continueState } = state;
 
   return (
-    <AppShell activeTab="home">
+    <AppShell activeTab="home" role={profile.role}>
       <header className="app-head">
         <div className="avatar">{(profile.name || "S").charAt(0).toUpperCase()}</div>
         <div className="title-block">

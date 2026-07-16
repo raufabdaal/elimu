@@ -14,243 +14,150 @@ export interface TopicData {
   questions: Question[];
 }
 
+// =====================================================
+// P7 MATHEMATICS - REAL SOURCED CONTENT
+// =====================================================
+
 const TOPICS: TopicData[] = [
+  // ========== P7 MATH: SESSION 1 - Numbers, Fractions & Decimals ==========
   {
-    id: "fractions",
-    name: "Fractions",
+    id: "p7-numbers-session-1",
+    name: "Numbers, Fractions & Decimals",
     subjectId: "math",
     questions: [
       {
-        id: "f1",
-        type: "multiple_choice",
-        question: "Which fraction means three equal parts out of four?",
-        options: [
-          { id: "a", text: "1/3", correct: false },
-          { id: "b", text: "3/4", correct: true },
-          { id: "c", text: "4/3", correct: false },
-        ],
-        explanation: "3/4 means three parts out of four equal parts.",
-        deepDive:
-          "A fraction has two numbers. The bottom number (denominator) tells how many equal parts the whole is cut into. The top number (numerator) tells how many of those parts we are talking about.",
-      },
-      {
-        id: "f2",
+        id: "p7n1",
         type: "short_answer",
-        question: "What is 1/2 of 8?",
-        answer: "4",
-        hint: "Type the number only",
-        explanation: "Half of 8 is 4 because 8 ÷ 2 = 4.",
-        deepDive:
-          "When we share a chapati equally among friends, each piece is a fraction of the whole chapati. Half means one of two equal parts.",
+        question: "Express 0.1666… as a common fraction in its simplest form.",
+        answer: "1/6",
+        hint: "Write as a fraction",
+        explanation: "0.1666… = 1/6",
+        deepDive: "This is a recurring decimal. Let x = 0.1666…, then 10x = 1.666… Subtracting gives 9x = 1.5 → x = 1/6.",
       },
       {
-        id: "f3",
+        id: "p7n2",
+        type: "short_answer",
+        question: "Write 0.0673 in scientific notation.",
+        answer: "6.73 × 10⁻²",
+        hint: "Move the decimal point",
+        explanation: "0.0673 = 6.73 × 10⁻²",
+        deepDive: "Scientific notation expresses numbers as a × 10ⁿ where 1 ≤ a < 10.",
+      },
+      {
+        id: "p7n3",
+        type: "multiple_choice",
+        question: "A Mathematics test of 20 questions is marked out of 100%. If a teacher awards 5 marks for every correct answer and deducts 3 marks for every wrong answer. How many correct answers has a pupil who scores 68%?",
+        options: [
+          { id: "a", text: "14", correct: false },
+          { id: "b", text: "16", correct: true },
+          { id: "c", text: "17", correct: false },
+          { id: "d", text: "15", correct: false },
+        ],
+        explanation: "Let x = correct answers. Then 5x - 3(20 - x) = 68 → 5x - 60 + 3x = 68 → 8x = 128 → x = 16.",
+        deepDive: "This is a typical PLE word problem involving simultaneous equations.",
+      },
+      {
+        id: "p7n4",
+        type: "short_answer",
+        question: "Simplify: (1.2 × 0.008) ÷ (0.16 × 0.3)",
+        answer: "0.2",
+        hint: "Calculate step by step",
+        explanation: "(1.2 × 0.008) = 0.0096. (0.16 × 0.3) = 0.048. 0.0096 ÷ 0.048 = 0.2",
+        deepDive: "Always work out multiplication first before division.",
+      },
+      {
+        id: "p7n5",
+        type: "short_answer",
+        question: "Solve the inequality: 18 ≤ 3n ≤ 24",
+        answer: "6 ≤ n ≤ 8",
+        hint: "Divide all parts by 3",
+        explanation: "Dividing all parts by 3 gives 6 ≤ n ≤ 8.",
+        deepDive: "When dividing or multiplying inequalities by a positive number, the inequality signs remain the same.",
+      },
+      {
+        id: "p7n6",
+        type: "short_answer",
+        question: "Jack, Joan and John shared biscuits in the ratio 4:5:3. If Joan got 18 more biscuits than John, how many biscuits did Jack and John get altogether?",
+        answer: "42",
+        hint: "Find the value of one part",
+        explanation: "Joan - John = 2 parts = 18 → 1 part = 9. Jack = 4 × 9 = 36, John = 3 × 9 = 27. Total = 63.",
+        deepDive: "Difference between Joan and John is 2 parts (5 - 3).",
+      },
+      {
+        id: "p7n7",
+        type: "short_answer",
+        question: "Express 45 in ternary (base 3).",
+        answer: "1200₃",
+        hint: "Divide repeatedly by 3",
+        explanation: "45 ÷ 3 = 15 r0 → 15 ÷ 3 = 5 r0 → 5 ÷ 3 = 1 r2 → 1 ÷ 3 = 0 r1 → 1200₃",
+        deepDive: "Read the remainders from bottom to top.",
+      },
+      {
+        id: "p7n8",
+        type: "multiple_choice",
+        question: "Which of the following is equivalent to 3/8?",
+        options: [
+          { id: "a", text: "0.375", correct: true },
+          { id: "b", text: "0.38", correct: false },
+          { id: "c", text: "0.385", correct: false },
+          { id: "d", text: "0.4", correct: false },
+        ],
+        explanation: "3 ÷ 8 = 0.375",
+        deepDive: "To convert a fraction to decimal, divide the numerator by the denominator.",
+      },
+      {
+        id: "p7n9",
         type: "true_false",
-        question: "1/2 is bigger than 1/4.",
-        answer: "true",
-        explanation: "Yes. When the whole is split into fewer equal parts, each part is bigger.",
-        deepDive:
-          "Imagine one chapati cut into 2 pieces versus the same chapati cut into 4 pieces. The half pieces are larger.",
+        question: "0.75 is greater than 3/4.",
+        answer: "false",
+        explanation: "0.75 = 3/4 exactly.",
+        deepDive: "0.75 means 75 hundredths which is exactly three quarters.",
       },
       {
-        id: "f4",
+        id: "p7n10",
         type: "ordering",
-        question: "Arrange these fractions from smallest to largest.",
+        question: "Arrange these numbers from smallest to largest: 0.6, 3/5, 65%, 0.58",
         items: [
-          { id: "quarter", text: "1/4" },
-          { id: "half", text: "1/2" },
-          { id: "three-quarters", text: "3/4" },
-          { id: "whole", text: "1" },
+          { id: "a", text: "0.58" },
+          { id: "b", text: "3/5" },
+          { id: "c", text: "0.6" },
+          { id: "d", text: "65%" },
         ],
-        correctOrder: ["quarter", "half", "three-quarters", "whole"],
-        explanation: "1/4 is smallest, then 1/2, then 3/4, then the whole 1.",
-        deepDive:
-          "As the denominator gets bigger, each part gets smaller. As the numerator gets closer to the denominator, the fraction gets closer to one whole.",
+        correctOrder: ["a", "b", "c", "d"],
+        explanation: "0.58 < 0.6 = 3/5 < 0.65",
+        deepDive: "Convert all to decimals: 0.58, 0.6, 0.6, 0.65.",
       },
       {
-        id: "f5",
-        type: "matching",
-        question: "Match each word with its meaning.",
-        pairs: [
-          { id: "p1", left: "Numerator", right: "Top number" },
-          { id: "p2", left: "Denominator", right: "Bottom number" },
-          { id: "p3", left: "Equivalent", right: "Same value" },
+        id: "p7n11",
+        type: "multiple_choice",
+        question: "What is 2/5 as a percentage?",
+        options: [
+          { id: "a", text: "20%", correct: false },
+          { id: "b", text: "40%", correct: true },
+          { id: "c", text: "50%", correct: false },
+          { id: "d", text: "25%", correct: false },
         ],
-        explanation: "The numerator is the top number, denominator is the bottom number, and equivalent fractions have the same value.",
-        deepDive:
-          "For example, 1/2 and 2/4 are equivalent because they represent the same amount.",
+        explanation: "2 ÷ 5 = 0.4 → 0.4 × 100 = 40%",
+        deepDive: "To convert a fraction to percentage, multiply by 100.",
+      },
+      {
+        id: "p7n12",
+        type: "short_answer",
+        question: "Find the product of the first three odd numbers.",
+        answer: "15",
+        hint: "1 × 3 × 5",
+        explanation: "The first three odd numbers are 1, 3 and 5. Their product is 15.",
+        deepDive: "Odd numbers are not divisible by 2.",
       },
     ],
   },
+
+  // ========== Placeholder for future P7 sessions ==========
   {
-    id: "decimals",
-    name: "Decimals",
+    id: "p7-algebra-session-1",
+    name: "Algebra & Equations",
     subjectId: "math",
-    questions: [
-      {
-        id: "d1",
-        type: "multiple_choice",
-        question: "What is 0.5 as a fraction?",
-        options: [
-          { id: "a", text: "1/5", correct: false },
-          { id: "b", text: "1/2", correct: true },
-          { id: "c", text: "5/10", correct: false },
-        ],
-        explanation: "0.5 is the same as one half, or 1/2.",
-        deepDive:
-          "Decimals are another way to write fractions. The first digit after the point shows how many tenths you have.",
-      },
-      {
-        id: "d2",
-        type: "multi_select",
-        question: "Select all the numbers that are equal to 0.5.",
-        options: [
-          { id: "a", text: "1/2", correct: true },
-          { id: "b", text: "5/10", correct: true },
-          { id: "c", text: "1/5", correct: false },
-          { id: "d", text: "50/100", correct: true },
-        ],
-        explanation: "1/2, 5/10, and 50/100 all equal 0.5. 1/5 equals 0.2.",
-        deepDive:
-          "Equivalent fractions look different but have the same value. You can simplify or expand them and they still mean the same thing.",
-      },
-    ],
-  },
-  {
-    id: "measurement",
-    name: "Measurement",
-    subjectId: "math",
-    questions: [
-      {
-        id: "m1",
-        type: "short_answer",
-        question: "How many centimetres are in 1 metre?",
-        answer: "100",
-        hint: "Type the number only",
-        explanation: "1 metre equals 100 centimetres.",
-        deepDive:
-          "We use metres and centimetres to measure length. A metre is bigger, so it takes 100 centimetres to make one metre.",
-      },
-      {
-        id: "m2",
-        type: "ordering",
-        question: "Arrange these units from smallest to largest.",
-        items: [
-          { id: "mm", text: "Millimetre" },
-          { id: "cm", text: "Centimetre" },
-          { id: "m", text: "Metre" },
-          { id: "km", text: "Kilometre" },
-        ],
-        correctOrder: ["mm", "cm", "m", "km"],
-        explanation: "Millimetre is smallest, then centimetre, then metre, then kilometre.",
-        deepDive:
-          "Milli- means one thousandth, centi- means one hundredth, kilo- means one thousand. That's why a kilometre is much bigger than a metre.",
-      },
-    ],
-  },
-  {
-    id: "uganda",
-    name: "Our country Uganda",
-    subjectId: "sst",
-    questions: [
-      {
-        id: "u1",
-        type: "multiple_choice",
-        question: "How many countries border Uganda?",
-        options: [
-          { id: "a", text: "Three", correct: false },
-          { id: "b", text: "Four", correct: false },
-          { id: "c", text: "Five", correct: true },
-        ],
-        explanation:
-          "Uganda borders Kenya, South Sudan, DRC, Rwanda, and Tanzania — five neighbours.",
-        deepDive:
-          "Uganda is a landlocked country in East Africa. That means it has no coastline on the ocean — its borders touch land only.",
-      },
-      {
-        id: "u2",
-        type: "short_answer",
-        question: "What is the capital city of Uganda?",
-        answer: "Kampala",
-        hint: "Type the city name",
-        explanation: "Kampala is the capital city of Uganda.",
-        deepDive:
-          "Kampala is the largest city in Uganda and the centre of government, business, and transport.",
-      },
-      {
-        id: "u3",
-        type: "matching",
-        question: "Match each neighbour with the direction it lies from Uganda.",
-        pairs: [
-          { id: "p1", left: "Kenya", right: "East" },
-          { id: "p2", left: "South Sudan", right: "North" },
-          { id: "p3", left: "Rwanda", right: "South-west" },
-        ],
-        explanation: "Kenya is to the east, South Sudan to the north, and Rwanda to the south-west.",
-        deepDive:
-          "Knowing directions helps you read maps and understand where Uganda sits in East Africa.",
-      },
-    ],
-  },
-  {
-    id: "maps",
-    name: "Maps and location",
-    subjectId: "sst",
-    questions: [
-      {
-        id: "mp1",
-        type: "short_answer",
-        question: "Which large lake sits on Uganda's southern side?",
-        answer: "Lake Victoria",
-        hint: "Three-word name",
-        explanation: "Lake Victoria is the large lake on Uganda's southern border.",
-        deepDive:
-          "Lake Victoria is Africa's largest lake by area. It is shared by Uganda, Kenya, and Tanzania.",
-      },
-      {
-        id: "mp2",
-        type: "true_false",
-        question: "A map always shows real places smaller than they are in real life.",
-        answer: "true",
-        explanation: "Yes. Maps are scaled-down drawings of real places.",
-        deepDive:
-          "A map scale tells you how much smaller the map is compared to real life. For example, 1 cm on the map might equal 1 km in real life.",
-      },
-    ],
-  },
-  {
-    id: "weather",
-    name: "Weather and climate",
-    subjectId: "sst",
-    questions: [
-      {
-        id: "w1",
-        type: "multiple_choice",
-        question: "Which of these measures how hot or cold the air is?",
-        options: [
-          { id: "a", text: "Rainfall", correct: false },
-          { id: "b", text: "Temperature", correct: true },
-          { id: "c", text: "Wind speed", correct: false },
-        ],
-        explanation: "Temperature tells us how hot or cold the air is.",
-        deepDive:
-          "Weather describes the air outside right now. Climate is the pattern of weather over a long time.",
-      },
-      {
-        id: "w2",
-        type: "multi_select",
-        question: "Select all words that describe weather.",
-        options: [
-          { id: "a", text: "Rainy", correct: true },
-          { id: "b", text: "Sunny", correct: true },
-          { id: "c", text: "Hot", correct: true },
-          { id: "d", text: "Democratic", correct: false },
-        ],
-        explanation: "Rainy, sunny, and hot describe weather. Democratic describes a system of government.",
-        deepDive:
-          "Weather can be described by temperature, rainfall, wind, sunshine, and clouds.",
-      },
-    ],
+    questions: [], // Will be populated later
   },
 ];
 
@@ -259,7 +166,6 @@ export function getTopic(topicId: string): TopicData | undefined {
 }
 
 export function getTopicsForClass(): TopicData[] {
-  // Later this can filter by class. For now, all topics are available.
   return TOPICS;
 }
 
@@ -277,7 +183,7 @@ export function getSubjects(classLevel: ClassLevel): Subject[] {
           name: t.name,
           subtopicCount: t.questions.length,
           completed: false,
-          inProgress: t.id === "fractions",
+          inProgress: t.id === "p7-numbers-session-1",
         })),
     },
     {
@@ -290,7 +196,7 @@ export function getSubjects(classLevel: ClassLevel): Subject[] {
           id: `${classLevel}-sst-${t.id}`,
           name: t.name,
           subtopicCount: t.questions.length,
-          completed: t.id === "uganda",
+          completed: false,
           inProgress: false,
         })),
     },

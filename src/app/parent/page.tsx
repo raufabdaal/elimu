@@ -23,7 +23,7 @@ export default function Parent() {
   const isLinked = !!profile.linkedStudentId;
 
   return (
-    <AppShell activeTab="parent">
+    <AppShell activeTab="parent" role={state.profile.role}>
       <header className="app-head">
         <div className="title-block">
           <p className="meta">PARENT VIEW</p>

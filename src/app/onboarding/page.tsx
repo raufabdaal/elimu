@@ -69,7 +69,7 @@ export default function Onboarding() {
   };
 
   return (
-    <AppShell showTabBar={false} noScrollPad>
+    <AppShell showTabBar={false} noScrollPad role="learner">
       <div className="onboard-top">
         <div className="logo-mark">E</div>
         <p className="eyebrow">ELIMU · UGANDA PRIMARY</p>

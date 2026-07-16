@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
 import { checkAnswer } from "@/lib/scoring";
+import { playWrongSound, playHeartLossSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
 import Hearts from "@/components/Hearts";
 import Celebration from "@/components/Celebration";
@@ -59,6 +60,8 @@ export default function Practice() {
       setFeedback("Not quite. " + q.explanation);
       setFeedbackType("bad");
       loseHeart();
+      playWrongSound();
+      playHeartLossSound();
       setAppState(loadState());
     }
 
@@ -129,7 +132,7 @@ export default function Practice() {
   }
 
   return (
-    <AppShell activeTab="practice">
+    <AppShell activeTab="practice" role={appState.profile.role}>
       <header className="app-head">
         <Link href="/home/" className="icon-btn" aria-label="Back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">

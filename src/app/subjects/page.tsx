@@ -24,7 +24,7 @@ export default function Subjects() {
   if (!state) return null;
 
   return (
-    <AppShell activeTab="subjects">
+    <AppShell activeTab="subjects" role={state.profile.role}>
       <header className="app-head">
         <Link href="/home/" className="icon-btn" aria-label="Back to home">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -79,12 +79,25 @@ export default function Subjects() {
                         </svg>
                       )}
                     </span>
-                    <div className="grow">
+                    <div className="grow min-w-0">
                       <p className="topic-name">{topic.name}</p>
-                      <p className="meta">
+                      <p className="meta text-xs">
                         {topic.subtopicCount} questions · {topic.completed ? "Done" : topic.inProgress ? "In progress" : "Not started"}
                       </p>
                     </div>
+
+                    {/* Duolingo-style gamification indicators (live values) */}
+                    <div className="flex items-center gap-2 text-xs flex-shrink-0">
+                      <div className="flex items-center gap-0.5 text-red-500">
+                        <span>❤️</span>
+                        <span className="font-mono text-[10px]">{state.progress.hearts}/5</span>
+                      </div>
+                      <div className="flex items-center gap-0.5 text-amber-500">
+                        <span>⚡</span>
+                        <span className="font-mono text-[10px]">{state.progress.energy}</span>
+                      </div>
+                    </div>
+
                     <span className="chev">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M9 6l6 6-6 6" />

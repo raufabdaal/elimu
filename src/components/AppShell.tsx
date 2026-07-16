@@ -8,6 +8,7 @@ interface AppShellProps {
   activeTab?: "home" | "subjects" | "practice" | "parent";
   showTabBar?: boolean;
   noScrollPad?: boolean;
+  role?: "learner" | "parent";
 }
 
 export default function AppShell({
@@ -15,12 +16,13 @@ export default function AppShell({
   activeTab,
   showTabBar = true,
   noScrollPad = false,
+  role = "learner",
 }: AppShellProps) {
   return (
     <div className="app-shell">
       <div className="app-container">
         <div className={noScrollPad ? "scroll no-tab" : "scroll"}>{children}</div>
-        {showTabBar && activeTab && <TabBar active={activeTab} />}
+        {showTabBar && activeTab && <TabBar active={activeTab} role={role} />}
       </div>
     </div>
   );
