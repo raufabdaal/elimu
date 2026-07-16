@@ -1,6 +1,6 @@
 import { AppState, DEFAULT_STATE, Profile } from "./types";
 
-const STORAGE_KEY = "elimu_state_v1";
+const STORAGE_KEY = "elimu-p4p7-v1";
 
 export function loadState(): AppState {
   if (typeof window === "undefined") return DEFAULT_STATE;
@@ -32,6 +32,12 @@ export function saveState(partial: Partial<AppState>): void {
 export function resetState(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(STORAGE_KEY);
+}
+
+export function hasCompletedOnboarding(): boolean {
+  if (typeof window === "undefined") return false;
+  const s = loadState();
+  return s.profile.role === "parent" ? !!s.profile.linkedStudentId : !!s.profile.classLevel;
 }
 
 export function updateStudyTime(minutes: number): void {
@@ -88,6 +94,16 @@ export function loseHeart(): void {
     progress: {
       ...state.progress,
       hearts: Math.max(0, state.progress.hearts - 1),
+    },
+  });
+}
+
+export function refillHearts(): void {
+  const state = loadState();
+  saveState({
+    progress: {
+      ...state.progress,
+      hearts: state.progress.maxHearts,
     },
   });
 }

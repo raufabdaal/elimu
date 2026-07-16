@@ -1,11 +1,11 @@
 # ELIMU Roadmap
 
-## Phase 0 — Handoff ingestion (now)
+## Phase 0 — Handoff ingestion (complete)
 - [x] Capture product brief and user intent.
 - [x] Create documentation scaffold.
-- [ ] Upload exported design files (`*.html`, `css/app.css`, `js/app.js`, `DESIGN-MANIFEST.json`).
-- [ ] Extract canonical tokens from `css/app.css` and update `DESIGN-SYSTEM.md`.
-- [ ] Confirm tech stack and file boundaries.
+- [x] Upload exported design files (`*.html`, `app.css`, `app.js`, `DESIGN-MANIFEST.json`).
+- [x] Extract canonical tokens from `app.css` and update `DESIGN-SYSTEM.md`.
+- [x] Confirm tech stack and file boundaries.
 
 ## Phase 1 — The 20% clickable prototype
 Goal: a usable, deployable app with filler content and synthetic progress.
@@ -17,12 +17,12 @@ Goal: a usable, deployable app with filler content and synthetic progress.
 - [x] Add Framer Motion + Lucide React.
 - [x] Implement root layout with fonts, metadata, and safe-area padding for mobile.
 
-:### 1.2 Screens
-- [x] `/` — launcher matching overview image.
+### 1.2 Screens
+- [x] `/` — smart entry: redirects to `/onboarding/` first time, `/home/` after.
 - [x] `/onboarding/` — class P4–P7 picker, role picker, parent code input.
-- [x] `/home/` — welcome, continue card, streak, hearts, subject shortcuts, progress animation.
+- [x] `/home/` — welcome, continue card, streak, hearts, subject shortcuts, progress animation, switch-profile button.
 - [x] `/subjects/` — subject grid, topic list per subject.
-- [x] `/module/` — readable lesson + check question.
+- [x] `/module/` — question-first topic quiz: answer → explanation paragraph → next question.
 - [x] `/practice/` — mixed quiz with hearts, feedback sheet, encouragement.
 - [x] `/parent/` — dashboard with child stats, struggle areas, study time.
 

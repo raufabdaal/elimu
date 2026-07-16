@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, Subject } from "@/lib/types";
-import PhoneShell from "@/components/PhoneShell";
+import AppShell from "@/components/AppShell";
 import { MathIcon, SSTIcon } from "@/components/SubjectIcons";
 
 export default function Subjects() {
@@ -24,7 +24,7 @@ export default function Subjects() {
   if (!state) return null;
 
   return (
-    <PhoneShell activeTab="subjects">
+    <AppShell activeTab="subjects">
       <header className="app-head">
         <Link href="/home/" className="icon-btn" aria-label="Back to home">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -44,30 +44,33 @@ export default function Subjects() {
           const pct = total ? Math.round((completed / total) * 100) : 0;
 
           return (
-            <section key={subject.id} className="card mb-6" id={subject.id}>
+            <section key={subject.id} className="card mb-lg" id={subject.id}>
               <div className="row">
                 <span className={`subject-mark ${subject.icon}`}>
                   {subject.icon === "math" ? <MathIcon /> : <SSTIcon />}
                 </span>
                 <div className="grow">
                   <h2 className="h3">{subject.name}</h2>
-                  <p className="meta mt-1">
+                  <p className="meta mt-sm">
                     {completed} of {total} topics complete
                   </p>
                 </div>
                 <span className="pill pill-muted">{pct}%</span>
               </div>
-              <div className="progress mt-4">
+              <div className="progress mt-md">
                 <span style={{ width: `${pct}%` }} />
               </div>
 
-              <div className="mt-4">
+              <div className="mt-md">
                 {subject.topics.map((topic) => (
                   <button
                     key={topic.id}
                     type="button"
                     className="topic-row"
-                    onClick={() => router.push(`/module/?subject=${subject.id}&topic=${topic.id}`)}
+                    onClick={() => {
+                      const baseId = topic.id.replace(`${state.profile.classLevel || "p5"}-${subject.id}-`, "");
+                      router.push(`/module/?topic=${baseId}`);
+                    }}
                   >
                     <span className={`topic-check ${topic.completed ? "done" : ""}`}>
                       {topic.completed && (
@@ -79,7 +82,7 @@ export default function Subjects() {
                     <div className="grow">
                       <p className="topic-name">{topic.name}</p>
                       <p className="meta">
-                        {topic.subtopicCount} subtopics · {topic.completed ? "Done" : topic.inProgress ? "In progress" : "Not started"}
+                        {topic.subtopicCount} questions · {topic.completed ? "Done" : topic.inProgress ? "In progress" : "Not started"}
                       </p>
                     </div>
                     <span className="chev">
@@ -94,6 +97,6 @@ export default function Subjects() {
           );
         })}
       </motion.div>
-    </PhoneShell>
+    </AppShell>
   );
 }

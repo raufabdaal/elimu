@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { loadState } from "@/lib/store";
 import { AppState } from "@/lib/types";
-import PhoneShell from "@/components/PhoneShell";
+import AppShell from "@/components/AppShell";
 
 export default function Parent() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function Parent() {
   const isLinked = !!profile.linkedStudentId;
 
   return (
-    <PhoneShell activeTab="parent">
+    <AppShell activeTab="parent">
       <header className="app-head">
         <div className="title-block">
           <p className="meta">PARENT VIEW</p>
@@ -34,12 +34,12 @@ export default function Parent() {
 
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         {!isLinked && (
-          <section className="card mb-6 bg-warning/10 border-warning/20">
-            <p className="eyebrow !text-warning">NOT LINKED</p>
-            <p className="text-sm text-muted mt-2">
+          <section className="card mb-lg" style={{ background: "var(--warn-soft)", borderColor: "color-mix(in oklch, var(--warn) 20%, transparent)" }}>
+            <p className="eyebrow" style={{ color: "var(--warn)" }}>NOT LINKED</p>
+            <p className="meta mt-2">
               Enter your child’s 6-digit code on the onboarding screen to see their progress.
             </p>
-            <button type="button" className="btn btn-secondary mt-4" onClick={() => router.push("/onboarding/")}>
+            <button type="button" className="btn btn-secondary mt-md" onClick={() => router.push("/onboarding/")}>
               Link now
             </button>
           </section>
@@ -50,17 +50,17 @@ export default function Parent() {
             <div className="avatar">{(profile.name || "S").charAt(0).toUpperCase()}</div>
             <div className="grow">
               <p className="meta">THIS WEEK</p>
-              <p className="h3 mt-1">
+              <p className="h3 mt-sm">
                 On track · <span className="num">4</span> sessions
               </p>
             </div>
           </div>
-          <p className="meta mt-4 leading-snug">
+          <p className="meta mt-md" style={{ lineHeight: 1.45 }}>
             Steady pace on {continueState.topic || "fractions"}. One short practice tonight keeps the streak without stress.
           </p>
         </section>
 
-        <div className="grid-2 mb-6">
+        <div className="grid-2 mb-lg">
           <div className="stat-tile">
             <p className="value num">{progress.modulesDone}</p>
             <p className="label">Modules done</p>
@@ -79,7 +79,7 @@ export default function Parent() {
           </div>
         </div>
 
-        <section className="card mb-6">
+        <section className="card mb-lg">
           <div className="section-label" style={{ marginBottom: 14 }}>
             <h2 className="h3">By subject</h2>
           </div>
@@ -109,14 +109,14 @@ export default function Parent() {
           </div>
         </section>
 
-        <section className="card mb-6">
+        <section className="card mb-lg">
           <div className="section-label" style={{ marginBottom: 6 }}>
             <h2 className="h3">Recent activity</h2>
           </div>
           <div className="activity-row">
             <div>
-              <p className="title">Fractions · Module 1</p>
-              <p className="meta">Mathematics · Today · 6 min</p>
+              <p className="title">Fractions · Question 1</p>
+              <p className="meta">Mathematics · Today · 2 min</p>
             </div>
             <span className="pill pill-ok">Done</span>
           </div>
@@ -141,14 +141,14 @@ export default function Parent() {
         <section className="card">
           <p className="eyebrow">TONIGHT</p>
           <p className="h3">10 quiet minutes on fractions</p>
-          <p className="meta mt-2 leading-snug">
+          <p className="meta mt-sm" style={{ lineHeight: 1.45 }}>
             {profile.name || "Your child"} is mid-way through the topic. One short drill keeps momentum without pressure.
           </p>
-          <Link href="/practice/" className="btn btn-secondary mt-4 no-underline">
+          <Link href="/practice/" className="btn btn-secondary mt-md no-underline">
             Open practice
           </Link>
         </section>
       </motion.div>
-    </PhoneShell>
+    </AppShell>
   );
 }

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { loadState, saveState, linkStudent } from "@/lib/store";
 import { CLASS_LABELS } from "@/lib/data";
 import { ClassLevel, Role } from "@/lib/types";
-import PhoneShell from "@/components/PhoneShell";
+import AppShell from "@/components/AppShell";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -69,7 +69,7 @@ export default function Onboarding() {
   };
 
   return (
-    <PhoneShell showTabBar={false} noScrollPad>
+    <AppShell showTabBar={false} noScrollPad>
       <div className="onboard-top">
         <div className="logo-mark">E</div>
         <p className="eyebrow">ELIMU · UGANDA PRIMARY</p>
@@ -136,7 +136,7 @@ export default function Onboarding() {
               className="answer-input text-3xl mt-6"
             />
             {codeError && <p className="feedback bad mt-2">{codeError}</p>}
-            <p className="meta mt-3">Demo code: <span className="font-mono font-semibold text-foreground">739104</span></p>
+            <p className="meta mt-3">Demo code: <span className="num font-semibold" style={{ color: "var(--fg)" }}>739104</span></p>
             <div className="mt-6">
               <button
                 type="button"
@@ -176,13 +176,14 @@ export default function Onboarding() {
         {step > 1 && (
           <button
             type="button"
-            className="mt-6 text-sm text-muted font-medium hover:text-foreground"
+            className="mt-6 text-sm font-medium hover:text-foreground"
+            style={{ color: "var(--muted)" }}
             onClick={() => setStep(step - 1)}
           >
             ← Back
           </button>
         )}
       </div>
-    </PhoneShell>
+    </AppShell>
   );
 }

@@ -6,8 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
-
-import PhoneShell from "@/components/PhoneShell";
+import AppShell from "@/components/AppShell";
 import Hearts from "@/components/Hearts";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
@@ -66,7 +65,7 @@ export default function Practice() {
 
     setTimeout(() => {
       nextQuestion();
-    }, 1400);
+    }, 1600);
   };
 
   const nextQuestion = () => {
@@ -96,12 +95,12 @@ export default function Practice() {
     setLocked(true);
     setFeedback("Skipped. " + q.explanation);
     setFeedbackType("");
-    setTimeout(nextQuestion, 800);
+    setTimeout(nextQuestion, 900);
   };
 
   if (finished) {
     return (
-      <PhoneShell activeTab="practice">
+      <AppShell activeTab="practice">
         <div className="pt-10 text-center">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -111,9 +110,9 @@ export default function Practice() {
             🎉
           </motion.div>
           <h1 className="h2">Session complete!</h1>
-          <p className="text-muted mt-2">
-            You got <span className="font-mono font-bold text-foreground">{score}</span> of{" "}
-            <span className="font-mono font-bold text-foreground">{questions.length}</span> correct.
+          <p className="meta mt-2">
+            You got <span className="num font-bold" style={{ color: "var(--fg)" }}>{score}</span> of{" "}
+            <span className="num font-bold" style={{ color: "var(--fg)" }}>{questions.length}</span> correct.
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <button type="button" className="btn btn-primary" onClick={() => router.push("/home/")}>
@@ -124,12 +123,12 @@ export default function Practice() {
             </button>
           </div>
         </div>
-      </PhoneShell>
+      </AppShell>
     );
   }
 
   return (
-    <PhoneShell activeTab="practice">
+    <AppShell activeTab="practice">
       <header className="app-head">
         <Link href="/home/" className="icon-btn" aria-label="Back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -146,18 +145,18 @@ export default function Practice() {
       </header>
 
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-4">
+        <div className="row-between mb-md">
           <Hearts count={state.progress.hearts} max={state.progress.maxHearts} />
-          <span className="text-xs font-mono text-muted">XP {state.progress.xp}</span>
+          <span className="meta">XP {state.progress.xp}</span>
         </div>
 
-        <div className="progress mb-6">
+        <div className="progress mb-md">
           <span style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
         </div>
 
         <p className="eyebrow">QUICK DRILL</p>
         <p className="practice-q">{q.question}</p>
-        <p className="meta mb-6">{q.hint}</p>
+        {q.hint && <p className="meta mb-md">{q.hint}</p>}
 
         <AnimatePresence mode="wait">
           {q.type === "short_answer" ? (
@@ -199,9 +198,9 @@ export default function Practice() {
           )}
         </AnimatePresence>
 
-        <p className={`feedback mt-4 ${feedbackType}`}>{feedback}</p>
+        <p className={`feedback ${feedbackType}`}>{feedback}</p>
 
-        <div className="btn-row mt-6">
+        <div className="btn-row mt-md">
           <button type="button" className="btn btn-secondary" onClick={handleSkip} disabled={locked}>
             Skip
           </button>
@@ -210,19 +209,19 @@ export default function Practice() {
           </button>
         </div>
 
-        <section className="card mt-6">
+        <section className="card mt-lg">
           <div className="row-between">
             <div>
               <p className="meta">THIS SESSION</p>
-              <p className="h3 mt-1">Correct answers</p>
+              <p className="h3 mt-sm">Correct answers</p>
             </div>
-            <p className="text-3xl font-mono font-bold text-accent">{score}</p>
+            <p className="display-num" style={{ fontSize: 30, color: "var(--accent)" }}>{score}</p>
           </div>
         </section>
       </motion.div>
 
       <Celebration show={celebrate} message="Correct!" onDone={() => setCelebrate(false)} />
       <EncouragementToast trigger={encourage} />
-    </PhoneShell>
+    </AppShell>
   );
 }

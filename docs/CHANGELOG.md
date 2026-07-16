@@ -20,5 +20,12 @@
   - Quiz engine with multiple-choice and short-answer questions, instant feedback, explanations.
   - Gamification: hearts, energy bar, streak flame, celebration overlay, encouragement toasts.
   - Parent dashboard with stats, subject progress, recent activity, and 6-digit linking flow.
-  - Filler P4–P7 content for Mathematics and Social Studies.
+- Refactored after receiving canonical `app.css` and `app.js`:
+  - Replaced reconstructed tokens with exact values from `assets/app.css`.
+  - Made the app fully responsive: mobile-first but scales to tablets, laptops, and desktops.
+  - Removed the phone status bar (battery/time) — this is a real app, not a mockup.
+  - Changed entry flow: `/` redirects to `/onboarding/` first time, then `/home/` on return.
+  - Added "Switch profile" button on home header for testing different classes/roles.
+  - Converted learning module to question-first flow: quiz question → answer → explanation paragraph → next question.
+  - Added `assets/app.css` and `assets/app.js` to the project for reference.
 - `npm run build` succeeds; static export generated in `/dist`.

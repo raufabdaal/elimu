@@ -1,8 +1,7 @@
 # ELIMU Design System
 
 ## Status
-**Reconstructed from exported HTML files + critique notes.**
-The manifest referenced `css/app.css` and `js/app.js`, but those files were not included in the upload. Tokens below were reverse-engineered from the inline classes/styles in the HTML screens and the critique notes (Newsreader display, DM Sans UI, IBM Plex Mono numerics, premium green paper + dot grid).
+**Canonical source available.** The exported `app.css` and `app.js` were uploaded after the initial build. Tokens below are taken from `assets/app.css`. The implementation uses these exact values in `src/app/globals.css`.
 
 ## Color tokens
 | Token | Hex | Usage |

@@ -1,6 +1,6 @@
 # Elimu
 
-Mobile-first quiz learning for Ugandan primary pupils (P4–P7). Built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion.
+Mobile-first (but fully responsive) quiz learning for Ugandan primary pupils (P4–P7). Built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion.
 
 ## Quick start
 
@@ -10,6 +10,8 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+First visit goes to `/onboarding/`. After that, `/` redirects to `/home/`.
 
 ## Build for production
 
@@ -21,17 +23,26 @@ This generates a static export in `/dist`, ready for Vercel.
 
 ## Routes
 
-- `/` — launcher / overview
+- `/` — smart entry (redirects based on onboarding state)
 - `/onboarding/` — role, class, name, parent code link
-- `/home/` — learner home with continue card, subjects, streak
+- `/home/` — learner home with continue card, subjects, streak, hearts, energy, switch-profile button
 - `/subjects/` — subjects and topics
-- `/module/` — readable lesson + check question
+- `/module/?topic=fractions` — question-first topic quiz with explanations
 - `/practice/` — mixed quiz with hearts, feedback, encouragement
 - `/parent/` — parent dashboard with stats and activity
 
 ## Demo parent link
 
 Use code **739104** on the parent onboarding step to simulate linking to the demo student account.
+
+## Learning flow
+
+Elimu is built around **question-first learning**:
+
+1. Pick a topic.
+2. Answer the question (multiple choice or fill-in).
+3. Read the short explanation that tells you why the answer is right or wrong.
+4. Move to the next question.
 
 ## Deployment
 

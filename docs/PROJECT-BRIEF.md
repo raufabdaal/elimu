@@ -39,11 +39,11 @@ The user stated: *“take this as 20 percent of what it has to be and we work to
 - [ ] Offline-native packaging (PWA download yes; app-store native no).
 
 ## Key flows
-1. **Onboarding** → pick class (P4–P7), pick role (learner / parent), optionally link parent via 6-digit code.
-2. **Home** → continue where you left off, streak card, hearts/energy, subjects shortcut.
-3. **Subjects** → Mathematics, Social Studies, etc. → topics list → topic quiz.
-4. **Practice** → mixed questions across subjects/topics.
-5. **Learning module** → readable micro-lesson + check question at bottom.
+1. **Onboarding** → pick class (P4–P7), pick role (learner / parent), optionally link parent via 6-digit code. First-time users land here; returning users skip to home.
+2. **Home** → continue where you left off, streak card, hearts/energy, subjects shortcut. Includes a "Switch profile" button for testing/reset.
+3. **Subjects** → Mathematics, Social Studies, etc. → topics list.
+4. **Topic quiz** → question-first learning: answer a question, then read the explanation paragraph that teaches *why*.
+5. **Practice** → mixed questions across subjects/topics.
 6. **Parent dashboard** → linked child’s progress, struggle areas, study time.
 
 ## Parent-student linkage (prototype)
@@ -70,7 +70,7 @@ The user stated: *“take this as 20 percent of what it has to be and we work to
 
 ## Source of truth
 - This file plus `DESIGN-SYSTEM.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `HANDOFF.md`, and `CHANGELOG.md`.
-- The exported HTML screens and `DESIGN-MANIFEST.json` are the visual contract. `css/app.css` and `js/app.js` were referenced but not uploaded; styles and behavior were reconstructed from the HTML files.
+- The exported HTML screens, `DESIGN-MANIFEST.json`, `assets/app.css`, and `assets/app.js` are the visual/behavior contract.
 
 ## Date created
 2026-07-16
