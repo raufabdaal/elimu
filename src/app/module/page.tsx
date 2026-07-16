@@ -187,7 +187,7 @@ function ModuleContent() {
           )}
         </motion.div>
 
-        <AnimatePresence>
+          <AnimatePresence>
           {showExplanation && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -198,7 +198,18 @@ function ModuleContent() {
               <h4 style={{ color: feedbackType === "ok" ? "var(--success)" : "var(--danger)" }}>
                 {feedbackType === "ok" ? "That’s right" : "Here’s why"}
               </h4>
-              <p>{q.deepDive || q.explanation}</p>
+              
+              {/* Rich explanation support */}
+              <div className="explanation-content text-[15px] leading-relaxed text-[var(--muted)]">
+                {q.deepDive ? (
+                  q.deepDive.split('\n\n').map((paragraph, i) => (
+                    <p key={i} className="mb-3 last:mb-0">{paragraph}</p>
+                  ))
+                ) : (
+                  <p>{q.explanation}</p>
+                )}
+              </div>
+
               <button type="button" className="btn btn-primary mt-md" onClick={nextQuestion}>
                 {index === questions.length - 1 ? "Finish topic" : "Next question"}
               </button>
