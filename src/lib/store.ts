@@ -111,7 +111,13 @@ export function refillHearts(): void {
 }
 
 // New: Energy system
-export function consumeEnergy(amount: number = 10): boolean {
+// TEMPORARY: Unlimited energy for testing until app is complete
+export function consumeEnergy(): boolean {
+  // During development/testing, always allow energy usage
+  return true;
+  
+  // Original logic (uncomment when ready for real energy system)
+  /*
   const state = loadState();
   if (state.progress.energy < amount) return false;
 
@@ -122,6 +128,7 @@ export function consumeEnergy(amount: number = 10): boolean {
     },
   });
   return true;
+  */
 }
 
 export function refillEnergy(): void {

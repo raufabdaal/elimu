@@ -54,10 +54,9 @@ function ModuleContent() {
   const handleCheck = () => {
     if (locked || !q) return;
 
-    // Use energy on every attempt
-    const hasEnergy = consumeEnergy(8);
+    // Use energy on every attempt (currently unlimited for testing)
+    const hasEnergy = consumeEnergy();
     if (!hasEnergy) {
-      // Could show a toast here later
       alert("Not enough energy! Come back later.");
       return;
     }

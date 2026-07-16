@@ -3,36 +3,32 @@
 ## ✅ Session 1: Our Country Uganda (COMPLETED)
 
 **Topic**: `p7-uganda-session-1`  
-**Questions**: 12  
-**Source**: UNEB PLE Social Studies patterns + standard P7 curriculum  
-**Date**: 2026-07-16
+**Questions**: 12
 
-### Questions Implemented:
+## ✅ Session 2: Our Country Uganda (COMPLETED)
 
-| # | Type | Question |
-|---|------|----------|
-| 1 | Multiple Choice | How many countries border Uganda? |
-| 2 | Short Answer | What is the capital city of Uganda? |
-| 3 | Multiple Choice | Which is NOT a neighbour of Uganda? |
-| 4 | True/False | Uganda is a landlocked country. |
-| 5 | Short Answer | Name the large lake on Uganda’s southern border |
-| 6 | Matching | Match neighbours with directions |
-| 7 | Multiple Choice | Which river flows out of Lake Victoria? |
-| 8 | Short Answer | Highest mountain in Uganda |
-| 9 | True/False | Uganda lies on the equator |
-| 10 | Multiple Choice | Official language of Uganda |
-| 11 | Ordering | Arrange regions from north to south |
-| 12 | Short Answer | Name one national park in Uganda |
+**Topic**: `p7-uganda-session-2`  
+**Questions**: 12
 
-**Status**: ✅ Live in production
+**Total questions for "Our Country Uganda"**: 24
 
 ---
 
-## Strategy Update
+## Major Updates (2026-07-16)
 
-- **Pilot Subject**: Social Studies (P7)
-- **Approach**: One topic at a time
-- **Session size**: 12 questions
-- **Next**: Will create Session 2 for the same topic or move to a new topic
+### Testing Mode Enabled
+- **Unlimited Energy** activated temporarily
+- `consumeEnergy()` now always returns `true`
+- This will stay active until the app is complete
 
-**Note**: All questions are based on the official Uganda Primary curriculum.
+### Navigation Improvements
+- Tab bar spacing improved
+- Better visual separation between tabs
+- Larger tap targets
+
+### Content Strategy
+- Switched pilot from Mathematics to **Social Studies**
+- Building one topic at a time with multiple sessions
+- Each session = 12 questions
+
+**Next**: We can continue with Session 3 or move to a new topic.
