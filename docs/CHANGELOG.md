@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-07-19 — P7 Mathematics Multi-Module Question Bank Integration & Build Verification (`src/lib/data.ts`)
+
+### Exhaustive P7 Mathematics Multi-Module Engine (`Advanced Geometry, Business Math & Set Theory`)
+- **Sourced & Embedded Canonical P7 Mathematics Question Bank (`src/lib/data.ts`, `docs/curriculum/P7-MATH-COMPLETE-QUESTION-BANK.md`)** — Fully authored and integrated 3 canonical P7 Mathematics topics structured into 11 bite-sized, sequential **Modules (`135 progressive questions total`)** with strict Ugandan context (`UGX, Owino Market, Kasese, Nakasero, NCDC vocabulary, and UNEB PLE multi-step word problems`) and zero repetitive numbers:
+  - **Topic 1: Advanced Geometry & Mensuration (`p7-math-geometry`)** — 4 Modules (`49 progressive questions`):
+    - `p7-geom-m1`: Circumference, Radius & Diameter (`12 questions`)
+    - `p7-geom-m2`: Area of Circles & Composite Curved Shapes (`12 questions`)
+    - `p7-geom-m3`: Polygons, Interior & Exterior Angles (`12 questions`)
+    - `p7-geom-m4`: 3D Solid Mensuration & Surface Area (`13 questions`)
+  - **Topic 2: Business Mathematics (`p7-math-business`)** — 4 Modules (`49 progressive questions`):
+    - `p7-bus-m1`: Simple Interest & Principal (`12 questions`)
+    - `p7-bus-m2`: Profit, Loss & Percentage Profit/Loss (`12 questions`)
+    - `p7-bus-m3`: Commission, Discount & Hire Purchase (`12 questions`)
+    - `p7-bus-m4`: Currency Conversion & Exchange Rates (`13 questions`)
+  - **Topic 3: Set Theory & Venn Diagrams (`p7-math-sets`)** — 3 Modules (`37 progressive questions`):
+    - `p7-sets-m1`: Set Notation, Subsets & Proper Subsets (`12 questions`)
+    - `p7-sets-m2`: 2-Set Venn Diagram Operations & Word Problems (`13 questions`)
+    - `p7-sets-m3`: 3-Set Venn Diagrams & Algebraic Traps (`12 questions`)
+- **Pristine Data Store & Syntax Verification (`src/lib/data.ts`)** — Resolved previous TypeScript bracket and semicolon syntax errors (`TS1128`, `TS1005`) caused by orphaned question fragments during data insertion. Cleanly extracted all 15 valid non-P7-Math base topics (`P4–P7 SST, Science, English, Math`) using exact brace counting (`count == 0`), appended the 11 P7 Mathematics modules (`135 questions`), and verified full TypeScript compliance (`npx tsc --noEmit` and `npm run build` passing with zero errors or warnings across all 11 static routes).
+- **Workspace Cleanup & Single Folder Rule (`/home/user/elimu/`)** — Removed all temporary builder `.py` and `.txt` scripts (`build_p7_math.py`, `clean_rebuild_data.py`, `p7_math.txt`, etc.) ensuring our single workspace repository remains spotless, well-organized, and ready for instant deployment to Vercel.
+
+---
+
 ## 2026-07-19 — Multi-Module Curriculum Architecture (`Subject -> Topic -> Module -> Question`)
 
 ### Multi-Module Hierarchy & Accordion Navigation (`types.ts`, `data.ts`, `subjects/page.tsx`, `module/page.tsx`)
