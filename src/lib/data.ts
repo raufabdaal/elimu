@@ -647,7 +647,414 @@ const TOPICS: TopicData[] = [
       },
     ],
   },
+  // =====================================================
+  // P4 CURRICULUM TOPICS (NCDC transitional & subject-based)
+  // =====================================================
+  {
+    id: "p4-math-numbers",
+    name: "Whole Numbers & Place Value",
+    subjectId: "math",
+    classLevel: "p4",
+    questions: [
+      {
+        id: "p4mn-1",
+        type: "multiple_choice",
+        question: "What is the place value of digit 6 in the number 4,682?",
+        options: [
+          { id: "a", text: "Tens", correct: false },
+          { id: "b", text: "Hundreds", correct: true },
+          { id: "c", text: "Thousands", correct: false },
+          { id: "d", text: "Ones", correct: false },
+        ],
+        explanation: "In 4,682, the digit 6 is in the Hundreds place (6 x 100 = 600).",
+        deepDive: "Every digit in a whole number has a place value: 4 is in the thousands place, 6 is in the hundreds place, 8 is in the tens place, and 2 is in the ones place.",
+      },
+      {
+        id: "p4mn-2",
+        type: "short_answer",
+        question: "Kintu bought 3 exercise books from the local market at UGX 1,200 each. How much money did he pay altogether?",
+        answer: "3600",
+        hint: "Multiply 1,200 by 3",
+        explanation: "1,200 x 3 = UGX 3,600.",
+        deepDive: "When finding the total cost of equal items, multiply the cost of one item by the total number of items bought.",
+      },
+      {
+        id: "p4mn-3",
+        type: "true_false",
+        question: "A square is a flat geometric shape with four equal sides and four right angles.",
+        answer: "true",
+        explanation: "A square always has 4 sides of equal length and four 90-degree right angles.",
+        deepDive: "The perimeter of a square is found by multiplying the length of one side by 4 (P = 4 x side).",
+      },
+      {
+        id: "p4mn-4",
+        type: "ordering",
+        question: "Arrange these whole numbers from the smallest to the largest value.",
+        items: [
+          { id: "n1", text: "1,450" },
+          { id: "n2", text: "2,300" },
+          { id: "n3", text: "4,100" },
+          { id: "n4", text: "980" },
+        ],
+        correctOrder: ["n4", "n1", "n2", "n3"],
+        explanation: "980 has only 3 digits (Hundreds), while the others have 4 digits (Thousands). Among 4-digit numbers, 1,450 < 2,300 < 4,100.",
+      },
+      {
+        id: "p4mn-5",
+        type: "matching",
+        question: "Match each mathematical shape or term to its correct definition.",
+        pairs: [
+          { id: "p1", left: "Rectangle", right: "Flat shape with two pairs of equal opposite sides" },
+          { id: "p2", left: "Perimeter", right: "Total distance around the outside boundary of a shape" },
+          { id: "p3", left: "Numerator", right: "Top number in a fraction showing parts selected" },
+          { id: "p4", left: "Denominator", right: "Bottom number in a fraction showing total equal parts" },
+        ],
+        explanation: "Understanding basic geometric and fraction terms is foundational in Primary 4 Mathematics.",
+      },
+    ],
+  },
+  {
+    id: "p4-sst-district",
+    name: "Our District & Local Council Leaders",
+    subjectId: "sst",
+    classLevel: "p4",
+    questions: [
+      {
+        id: "p4sd-1",
+        type: "multiple_choice",
+        question: "Who is the political head and elected chairperson of a Local Council One (LC1) in a Ugandan village?",
+        options: [
+          { id: "a", text: "Chief Administrative Officer (CAO)", correct: false },
+          { id: "b", text: "LC1 Chairperson", correct: true },
+          { id: "c", text: "Resident District Commissioner (RDC)", correct: false },
+          { id: "d", text: "Parish Chief", correct: false },
+        ],
+        explanation: "The LC1 Chairperson is the elected political leader and head of the village Executive Committee.",
+        deepDive: "The Local Council system in Uganda runs from LC1 (Village/Cell), LC2 (Parish/Ward), LC3 (Sub-county/Division), up to LC5 (District/City).",
+      },
+      {
+        id: "p4sd-2",
+        type: "short_answer",
+        question: "Name the instrument that shows the four cardinal points (North, South, East, West) and helps travelers find direction.",
+        answer: "Compass",
+        hint: "It has a magnetic needle that always points North",
+        explanation: "A compass is a navigational instrument used to find directions on land or sea.",
+        deepDive: "The four cardinal points are North (N), South (S), East (E), and West (W). The four secondary or intermediate points are North-East (NE), North-West (NW), South-East (SE), and South-West (SW).",
+      },
+      {
+        id: "p4sd-3",
+        type: "true_false",
+        question: "The Resident District Commissioner (RDC) is appointed directly by the President to represent the Central Government in a district.",
+        answer: "true",
+        explanation: "The RDC is the senior presidential representative in the district, overseeing security and monitoring central government programs.",
+      },
+    ],
+  },
+  {
+    id: "p4-sci-plants",
+    name: "Parts of a Flowering Plant & Germination",
+    subjectId: "sci",
+    classLevel: "p4",
+    questions: [
+      {
+        id: "p4sp-1",
+        type: "multiple_choice",
+        question: "Which part of a flowering plant is responsible for making food through photosynthesis?",
+        options: [
+          { id: "a", text: "Roots", correct: false },
+          { id: "b", text: "Stem", correct: false },
+          { id: "c", text: "Leaves", correct: true },
+          { id: "d", text: "Flower", correct: false },
+        ],
+        explanation: "Leaves carry out photosynthesis using sunlight, carbon dioxide, and water to produce food (sugar) for the plant.",
+        deepDive: "Leaves contain a green pigment called chlorophyll that traps sunlight energy required for photosynthesis.",
+      },
+      {
+        id: "p4sp-2",
+        type: "short_answer",
+        question: "What name is given to the process by which a dry seed develops into a young seedling when given moisture, warmth, and oxygen?",
+        answer: "Germination",
+        hint: "Starts with 'G'",
+        explanation: "Germination is the sprouting of a seed into a seedling under favourable conditions.",
+        deepDive: "The three essential conditions for seed germination are moisture (water), warmth (favourable temperature), and oxygen (for respiration). Seeds do NOT require sunlight to germinate!",
+      },
+      {
+        id: "p4sp-3",
+        type: "matching",
+        question: "Match each plant structure with its primary function.",
+        pairs: [
+          { id: "pp1", left: "Roots", right: "Absorb water and mineral salts from the soil" },
+          { id: "pp2", left: "Stem", right: "Transports water and supports branches and leaves" },
+          { id: "pp3", left: "Flower", right: "Serves as the reproductive organ of the plant" },
+          { id: "pp4", left: "Fruit", right: "Protects developing seeds and aids in seed dispersal" },
+        ],
+        explanation: "Every structure on a flowering plant works together to ensure survival and reproduction.",
+      },
+    ],
+  },
+  {
+    id: "p4-eng-nouns",
+    name: "Common & Proper Nouns & Simple Tenses",
+    subjectId: "eng",
+    classLevel: "p4",
+    questions: [
+      {
+        id: "p4en-1",
+        type: "multiple_choice",
+        question: "Choose the correct plural form of the irregular noun 'Child'.",
+        options: [
+          { id: "a", text: "Childs", correct: false },
+          { id: "b", text: "Children", correct: true },
+          { id: "c", text: "Childrens", correct: false },
+          { id: "d", text: "Childes", correct: false },
+        ],
+        explanation: "'Child' is an irregular noun whose plural is 'Children'.",
+        deepDive: "Other common irregular plurals in P4 English include: man -> men, woman -> women, tooth -> teeth, foot -> feet, ox -> oxen, and mouse -> mice.",
+      },
+      {
+        id: "p4en-2",
+        type: "short_answer",
+        question: "Complete the sentence with the correct past tense of the verb in brackets: Yesterday, Akello ______ (go) to the village borehole to fetch clean water.",
+        answer: "went",
+        hint: "'Go' is an irregular verb",
+        explanation: "The simple past tense of 'go' is 'went'.",
+      },
+      {
+        id: "p4en-3",
+        type: "true_false",
+        question: "In the sentence 'Kampala is the capital city of Uganda,' the words Kampala and Uganda are proper nouns.",
+        answer: "true",
+        explanation: "Kampala and Uganda name specific places, so they are proper nouns and always begin with capital letters.",
+      },
+    ],
+  },
+
+  // =====================================================
+  // P6 CURRICULUM TOPICS (NCDC Upper Primary)
+  // =====================================================
+  {
+    id: "p6-math-percentages",
+    name: "Percentages, Ratios & Set Theory",
+    subjectId: "math",
+    classLevel: "p6",
+    questions: [
+      {
+        id: "p6mp-1",
+        type: "multiple_choice",
+        question: "In a P6 class of 50 pupils, 20% of the pupils are absent due to heavy rain. How many pupils are present?",
+        options: [
+          { id: "a", text: "10 pupils", correct: false },
+          { id: "b", text: "40 pupils", correct: true },
+          { id: "c", text: "30 pupils", correct: false },
+          { id: "d", text: "20 pupils", correct: false },
+        ],
+        explanation: "20% of 50 = (20/100) x 50 = 10 absent pupils. Therefore, 50 - 10 = 40 pupils present.",
+      },
+      {
+        id: "p6mp-2",
+        type: "short_answer",
+        question: "If Set A = {2, 3, 5, 7} and Set B = {1, 3, 5, 9}, find the number of elements in the intersection set n(A ∩ B).",
+        answer: "2",
+        hint: "Look for common elements in both Set A and Set B",
+        explanation: "The intersection set A ∩ B = {3, 5}. There are 2 common elements, so n(A ∩ B) = 2.",
+      },
+      {
+        id: "p6mp-3",
+        type: "true_false",
+        question: "If 3x = 24, then the value of variable x is 8.",
+        answer: "true",
+        explanation: "Dividing both sides by 3 gives x = 24/3 = 8.",
+      },
+    ],
+  },
+  {
+    id: "p6-sst-eac",
+    name: "East African Community & Early Kingdoms",
+    subjectId: "sst",
+    classLevel: "p6",
+    questions: [
+      {
+        id: "p6se-1",
+        type: "multiple_choice",
+        question: "Which of the following countries is NOT a member state of the East African Community (EAC)?",
+        options: [
+          { id: "a", text: "Republic of South Sudan", correct: false },
+          { id: "b", text: "Democratic Republic of Congo", correct: false },
+          { id: "c", text: "Federal Democratic Republic of Ethiopia", correct: true },
+          { id: "d", text: "Republic of Rwanda", correct: false },
+        ],
+        explanation: "The 8 EAC partner states are Uganda, Kenya, Tanzania, Rwanda, Burundi, South Sudan, DR Congo, and Somalia. Ethiopia is not an EAC member.",
+      },
+      {
+        id: "p6se-2",
+        type: "short_answer",
+        question: "Name the northern Tanzanian city where the headquarters of the East African Community (EAC Secretariat) are located.",
+        answer: "Arusha",
+        hint: "Located near Mount Meru in Tanzania",
+        explanation: "Arusha serves as the diplomatic and administrative headquarters of the EAC.",
+      },
+      {
+        id: "p6se-3",
+        type: "true_false",
+        question: "The Bunyoro-Kitara Empire was one of the earliest and largest pre-colonial kingdoms in East Africa, founded by the Bachwezi.",
+        answer: "true",
+        explanation: "Bunyoro-Kitara covered large parts of Western Uganda and was famous for cattlekeeping and iron working under the Chwezi dynasty.",
+      },
+    ],
+  },
+  {
+    id: "p6-sci-electricity",
+    name: "Circulatory System & Simple Circuits",
+    subjectId: "sci",
+    classLevel: "p6",
+    questions: [
+      {
+        id: "p6sc-1",
+        type: "multiple_choice",
+        question: "Which blood vessels carry blood away from the heart to the rest of the body under high pressure?",
+        options: [
+          { id: "a", text: "Veins", correct: false },
+          { id: "b", text: "Capillaries", correct: false },
+          { id: "c", text: "Arteries", correct: true },
+          { id: "d", text: "Vena Cava", correct: false },
+        ],
+        explanation: "Arteries carry blood away from the heart under high pressure. All arteries carry oxygenated blood except the pulmonary artery.",
+      },
+      {
+        id: "p6sc-2",
+        type: "short_answer",
+        question: "Which blood cells are responsible for fighting against disease germs that enter the human body?",
+        answer: "White blood cells",
+        hint: "They act as internal soldiers against infections",
+        explanation: "White blood cells (leucocytes) engulf and destroy pathogens or produce antibodies to defend the body.",
+      },
+      {
+        id: "p6sc-3",
+        type: "true_false",
+        question: "Copper wire is a good conductor of electricity, while rubber and dry wood are electric insulators.",
+        answer: "true",
+        explanation: "Metals like copper conduct electricity, while non-metals like rubber and wood block electric current and prevent electrocution.",
+      },
+    ],
+  },
+  {
+    id: "p6-eng-clauses",
+    name: "Direct & Reported Speech & Prepositions",
+    subjectId: "eng",
+    classLevel: "p6",
+    questions: [
+      {
+        id: "p6ec-1",
+        type: "multiple_choice",
+        question: 'Choose the correct reported speech form of: Okello said, "I am reading my English notes now."',
+        options: [
+          { id: "a", text: "Okello said that he is reading his English notes now.", correct: false },
+          { id: "b", text: "Okello said that he was reading his English notes then.", correct: true },
+          { id: "c", text: "Okello said that I was reading my notes then.", correct: false },
+          { id: "d", text: "Okello says he read his English notes.", correct: false },
+        ],
+        explanation: "In reported speech, present continuous backshifts to past continuous ('was reading'), and 'now' changes to 'then'.",
+      },
+      {
+        id: "p6ec-2",
+        type: "short_answer",
+        question: "Complete the sentence with the correct preposition: All pupils should pay attention ______ their teacher during mathematics drills.",
+        answer: "to",
+        hint: "A two-letter preposition following 'attention'",
+        explanation: "The correct phrasal preposition is 'pay attention to'.",
+      },
+    ],
+  },
+
+  // =====================================================
+  // P7 CURRICULUM TOPICS (UNEB PLE Mastery)
+  // =====================================================
+  {
+    id: "p7-math-business",
+    name: "Business Math: Interest, Profit & Mensuration",
+    subjectId: "math",
+    classLevel: "p7",
+    questions: [
+      {
+        id: "p7mb-1",
+        type: "multiple_choice",
+        question: "A businessman deposited UGX 400,000 in a commercial bank that offers simple interest at a rate of 5% per annum. How much simple interest will he earn after 2 years?",
+        options: [
+          { id: "a", text: "UGX 20,000", correct: false },
+          { id: "b", text: "UGX 40,000", correct: true },
+          { id: "c", text: "UGX 80,000", correct: false },
+          { id: "d", text: "UGX 440,000", correct: false },
+        ],
+        explanation: "I = (P x R x T) / 100 = (400,000 x 5 x 2) / 100 = 4,000,000 / 100 = UGX 40,000.",
+      },
+      {
+        id: "p7mb-2",
+        type: "short_answer",
+        question: "The area of a rectangular school football pitch is 1,200 square meters. If its width is 30 meters, what is its length in meters?",
+        answer: "40",
+        hint: "Length = Area / Width",
+        explanation: "1,200 / 30 = 40 meters.",
+      },
+    ],
+  },
+  {
+    id: "p7-sci-energy",
+    name: "Renewable Energy & Excretory System",
+    subjectId: "sci",
+    classLevel: "p7",
+    questions: [
+      {
+        id: "p7se-1",
+        type: "multiple_choice",
+        question: "Which of the following is a renewable source of energy generated by rushing water at dams like Owen Falls and Karuma on River Nile?",
+        options: [
+          { id: "a", text: "Coal", correct: false },
+          { id: "b", text: "Hydroelectric power", correct: true },
+          { id: "c", text: "Petroleum", correct: false },
+          { id: "d", text: "Natural gas", correct: false },
+        ],
+        explanation: "Hydroelectric power, solar, and biogas are renewable sources of energy naturally replenished by environmental cycles.",
+      },
+      {
+        id: "p7se-2",
+        type: "short_answer",
+        question: "Which bean-shaped human organs remove urea, excess salts, and water from the blood in the form of urine?",
+        answer: "Kidneys",
+        hint: "Located in the lower back on either side of the spine",
+        explanation: "The kidneys filter blood to produce urine, regulating body fluids and eliminating nitrogenous waste.",
+      },
+    ],
+  },
+  {
+    id: "p7-eng-composition",
+    name: "PLE Composition & Formal Letter Writing",
+    subjectId: "eng",
+    classLevel: "p7",
+    questions: [
+      {
+        id: "p7ec-1",
+        type: "multiple_choice",
+        question: "Choose the correctly punctuated formal salutation when writing a job application letter to a Bank Manager whose name you do not know.",
+        options: [
+          { id: "a", text: "Dear Bank Manager,", correct: false },
+          { id: "b", text: "Dear Sir/Madam,", correct: true },
+          { id: "c", text: "My dear Sir,", correct: false },
+          { id: "d", text: "Hello Manager", correct: false },
+        ],
+        explanation: "'Dear Sir/Madam,' is the standard official salutation for formal letters when the recipient's personal name is unknown.",
+      },
+      {
+        id: "p7ec-2",
+        type: "short_answer",
+        question: "Complete the sentence with the correct adverb form of the word in brackets: The PLE candidates walked ______ (quiet) into the examination hall.",
+        answer: "quietly",
+        hint: "Change adjective 'quiet' into an adverb of manner ending in -ly",
+        explanation: "'Quietly' describes how the candidates walked into the hall.",
+      },
+    ],
+  }
 ];
+
 export function getTopic(topicId: string): TopicData | undefined {
   if (!topicId) return undefined;
   // Direct ID match

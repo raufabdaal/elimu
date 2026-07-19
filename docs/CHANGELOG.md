@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-07-19 — Sourced & Embedded Canonical 4-Class / 4-Subject NCDC & UNEB PLE Curriculum Bank
+
+### Canonical NCDC & UNEB PLE Question Bank Documents (`docs/curriculum/`)
+- **Systematic Class-by-Class Sourcing & Screening** — Created comprehensive markdown question banks for Primary 4, Primary 5, Primary 6, and Primary 7 aligned strictly to the Uganda National Curriculum Development Centre (NCDC) and Primary Leaving Examination (UNEB PLE) syllabus.
+- **Strictly Ugandan Context (No Western/Generic Filler)** — Screened out generic Western items and established authentic local context across all 4 subjects:
+  - **Mathematics (`math`)**: Whole numbers, place values, UGX profit/loss (`Owino Market`), simple interest ($I = \frac{P \times R \times T}{100}$), set theory ($A \cap B$), LCM/HCF, Roman numerals, and fractions.
+  - **Social Studies (`sst`)**: Ugandan Local Council system (`LC1 Village Chairperson to LC5 District Chairperson`), physical features (`Mount Rwenzori horst vs Mount Elgon volcano`), Uganda regions, East African Community (`8 partner states, Arusha HQ`), pre-colonial kingdoms (`Bunyoro-Kitara`), and 39 canonical questions of `Our Country Uganda`.
+  - **Integrated Science (`sci`)**: Tropical vectors and health (`Female Anopheles mosquito / Malaria`, `Tsetse fly / Sleeping sickness`, `Housefly / Cholera`), human skeletal/circulatory/excretory systems (`Heart chambers`, `Kidneys / osmoregulation`), seed germination (`Moisture, warmth, oxygen`), and renewable energy (`Hydroelectric dams on River Nile`).
+  - **English Language (`eng`)**: P4–P7 irregular plurals (`Child/Children`), proper vs common nouns (`Kampala, Uganda`), direct & reported speech backshifting (`now -> then`, `am reading -> was reading`), formal letter salutations (`Dear Sir/Madam, Yours faithfully`), and prepositions.
+- **Canonical Files Created**:
+  - `docs/curriculum/P4-NCDC-QUESTION-BANK.md`
+  - `docs/curriculum/P5-NCDC-QUESTION-BANK.md`
+  - `docs/curriculum/P6-NCDC-QUESTION-BANK.md`
+  - `docs/curriculum/P7-NCDC-UNEB-PLE-QUESTION-BANK.md`
+
+### Embedded Interactive Curriculum Drills (`src/lib/data.ts`)
+- **Interactive `TOPICS` Expansion** — Embedded the screened canonical questions directly into the application data store (`src/lib/data.ts`) so pupils and parents can immediately drill any of the 16 subject-class portals (`P4–P7` across `Math, SST, Science, English`).
+- **Dynamic Subject & Topic Resolvers (`getSubjects`, `getTopic`, `getTopicsForClass`)** — Updated helper functions to accurately filter and return the live interactive topics along with their subtopic counts, completion states (`⭐ Mastered`), and accuracy metrics (`100% / 85%`).
+
+---
+
 ## 2026-07-19 — Responsive Header Overlap, Non-Blocking Celebrations, Workspace & Documentation Rules
 
 ### Responsive Header Overlap Resolution (`HeaderStats.tsx`)
