@@ -121,6 +121,8 @@ function ModuleContent() {
           progress: Math.min(100, (s.continue?.progress || 0) + 25),
         },
       });
+      setCelebrate(false);
+      setEncourage(0);
       setAppState(loadState());
       setFinished(true);
       return;
@@ -132,6 +134,7 @@ function ModuleContent() {
     setFeedbackType("");
     setShowExplanation(false);
     setCelebrate(false);
+    setEncourage(0);
   };
 
   const theme = SUBJECT_THEMES[topic.subjectId] || SUBJECT_THEMES.math;

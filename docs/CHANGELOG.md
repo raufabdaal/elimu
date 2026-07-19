@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-07-19 — Responsive Header Overlap, Non-Blocking Celebrations, Workspace & Documentation Rules
+
+### Responsive Header Overlap Resolution (`HeaderStats.tsx`)
+- **Stacked Two-Row Mobile Header (`flex-col sm:flex-row`)** — Re-structured flex hierarchy so Row 1 (`flex items-center justify-between w-full`) isolates `Avatar + Pupil Name` on the left and `Streak + Hearts` (`shrink-0`) on the right. Row 2 (`pt-1 border-t border-slate-100 sm:border-0 sm:pt-0`) houses the **Class Pill (`Primary 5 · Switch Class ▾`)** on its own dedicated line underneath. The streak pill (`🔥 3 days`) never collides or sits on top of the class selector on tall or narrow devices (`320px–400px+`).
+
+### Non-Blocking Celebration & Toast Animations (`Celebration.tsx`, `EncouragementToast.tsx`)
+- **Instant Exit on Question Advancement** — Added explicit `if (!show) setVisible(false)` logic inside `Celebration.tsx` (`useEffect`) and set container wrappers to `pointer-events-none`.
+- **Question Reset Assurance (`module/page.tsx`, `practice/page.tsx`)** — Updated `nextQuestion()` handlers across topic drills (`/module`) and rapid reviews (`/practice`) to explicitly reset `setCelebrate(false)` and `setEncourage(0)` right before loading index `i + 1`. Confetti animations and toasts never persist across questions or block user clicks.
+
+### Workspace & Handoff Rule Enforced (`HANDOFF.md`)
+- **Single Workspace Folder Integrity** — Removed stray external directories (`/home/user/docs`, `/home/user/tailwind.config.ts`), ensuring `/home/user/elimu/` is the sole canonical directory containing all code, assets, and documentation.
+- **Mandatory Modified File Summary Rule** — Added explicit rule in `HANDOFF.md` requiring every turn/update to conclude with a summary list of exact modified paths for frictionless copy-pasting to production.
+
+---
+
 ## 2026-07-19 — Full UI/UX & Gamification Overhaul + 4-Class / 4-Subject NCDC Architecture Prep
 
 ### Comprehensive Design Psychology & Gamified Interface Overhaul

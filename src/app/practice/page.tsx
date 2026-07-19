@@ -81,6 +81,8 @@ export default function Practice() {
           xp: s.progress.xp + score * 15 + 50,
         },
       });
+      setCelebrate(false);
+      setEncourage(0);
       setAppState(loadState());
       setFinished(true);
       return;
@@ -92,6 +94,7 @@ export default function Practice() {
     setFeedbackType("");
     setShowExplanation(false);
     setCelebrate(false);
+    setEncourage(0);
   };
 
   const handleSkip = () => {

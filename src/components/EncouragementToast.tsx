@@ -38,7 +38,7 @@ export default function EncouragementToast({ trigger, playSound = true }: Encour
 
     const t = setTimeout(() => {
       setMessage(null);
-    }, 1700);
+    }, 1500);
 
     return () => clearTimeout(t);
   }, [trigger, playSound]);
@@ -54,7 +54,7 @@ export default function EncouragementToast({ trigger, playSound = true }: Encour
           transition={{ type: "spring", stiffness: 500, damping: 26 }}
           className="fixed sm:absolute top-20 left-0 right-0 z-60 flex justify-center pointer-events-none px-4"
         >
-          <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white font-extrabold text-[14.5px] px-5 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 backdrop-blur-md relative overflow-hidden">
+          <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white font-extrabold text-[14.5px] px-5 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 backdrop-blur-md relative overflow-hidden pointer-events-none">
             <motion.div
               animate={{ rotate: [0, 360], scale: [1, 1.3, 1] }}
               transition={{ duration: 1.6, repeat: Infinity }}

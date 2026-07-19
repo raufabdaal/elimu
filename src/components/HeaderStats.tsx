@@ -52,49 +52,55 @@ export default function HeaderStats({
 
   return (
     <>
-      <header className="w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 px-4 py-3 sm:rounded-t-[36px]">
-        <div className="flex items-center justify-between gap-2">
-          {/* Avatar & Class Switcher Trigger */}
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white font-extrabold text-lg flex items-center justify-center shadow-md shrink-0">
-              {(profile.name || "S").charAt(0).toUpperCase()}
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-[15px] text-slate-900 truncate">
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 px-3.5 sm:px-4 py-2.5 sm:py-3 sm:rounded-t-[36px] shadow-2xs">
+        {/* Responsive Two-Row Stack on Narrow/Tall Screens vs Single Row on Desktop */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 w-full">
+          
+          {/* Top Row: Avatar + Name on Left | Gamification Stats on Right */}
+          <div className="flex items-center justify-between gap-2 w-full sm:w-auto min-w-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-xs shrink-0">
+                {(profile.name || "S").charAt(0).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex items-center gap-1.5 flex-wrap">
+                <span className="font-extrabold text-[15px] sm:text-base text-slate-900 truncate">
                   {profile.name || "Pupil"}
                 </span>
                 {profile.role === "parent" && (
-                  <span className="bg-purple-100 text-purple-800 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md border border-purple-200">
+                  <span className="bg-purple-100 text-purple-800 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md border border-purple-200 shrink-0">
                     Parent
                   </span>
                 )}
               </div>
-              
-              {showClassSwitcher ? (
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="flex items-center gap-1 text-[12px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-200/80 transition-all mt-0.5"
-                >
-                  <span>{CLASS_LABELS[profile.classLevel || "p5"]}</span>
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-              ) : (
-                <span className="text-[12px] font-semibold text-slate-500 block mt-0.5">
-                  {CLASS_LABELS[profile.classLevel || "p5"]}
-                </span>
-              )}
+            </div>
+
+            {/* Gamification Stats (Always docked to Top Right of Row 1 so it NEVER overlaps Class Pill below) */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <Streak days={streakDays} />
+              <div className={shakeHearts ? "animate-shake" : ""}>
+                <Hearts count={hearts} max={maxHearts} showCount={true} />
+              </div>
             </div>
           </div>
 
-          {/* Gamification Stats */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Streak days={streakDays} />
-            <div className={shakeHearts ? "animate-shake" : ""}>
-              <Hearts count={hearts} max={maxHearts} showCount={true} />
-            </div>
+          {/* Bottom Row on Mobile (or inline right of name on wider screens): Dedicated Class Pill Line */}
+          <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start pt-1 border-t border-slate-100 sm:border-0 sm:pt-0">
+            {showClassSwitcher ? (
+              <button
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="flex items-center gap-1 text-[12px] font-extrabold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 active:scale-95 px-2.5 py-1 rounded-xl border border-emerald-300/80 transition-all shadow-2xs"
+              >
+                <span>{CLASS_LABELS[profile.classLevel || "p5"]} · Switch Class</span>
+                <ChevronDown className="w-3.5 h-3.5 text-emerald-700" />
+              </button>
+            ) : (
+              <span className="text-[12px] font-bold text-slate-500 block px-1">
+                {CLASS_LABELS[profile.classLevel || "p5"]}
+              </span>
+            )}
           </div>
+
         </div>
       </header>
 

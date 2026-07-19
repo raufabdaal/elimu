@@ -25,8 +25,11 @@ export default function Celebration({
       const t = setTimeout(() => {
         setVisible(false);
         onDone?.();
-      }, 2200);
+      }, 1400); // Shorter, snappy 1.4s max duration
       return () => clearTimeout(t);
+    } else {
+      // Instantly hide celebration if parent changes `show` to false (e.g. advancing to next question!)
+      setVisible(false);
     }
   }, [show, onDone]);
 
@@ -45,14 +48,15 @@ export default function Celebration({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           className="fixed sm:absolute inset-0 z-[80] flex items-center justify-center bg-black/45 backdrop-blur-sm pointer-events-none p-4 overflow-hidden"
         >
           <motion.div
-            initial={{ scale: 0.5, y: 40, opacity: 0 }}
+            initial={{ scale: 0.5, y: 35, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.8, y: -30, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 24 }}
-            className="bg-white rounded-[32px] p-8 max-w-sm w-full border-4 border-emerald-400 shadow-2xl text-center pointer-events-auto relative"
+            exit={{ scale: 0.8, y: -20, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 26 }}
+            className="bg-white rounded-[32px] p-8 max-w-sm w-full border-4 border-emerald-400 shadow-2xl text-center pointer-events-none relative"
           >
             {/* Particle burst ring */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible">
@@ -65,7 +69,7 @@ export default function Celebration({
                     key={p.id}
                     initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
                     animate={{ x, y, scale: [0, 1.2, 0.4], opacity: [1, 1, 0] }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    transition={{ duration: 1.1, ease: "easeOut" }}
                     className="absolute w-3 h-3 rounded-full"
                     style={{ backgroundColor: p.color }}
                   />
@@ -75,7 +79,7 @@ export default function Celebration({
 
             <div className="relative flex justify-center items-center mb-5">
               <motion.div
-                animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.25, 1] }}
+                animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
                 transition={{ duration: 0.8, repeat: Infinity }}
                 className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 border-4 border-emerald-300 flex items-center justify-center text-white shadow-lg relative z-10"
               >
@@ -101,7 +105,7 @@ export default function Celebration({
             <motion.p
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.15 }}
               className="text-sm font-extrabold text-emerald-800 bg-emerald-100 px-4 py-2 rounded-2xl inline-block mt-2 shadow-inner border border-emerald-300"
             >
               {subMessage}
