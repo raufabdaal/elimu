@@ -1,4 +1,4 @@
-import { ClassLevel, Subject, Question } from "./types";
+import { ClassLevel, Subject, Question, SubjectId, Topic } from "./types";
 
 export const CLASS_LABELS: Record<ClassLevel, string> = {
   p4: "Primary 4",
@@ -10,7 +10,8 @@ export const CLASS_LABELS: Record<ClassLevel, string> = {
 export interface TopicData {
   id: string;
   name: string;
-  subjectId: "math" | "sst";
+  subjectId: SubjectId | "math" | "sst" | "sci" | "eng";
+  classLevel?: ClassLevel;
   questions: Question[];
 }
 
@@ -487,40 +488,340 @@ const TOPICS: TopicData[] = [
       },
     ],
   },
+  // =====================================================
+  // P5 MATHEMATICS - "FRACTIONS & DECIMALS"
+  // =====================================================
+  {
+    id: "p5-math-fractions",
+    name: "Fractions & Decimals",
+    subjectId: "math",
+    classLevel: "p5",
+    questions: [
+      {
+        id: "p5mf-1",
+        type: "multiple_choice",
+        question: "What is 1/2 + 1/4?",
+        options: [
+          { id: "a", text: "2/6", correct: false },
+          { id: "b", text: "3/4", correct: true },
+          { id: "c", text: "1/6", correct: false },
+          { id: "d", text: "2/4", correct: false },
+        ],
+        explanation: "To add fractions with different denominators, find a common denominator. 1/2 = 2/4. Then 2/4 + 1/4 = 3/4.",
+        deepDive: "Fractions represent parts of a whole. Always make sure bottom numbers (denominators) match when adding or subtracting!",
+      },
+      {
+        id: "p5mf-2",
+        type: "true_false",
+        question: "In the fraction 3/5, the top number (3) is called the numerator.",
+        answer: "true",
+        explanation: "The top number is always the numerator, showing how many parts we have.",
+        deepDive: "The bottom number (5) is the denominator, showing into how many equal parts the whole is divided.",
+      },
+      {
+        id: "p5mf-3",
+        type: "short_answer",
+        question: "What is 0.5 expressed as a common fraction in simplest form?",
+        answer: "1/2",
+        hint: "Think about half of 1",
+        explanation: "0.5 is five-tenths (5/10), which simplifies by dividing both numerator and denominator by 5 to get 1/2.",
+      },
+      {
+        id: "p5mf-4",
+        type: "ordering",
+        question: "Arrange these fractions from smallest to largest value.",
+        items: [
+          { id: "f1", text: "1/8" },
+          { id: "f2", text: "1/4" },
+          { id: "f3", text: "1/2" },
+          { id: "f4", text: "3/4" },
+        ],
+        correctOrder: ["f1", "f2", "f3", "f4"],
+        explanation: "1/8 (0.125) is smaller than 1/4 (0.25), which is smaller than 1/2 (0.5), and 3/4 (0.75) is the largest.",
+      },
+      {
+        id: "p5mf-5",
+        type: "multi_select",
+        question: "Which of these fractions are equivalent to 1/2? (Select all that apply)",
+        options: [
+          { id: "e1", text: "2/4", correct: true },
+          { id: "e2", text: "3/6", correct: true },
+          { id: "e3", text: "2/5", correct: false },
+          { id: "e4", text: "5/10", correct: true },
+        ],
+        explanation: "2/4, 3/6, and 5/10 all simplify to 1/2 when you divide the numerator and denominator by the numerator.",
+      },
+      {
+        id: "p5mf-6",
+        type: "matching",
+        question: "Match each decimal value with its equivalent fraction.",
+        pairs: [
+          { id: "m1", left: "0.25", right: "1/4" },
+          { id: "m2", left: "0.5", right: "1/2" },
+          { id: "m3", left: "0.75", right: "3/4" },
+          { id: "m4", left: "0.1", right: "1/10" },
+        ],
+        explanation: "Decimals and fractions are two ways to write the same part of a whole number.",
+      },
+    ],
+  },
+
+  // =====================================================
+  // P5 INTEGRATED SCIENCE - "THE HUMAN BODY & HEALTH"
+  // =====================================================
+  {
+    id: "p5-sci-humanbody",
+    name: "The Human Body & Sensory Organs",
+    subjectId: "sci",
+    classLevel: "p5",
+    questions: [
+      {
+        id: "p5sh-1",
+        type: "multiple_choice",
+        question: "Which organ is responsible for pumping blood throughout the human body?",
+        options: [
+          { id: "a", text: "Lungs", correct: false },
+          { id: "b", text: "Heart", correct: true },
+          { id: "c", text: "Brain", correct: false },
+          { id: "d", text: "Kidneys", correct: false },
+        ],
+        explanation: "The heart pumps oxygen-rich blood through blood vessels to all parts of the body.",
+      },
+      {
+        id: "p5sh-2",
+        type: "true_false",
+        question: "The human skeleton provides support and protects internal organs.",
+        answer: "true",
+        explanation: "Bones like the skull protect the brain, and ribs protect the heart and lungs.",
+      },
+      {
+        id: "p5sh-3",
+        type: "matching",
+        question: "Match each sensory organ to its primary sense.",
+        pairs: [
+          { id: "so1", left: "Eyes", right: "Sight" },
+          { id: "so2", left: "Ears", right: "Hearing" },
+          { id: "so3", left: "Skin", right: "Touch" },
+          { id: "so4", left: "Tongue", right: "Taste" },
+        ],
+        explanation: "Our sensory organs help us detect changes and respond to our environment.",
+      },
+    ],
+  },
+
+  // =====================================================
+  // P5 ENGLISH LANGUAGE - "VERBS & TENSES"
+  // =====================================================
+  {
+    id: "p5-eng-tenses",
+    name: "Verbs, Tenses & Parts of Speech",
+    subjectId: "eng",
+    classLevel: "p5",
+    questions: [
+      {
+        id: "p5et-1",
+        type: "multiple_choice",
+        question: "Choose the correct past tense of the irregular verb 'go'.",
+        options: [
+          { id: "a", text: "goed", correct: false },
+          { id: "b", text: "went", correct: true },
+          { id: "c", text: "gone", correct: false },
+          { id: "d", text: "going", correct: false },
+        ],
+        explanation: "'Go' is an irregular verb. The simple past tense is 'went' (e.g., Yesterday I went to school).",
+      },
+      {
+        id: "p5et-2",
+        type: "short_answer",
+        question: "Write the plural form of the noun 'Child'.",
+        answer: "Children",
+        hint: "It does not end with 's'",
+        explanation: "'Child' changes to 'Children' in the plural form.",
+      },
+      {
+        id: "p5et-3",
+        type: "true_false",
+        question: "An adjective is a word that describes a noun or pronoun.",
+        answer: "true",
+        explanation: "For example, in 'beautiful Uganda', 'beautiful' is an adjective describing the noun 'Uganda'.",
+      },
+    ],
+  },
 ];
-
 export function getTopic(topicId: string): TopicData | undefined {
-  return TOPICS.find((t) => t.id === topicId);
+  if (!topicId) return undefined;
+  // Direct ID match
+  const exact = TOPICS.find((t) => t.id === topicId);
+  if (exact) return exact;
+
+  // If queried by short alias like 'fractions'
+  if (topicId === "fractions") {
+    return TOPICS.find((t) => t.id === "p5-math-fractions");
+  }
+
+  // Partial match fallback
+  return TOPICS.find((t) => t.id.includes(topicId) || topicId.includes(t.id));
 }
 
-export function getTopicsForClass(): TopicData[] {
-  return TOPICS;
+export function getTopicsForClass(classLevel?: ClassLevel): TopicData[] {
+  if (!classLevel) return TOPICS;
+  return TOPICS.filter((t) => !t.classLevel || t.classLevel === classLevel || t.id.startsWith(classLevel));
 }
 
-export function getSubjects(classLevel: ClassLevel): Subject[] {
-  const topics = getTopicsForClass();
+export function getSubjects(classLevel: ClassLevel = "p5"): Subject[] {
+  const allTopics = TOPICS;
+
+  // Filter topics for the current class or general starters
+  const classTopics = allTopics.filter((t) => {
+    if (t.classLevel === classLevel) return true;
+    if (t.id.startsWith(classLevel)) return true;
+    // For testing/preview, if P7 SST is shown or P5 starters
+    if (classLevel === "p7" && t.id.includes("uganda-session")) return true;
+    if (classLevel === "p5" && (t.id.includes("fractions") || t.id.includes("sci-humanbody") || t.id.includes("eng-tenses"))) return true;
+    return false;
+  });
+
+  const getTopicsBySubject = (subId: SubjectId) => {
+    const matched = classTopics.filter((t) => t.subjectId === subId);
+    
+    // Return actual topics if present
+    if (matched.length > 0) {
+      return matched.map((t) => ({
+        id: t.id,
+        name: t.name,
+        subtopicCount: t.questions.length,
+        completed: t.id === "p7-uganda-session-1" || t.id === "p5-sci-humanbody",
+        inProgress: t.id === "p5-math-fractions" || t.id === "p7-uganda-session-2",
+        accuracy: t.id === "p5-math-fractions" ? 82 : t.id === "p7-uganda-session-1" ? 90 : 75,
+      }));
+    }
+
+    // Otherwise return curriculum topic slots for the chosen class so the UI is fully prepped & browsable
+    return getStarterTopicsForClassAndSubject(classLevel, subId);
+  };
+
   return [
-    {
-      id: "sst",
-      name: "Social Studies",
-      icon: "sst",
-      topics: topics
-        .filter((t) => t.subjectId === "sst")
-        .map((t) => ({
-          id: `${classLevel}-sst-${t.id}`,
-          name: t.name,
-          subtopicCount: t.questions.length,
-          completed: false,
-          inProgress: t.id.includes("p7-uganda-session"),
-        })),
-    },
     {
       id: "math",
       name: "Mathematics",
       icon: "math",
-      topics: [],
+      colorTheme: "blue",
+      topics: getTopicsBySubject("math"),
+    },
+    {
+      id: "sst",
+      name: "Social Studies",
+      icon: "sst",
+      colorTheme: "amber",
+      topics: getTopicsBySubject("sst"),
+    },
+    {
+      id: "sci",
+      name: "Integrated Science",
+      icon: "sci",
+      colorTheme: "emerald",
+      topics: getTopicsBySubject("sci"),
+    },
+    {
+      id: "eng",
+      name: "English Language",
+      icon: "eng",
+      colorTheme: "rose",
+      topics: getTopicsBySubject("eng"),
     },
   ];
+}
+
+function getStarterTopicsForClassAndSubject(classLevel: ClassLevel, subId: SubjectId): Topic[] {
+  const map: Record<ClassLevel, Record<SubjectId, { id: string; name: string; count: number }[]>> = {
+    p4: {
+      math: [
+        { id: "p4-math-numbers", name: "Whole Numbers & Place Value", count: 8 },
+        { id: "p4-math-addition", name: "Addition & Subtraction up to 10,000", count: 10 },
+        { id: "p4-math-shapes", name: "Basic Geometric Shapes & Perimeter", count: 6 },
+      ],
+      sst: [
+        { id: "p4-sst-district", name: "Our District & Local Leaders", count: 8 },
+        { id: "p4-sst-compass", name: "Using a Compass & Map Symbols", count: 7 },
+      ],
+      sci: [
+        { id: "p4-sci-plants", name: "Parts of a Flowering Plant", count: 9 },
+        { id: "p4-sci-animals", name: "Domestic & Wild Animals of Uganda", count: 8 },
+      ],
+      eng: [
+        { id: "p4-eng-nouns", name: "Common & Proper Nouns", count: 8 },
+        { id: "p4-eng-reading", name: "Reading & Simple Comprehension", count: 6 },
+      ],
+    },
+    p5: {
+      math: [
+        { id: "p5-math-fractions", name: "Fractions & Decimals", count: 6 },
+        { id: "p5-math-multiplication", name: "Multiplication & Long Division", count: 10 },
+        { id: "p5-math-time", name: "Time, Speed & Distance", count: 8 },
+      ],
+      sst: [
+        { id: "p5-sst-regions", name: "Regions of Uganda & Physical Features", count: 10 },
+        { id: "p5-sst-vegetation", name: "Natural Vegetation & Climate", count: 8 },
+      ],
+      sci: [
+        { id: "p5-sci-humanbody", name: "The Human Body & Sensory Organs", count: 3 },
+        { id: "p5-sci-water", name: "Sanitation, Hygiene & Safe Water", count: 8 },
+      ],
+      eng: [
+        { id: "p5-eng-tenses", name: "Verbs, Tenses & Parts of Speech", count: 3 },
+        { id: "p5-eng-vocabulary", name: "Synonyms, Antonyms & Homophones", count: 8 },
+      ],
+    },
+    p6: {
+      math: [
+        { id: "p6-math-percentages", name: "Percentages, Ratios & Proportions", count: 10 },
+        { id: "p6-math-algebra", name: "Simple Algebraic Expressions", count: 8 },
+        { id: "p6-math-angles", name: "Angles, Parallel Lines & Triangles", count: 8 },
+      ],
+      sst: [
+        { id: "p6-sst-eac", name: "East African Community & Neighbors", count: 12 },
+        { id: "p6-sst-history", name: "Early Migration & Kingdoms of East Africa", count: 10 },
+      ],
+      sci: [
+        { id: "p6-sci-electricity", name: "Simple Electric Circuits & Magnetism", count: 10 },
+        { id: "p6-sci-sound", name: "Sound, Light & Heat Energy", count: 8 },
+      ],
+      eng: [
+        { id: "p6-eng-comprehension", name: "Advanced Reading Comprehension", count: 8 },
+        { id: "p6-eng-clauses", name: "Direct & Indirect Speech", count: 8 },
+      ],
+    },
+    p7: {
+      math: [
+        { id: "p7-math-geometry", name: "Advanced Geometry & Volume", count: 12 },
+        { id: "p7-math-business", name: "Business Math: Profit, Loss & Interest", count: 10 },
+        { id: "p7-math-sets", name: "Set Theory & Venn Diagrams", count: 8 },
+      ],
+      sst: [
+        { id: "p7-uganda-session-1", name: "Our Country Uganda (Session 1)", count: 12 },
+        { id: "p7-uganda-session-2", name: "Our Country Uganda (Session 2)", count: 12 },
+        { id: "p7-uganda-session-3", name: "Our Country Uganda (Session 3)", count: 15 },
+      ],
+      sci: [
+        { id: "p7-sci-energy", name: "Renewable & Non-Renewable Energy Resources", count: 10 },
+        { id: "p7-sci-ecosystem", name: "Ecosystems & Environmental Conservation", count: 10 },
+      ],
+      eng: [
+        { id: "p7-eng-composition", name: "PLE Essay Writing & Letter Formatting", count: 8 },
+        { id: "p7-eng-grammar", name: "Comprehensive Grammar & Vocabulary Review", count: 12 },
+      ],
+    },
+  };
+
+  const list = map[classLevel]?.[subId] || [];
+  return list.map((item, index) => ({
+    id: item.id,
+    name: item.name,
+    subtopicCount: item.count,
+    completed: index === 0 && (classLevel === "p5" || classLevel === "p7"),
+    inProgress: index === 1,
+    accuracy: index === 0 ? 85 : undefined,
+  }));
 }
 
 export const PRACTICE_QUESTIONS = TOPICS.flatMap((topic) =>

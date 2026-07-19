@@ -9,211 +9,155 @@ function getAudioContext() {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     audioContext = new AudioContextClass();
   }
+  if (audioContext && audioContext.state === "suspended") {
+    audioContext.resume();
+  }
   return audioContext;
 }
 
-// ===== CORE SOUNDS =====
+// ===== DUOLINGO-STYLE RICH HARMONIC SOUNDS =====
 
+/**
+ * Joyful 3-note rising major chord + sparkle (Correct Answer)
+ */
 export function playCorrectSound() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const oscillator = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  oscillator.type = "sine";
-  oscillator.frequency.value = 880;
-
-  filter.type = "lowpass";
-  filter.frequency.value = 1200;
-
-  gain.gain.value = 0.3;
-
   const t = ctx.currentTime;
+  // Major triad notes: C6 (1046.5 Hz), E6 (1318.5 Hz), G6 (1568 Hz), C7 (2093 Hz)
+  const notes = [1046.5, 1318.5, 1568, 2093];
 
-  oscillator.frequency.setValueAtTime(880, t);
-  oscillator.frequency.linearRampToValueAtTime(1320, t + 0.25);
+  notes.forEach((freq, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  gain.gain.setValueAtTime(0.3, t);
-  gain.gain.linearRampToValueAtTime(0.0, t + 0.35);
+    osc.type = index === 3 ? "sine" : "triangle";
+    osc.frequency.setValueAtTime(freq, t + index * 0.06);
 
-  const compressor = ctx.createDynamicsCompressor();
+    gain.gain.setValueAtTime(0, t + index * 0.06);
+    gain.gain.linearRampToValueAtTime(0.18, t + index * 0.06 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.06 + 0.38);
 
-  oscillator.connect(filter);
-  filter.connect(gain);
-  gain.connect(compressor);
-  compressor.connect(ctx.destination);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
 
-  oscillator.start(t);
-  oscillator.stop(t + 0.4);
+    osc.start(t + index * 0.06);
+    osc.stop(t + index * 0.06 + 0.4);
+  });
 }
 
+/**
+ * Soft descending two-tone interval + low bass cushion (Wrong Answer / Heart Loss)
+ */
 export function playWrongSound() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const oscillator = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  oscillator.type = "sawtooth";
-  oscillator.frequency.value = 220;
-
-  gain.gain.value = 0.25;
-
   const t = ctx.currentTime;
+  const notes = [311.1, 261.6]; // D#4 -> C#4 soft interval
 
-  oscillator.frequency.setValueAtTime(220, t);
-  oscillator.frequency.linearRampToValueAtTime(180, t + 0.3);
+  notes.forEach((freq, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
-  gain.gain.setValueAtTime(0.25, t);
-  gain.gain.linearRampToValueAtTime(0.0, t + 0.35);
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(freq, t + index * 0.14);
 
-  oscillator.connect(gain);
-  gain.connect(ctx.destination);
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(600, t + index * 0.14);
 
-  oscillator.start(t);
-  oscillator.stop(t + 0.4);
+    gain.gain.setValueAtTime(0, t + index * 0.14);
+    gain.gain.linearRampToValueAtTime(0.2, t + index * 0.14 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.14 + 0.28);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(t + index * 0.14);
+    osc.stop(t + index * 0.14 + 0.3);
+  });
+
+  // Low bass cushion
+  const bass = ctx.createOscillator();
+  const bassGain = ctx.createGain();
+  bass.type = "sine";
+  bass.frequency.setValueAtTime(110, t);
+  bass.frequency.linearRampToValueAtTime(80, t + 0.35);
+  bassGain.gain.setValueAtTime(0.15, t);
+  bassGain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+  bass.connect(bassGain);
+  bassGain.connect(ctx.destination);
+  bass.start(t);
+  bass.stop(t + 0.4);
 }
-
-export function playClickSound() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const oscillator = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  oscillator.type = "sine";
-  oscillator.frequency.value = 660;
-
-  gain.gain.value = 0.15;
-
-  const t = ctx.currentTime;
-  gain.gain.setValueAtTime(0.15, t);
-  gain.gain.linearRampToValueAtTime(0, t + 0.1);
-
-  oscillator.connect(gain);
-  gain.connect(ctx.destination);
-
-  oscillator.start(t);
-  oscillator.stop(t + 0.12);
-}
-
-// ===== DUOLINGO-STYLE ENGAGEMENT SOUNDS =====
 
 export function playHeartLossSound() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  osc.type = "sawtooth";
-  osc.frequency.value = 180;
-
-  filter.type = "lowpass";
-  filter.frequency.value = 600;
-
-  gain.gain.value = 0.35;
-
-  const t = ctx.currentTime;
-
-  osc.frequency.setValueAtTime(180, t);
-  osc.frequency.linearRampToValueAtTime(120, t + 0.4);
-
-  gain.gain.setValueAtTime(0.35, t);
-  gain.gain.linearRampToValueAtTime(0, t + 0.5);
-
-  osc.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start(t);
-  osc.stop(t + 0.55);
+  playWrongSound();
 }
 
+/**
+ * Sparkling 5-note rising pentatonic sequence (Streak Bonus / Level Up)
+ */
 export function playStreakSound() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = "triangle";
-  osc.frequency.value = 880;
-
-  gain.gain.value = 0.4;
-
   const t = ctx.currentTime;
+  // C5, D5, E5, G5, C6
+  const notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
 
-  // Rising celebratory arpeggio
-  osc.frequency.setValueAtTime(880, t);
-  osc.frequency.linearRampToValueAtTime(1320, t + 0.15);
-  osc.frequency.linearRampToValueAtTime(1760, t + 0.3);
+  notes.forEach((freq, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-  gain.gain.setValueAtTime(0.4, t);
-  gain.gain.linearRampToValueAtTime(0, t + 0.45);
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, t + index * 0.05);
 
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0, t + index * 0.05);
+    gain.gain.linearRampToValueAtTime(0.22, t + index * 0.05 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.05 + 0.35);
 
-  osc.start(t);
-  osc.stop(t + 0.5);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(t + index * 0.05);
+    osc.stop(t + index * 0.05 + 0.38);
+  });
 }
 
 export function playLevelUpSound() {
+  playStreakSound();
+}
+
+/**
+ * Crisp woody pop sound (Tactile Button Click)
+ */
+export function playButtonClick() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
+  const t = ctx.currentTime;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   const filter = ctx.createBiquadFilter();
 
   osc.type = "sine";
-  osc.frequency.value = 660;
+  osc.frequency.setValueAtTime(900, t);
+  osc.frequency.exponentialRampToValueAtTime(300, t + 0.06);
 
   filter.type = "lowpass";
-  filter.frequency.value = 1800;
+  filter.frequency.setValueAtTime(1400, t);
 
-  gain.gain.value = 0.35;
-
-  const t = ctx.currentTime;
-
-  osc.frequency.setValueAtTime(660, t);
-  osc.frequency.linearRampToValueAtTime(990, t + 0.2);
-  osc.frequency.linearRampToValueAtTime(1320, t + 0.4);
-
-  gain.gain.setValueAtTime(0.35, t);
-  gain.gain.linearRampToValueAtTime(0, t + 0.55);
+  gain.gain.setValueAtTime(0.18, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
 
   osc.connect(filter);
   filter.connect(gain);
   gain.connect(ctx.destination);
 
   osc.start(t);
-  osc.stop(t + 0.6);
-}
-
-export function playButtonClick() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = "sine";
-  osc.frequency.value = 520;
-
-  gain.gain.value = 0.12;
-
-  const t = ctx.currentTime;
-  gain.gain.setValueAtTime(0.12, t);
-  gain.gain.linearRampToValueAtTime(0, t + 0.08);
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start(t);
-  osc.stop(t + 0.1);
+  osc.stop(t + 0.08);
 }
