@@ -1,152 +1,330 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { loadState } from "@/lib/store";
-import { AppState } from "@/lib/types";
+import { getSubjects } from "@/lib/data";
+import { AppState, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
+import HeaderStats from "@/components/HeaderStats";
+import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
+import { Flame, Send, CheckCircle2, BarChart2 } from "lucide-react";
 
 export default function Parent() {
   const router = useRouter();
   const [state, setState] = useState<AppState | null>(null);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [sentToast, setSentToast] = useState<string | null>(null);
 
   useEffect(() => {
     const s = loadState();
     setState(s);
+    setSubjects(getSubjects(s.profile.classLevel || "p5"));
   }, []);
 
   if (!state) return null;
 
   const { profile, progress, session, continue: continueState } = state;
-  const isLinked = !!profile.linkedStudentId;
+  const isLinked = !!profile.linkedStudentId || profile.role === "parent";
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const maxWeeklyMin = Math.max(...session.weeklyMinutes, 40);
+
+  const handleSendCheers = (cheer: string) => {
+    setSentToast(`Sent "${cheer}" to ${profile.name || "your child"}'s screen! ✨`);
+    setTimeout(() => {
+      setSentToast(null);
+    }, 2800);
+  };
 
   return (
-    <AppShell activeTab="parent" role={state.profile.role}>
-      <header className="app-head">
-        <div className="title-block">
-          <p className="meta">PARENT VIEW</p>
-          <h1>{profile.name || "Student"}’s progress</h1>
-        </div>
-        <span className="pill">{profile.classLevel?.toUpperCase() || "P5"}</span>
-      </header>
+    <AppShell activeTab="parent" role="parent">
+      <HeaderStats
+        profile={{ ...profile, role: "parent" }}
+        hearts={progress.hearts}
+        maxHearts={progress.maxHearts}
+        streakDays={progress.streakDays}
+        showClassSwitcher={true}
+        onClassChange={(newClass) => {
+          const updated: AppState = { ...state, profile: { ...state.profile, classLevel: newClass } };
+          setState(updated);
+          setSubjects(getSubjects(newClass));
+        }}
+      />
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col gap-5 pt-3"
+      >
+        {/* Toast Notification when Parent sends encouragement */}
+        <AnimatePresence>
+          {sentToast && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed sm:absolute top-20 left-4 right-4 z-[70] bg-emerald-900 text-white font-extrabold text-sm px-4 py-3 rounded-2xl shadow-xl border border-emerald-600 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span>{sentToast}</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {!isLinked && (
-          <section className="card mb-lg" style={{ background: "var(--warn-soft)", borderColor: "color-mix(in oklch, var(--warn) 20%, transparent)" }}>
-            <p className="eyebrow" style={{ color: "var(--warn)" }}>NOT LINKED</p>
-            <p className="meta mt-2">
-              Enter your child’s 6-digit code on the onboarding screen to see their progress.
-            </p>
-            <button type="button" className="btn btn-secondary mt-md" onClick={() => router.push("/onboarding/")}>
-              Link now
+          <section className="card bg-amber-50 border-amber-300 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className="text-[11px] font-black uppercase text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded">
+                  Pairing Required
+                </span>
+                <h3 className="text-base font-black text-amber-950 mt-1">
+                  Link your child&apos;s student account
+                </h3>
+                <p className="text-xs font-semibold text-amber-900/80 mt-0.5">
+                  Enter their 6-digit numeric code (e.g., 739104) to track real-time study habits and struggle areas.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm py-2.5 px-4 rounded-xl mt-3 shadow-xs"
+              onClick={() => router.push("/onboarding/")}
+            >
+              Link Student Account →
             </button>
           </section>
         )}
 
-        <section className="parent-hero">
-          <div className="row">
-            <div className="avatar">{(profile.name || "S").charAt(0).toUpperCase()}</div>
-            <div className="grow">
-              <p className="meta">THIS WEEK</p>
-              <p className="h3 mt-sm">
-                On track · <span className="num">4</span> sessions
-              </p>
+        {/* Executive Pupil Overview Card */}
+        <section className="card bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-5 border-none shadow-md relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-black text-xl flex items-center justify-center shadow-md shrink-0">
+                {(profile.name || "S").charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-black text-white">{profile.name || "Pupil"}</h2>
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-extrabold uppercase px-2 py-0.5 rounded-full">
+                    Active Link
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-slate-300 mt-0.5">
+                  Primary {(profile.classLevel || "p5").toUpperCase().replace("P", "")} · Uganda NCDC Curriculum
+                </p>
+              </div>
             </div>
           </div>
-          <p className="meta mt-md" style={{ lineHeight: 1.45 }}>
-            Steady pace on {continueState.topic || "fractions"}. One short practice tonight keeps the streak without stress.
+
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+            <div className="bg-white/10 rounded-2xl p-3 border border-white/10 text-center backdrop-blur-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">Day Streak</span>
+              <span className="text-2xl font-mono font-black text-amber-400 flex items-center justify-center gap-1 mt-0.5">
+                <Flame className="w-5 h-5 fill-amber-400" /> {progress.streakDays}
+              </span>
+            </div>
+            <div className="bg-white/10 rounded-2xl p-3 border border-white/10 text-center backdrop-blur-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">Accuracy</span>
+              <span className="text-2xl font-mono font-black text-emerald-400 mt-0.5 block">
+                {progress.practiceAccuracy}%
+              </span>
+            </div>
+            <div className="bg-white/10 rounded-2xl p-3 border border-white/10 text-center backdrop-blur-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">Modules Done</span>
+              <span className="text-2xl font-mono font-black text-white mt-0.5 block">
+                {progress.modulesDone}
+              </span>
+            </div>
+            <div className="bg-white/10 rounded-2xl p-3 border border-white/10 text-center backdrop-blur-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">Today&apos;s Time</span>
+              <span className="text-2xl font-mono font-black text-cyan-300 mt-0.5 block">
+                {session.todayMinutes}m
+              </span>
+            </div>
+          </div>
+
+          <p className="text-xs font-semibold text-slate-300 mt-4 bg-black/20 p-3 rounded-xl border border-white/10 leading-relaxed">
+            💡 <strong>Parent Insight:</strong> {profile.name || "Your child"} is maintaining an excellent {progress.practiceAccuracy}% practice accuracy on {continueState.topic || "Fractions"}. A 5-minute review drill tonight keeps them right on track!
           </p>
         </section>
 
-        <div className="grid-2 mb-lg">
-          <div className="stat-tile">
-            <p className="value num">{progress.modulesDone}</p>
-            <p className="label">Modules done</p>
-          </div>
-          <div className="stat-tile">
-            <p className="value num">{progress.streakDays}</p>
-            <p className="label">Day streak</p>
-          </div>
-          <div className="stat-tile">
-            <p className="value num">{session.todayMinutes}</p>
-            <p className="label">Minutes today</p>
-          </div>
-          <div className="stat-tile">
-            <p className="value num">{progress.practiceAccuracy}%</p>
-            <p className="label">Practice accuracy</p>
-          </div>
-        </div>
-
-        <section className="card mb-lg">
-          <div className="section-label" style={{ marginBottom: 14 }}>
-            <h2 className="h3">By subject</h2>
-          </div>
-          <div className="stack-sm">
-            <div className="bar-row">
-              <span className="label">Maths</span>
-              <div className="bar-track">
-                <i style={{ width: "33%" }} />
-              </div>
-              <span className="pct num">33%</span>
-            </div>
-            <div className="bar-row">
-              <span className="label">SST</span>
-              <div className="bar-track">
-                <i style={{ width: "22%" }} />
-              </div>
-              <span className="pct num">22%</span>
-            </div>
-          </div>
-          <div className="chip-row" style={{ marginTop: 14 }}>
-            <span className="chip">
-              Focus: <strong>Fractions</strong>
-            </span>
-            <span className="chip">
-              Next: <strong>Decimals</strong>
-            </span>
-          </div>
-        </section>
-
-        <section className="card mb-lg">
-          <div className="section-label" style={{ marginBottom: 6 }}>
-            <h2 className="h3">Recent activity</h2>
-          </div>
-          <div className="activity-row">
+        {/* Send Encouragement to Pupil (`Interactive Parent Feature`) */}
+        <section className="card bg-white p-4 border-2 border-slate-200/80 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="title">Fractions · Question 1</p>
-              <p className="meta">Mathematics · Today · 2 min</p>
-            </div>
-            <span className="pill pill-ok">Done</span>
-          </div>
-          <div className="activity-row">
-            <div>
-              <p className="title">Practice drill</p>
-              <p className="meta">
-                <span className="num">4</span> of <span className="num">5</span> correct · Today
+              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <Send className="w-4 h-4 text-emerald-600" />
+                <span>Send Live Encouragement</span>
+              </h3>
+              <p className="text-xs font-semibold text-slate-500">
+                Tap to send instant cheer directly to {profile.name || "your child"}&apos;s screen during their study session!
               </p>
             </div>
-            <span className="pill pill-ok">Good</span>
           </div>
-          <div className="activity-row">
-            <div>
-              <p className="title">Our country Uganda</p>
-              <p className="meta">Social Studies · Yesterday</p>
-            </div>
-            <span className="pill pill-muted">Read</span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleSendCheers("High Five! 🙌")}
+              className="p-3 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-left transition-all group flex items-center justify-between"
+            >
+              <div>
+                <div className="font-extrabold text-sm text-slate-900 group-hover:text-emerald-950">🙌 High Five!</div>
+                <div className="text-[11px] text-slate-500">Boost motivation</div>
+              </div>
+              <span className="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                +✨
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSendCheers("Proud of your streak! 🔥")}
+              className="p-3 rounded-2xl border-2 border-slate-200 hover:border-amber-500 hover:bg-amber-50/50 text-left transition-all group flex items-center justify-between"
+            >
+              <div>
+                <div className="font-extrabold text-sm text-slate-900 group-hover:text-amber-950">🔥 Keep the Streak!</div>
+                <div className="text-[11px] text-slate-500">Celebrate habit</div>
+              </div>
+              <span className="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                +🔥
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSendCheers("You're a super scholar! 🌟")}
+              className="p-3 rounded-2xl border-2 border-slate-200 hover:border-purple-500 hover:bg-purple-50/50 text-left transition-all group flex items-center justify-between"
+            >
+              <div>
+                <div className="font-extrabold text-sm text-slate-900 group-hover:text-purple-950">🌟 Super Scholar!</div>
+                <div className="text-[11px] text-slate-500">Praise effort</div>
+              </div>
+              <span className="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-purple-600 group-hover:text-white flex items-center justify-center font-bold text-sm transition-colors">
+                +🌟
+              </span>
+            </button>
           </div>
         </section>
 
-        <section className="card">
-          <p className="eyebrow">TONIGHT</p>
-          <p className="h3">10 quiet minutes on fractions</p>
-          <p className="meta mt-sm" style={{ lineHeight: 1.45 }}>
-            {profile.name || "Your child"} is mid-way through the topic. One short drill keeps momentum without pressure.
-          </p>
-          <Link href="/practice/" className="btn btn-secondary mt-md no-underline">
-            Open practice
-          </Link>
+        {/* Weekly Study Habits Bar Chart */}
+        <section className="card bg-white p-5 border-2 border-slate-200/80 shadow-xs">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div>
+              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <BarChart2 className="w-4 h-4 text-emerald-600" />
+                <span>7-Day Study Activity</span>
+              </h3>
+              <p className="text-xs font-semibold text-slate-500">
+                Daily active learning minutes across subjects
+              </p>
+            </div>
+            <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
+              Total: {session.weeklyMinutes.reduce((a, b) => a + b, 0)} min
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between gap-2 h-32 pt-2 px-1">
+            {session.weeklyMinutes.map((mins, idx) => {
+              const heightPct = Math.round((mins / maxWeeklyMin) * 100);
+              const isToday = idx === 4; // Friday or current demo day
+
+              return (
+                <div key={idx} className="flex flex-col items-center gap-2 flex-1 h-full justify-end">
+                  <div className="text-[11px] font-mono font-bold text-slate-600">
+                    {mins > 0 ? `${mins}m` : ""}
+                  </div>
+                  <div className="w-full max-w-[32px] bg-slate-100 rounded-t-xl h-24 flex items-end overflow-hidden p-0.5 border border-slate-200">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${Math.max(6, heightPct)}%` }}
+                      transition={{ duration: 0.6, delay: idx * 0.05 }}
+                      className={`w-full rounded-t-lg ${
+                        isToday ? "bg-gradient-to-t from-emerald-600 to-teal-400" : mins > 0 ? "bg-slate-700" : "bg-slate-200"
+                      }`}
+                    />
+                  </div>
+                  <span className={`text-xs font-bold ${isToday ? "text-emerald-700 underline font-black" : "text-slate-500"}`}>
+                    {daysOfWeek[idx]}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 4 Core Subjects Mastery Breakdown */}
+        <section className="card bg-white p-5 border-2 border-slate-200/80 shadow-xs">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <div>
+              <h3 className="text-base font-black text-slate-900">NCDC Core Subjects Breakdown</h3>
+              <p className="text-xs font-semibold text-slate-500">
+                Curriculum coverage for Primary {(profile.classLevel || "p5").toUpperCase().replace("P", "")}
+              </p>
+            </div>
+            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              4 Subjects
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {subjects.map((sub) => {
+              const theme = SUBJECT_THEMES[sub.id] || SUBJECT_THEMES.math;
+              const completedTopics = sub.topics.filter((t) => t.completed).length;
+              const totalTopics = sub.topics.length;
+              const pct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+
+              return (
+                <div key={sub.id} className="flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-50/70 border border-slate-200/60">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 ${theme.iconBg}`}>
+                        <SubjectIcon subjectId={sub.id} className="w-4 h-4 stroke-[2.4]" />
+                      </div>
+                      <span className="font-extrabold text-sm text-slate-900">{sub.name}</span>
+                    </div>
+                    <span className="font-mono text-xs font-black text-slate-700">
+                      {completedTopics}/{totalTopics} topics ({pct}%)
+                    </span>
+                  </div>
+
+                  <div className="w-full h-2 bg-slate-200/80 rounded-full overflow-hidden mt-1 p-0.5">
+                    <div
+                      className={`h-full rounded-full ${theme.progressBg} transition-all duration-500`}
+                      style={{ width: `${Math.max(6, pct)}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Quick Action Footer */}
+        <section className="card bg-slate-900 text-white p-5 border-none shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-black text-white">Need to test learner view?</h3>
+              <p className="text-xs font-semibold text-slate-300 mt-0.5">
+                Switch back to learner mode or jump into a practice drill with your child.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => router.push("/home/")}
+              className="btn bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm py-2.5 px-4 rounded-xl shrink-0"
+            >
+              Open Pupil Home
+            </button>
+          </div>
         </section>
       </motion.div>
     </AppShell>

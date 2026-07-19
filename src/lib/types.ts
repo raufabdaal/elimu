@@ -2,6 +2,8 @@ export type Role = "learner" | "parent";
 
 export type ClassLevel = "p4" | "p5" | "p6" | "p7";
 
+export type SubjectId = "math" | "sst" | "sci" | "eng";
+
 export type QuestionType =
   | "multiple_choice"
   | "short_answer"
@@ -71,17 +73,20 @@ export interface Topic {
   subtopicCount: number;
   completed: boolean;
   inProgress?: boolean;
+  accuracy?: number;
 }
 
 export interface Subject {
-  id: "math" | "sst";
+  id: SubjectId;
   name: string;
-  icon: "math" | "sst";
+  icon: SubjectId;
+  colorTheme: string; // e.g., 'blue', 'amber', 'emerald', 'rose'
   topics: Topic[];
 }
 
 export interface ContinueState {
   subject?: string;
+  topicId?: string;
   topic?: string;
   subtopic?: string;
   module?: number;
@@ -118,7 +123,7 @@ export interface AppState {
   };
   continue: ContinueState;
   session: SessionStats;
-  topicProgress: Record<string, { accuracy: number; attempts: number; lastAttempt: string }>;
+  topicProgress: Record<string, { accuracy: number; attempts: number; lastAttempt: string; completed?: boolean }>;
 }
 
 export const DEFAULT_STATE: AppState = {
@@ -142,7 +147,8 @@ export const DEFAULT_STATE: AppState = {
   },
   continue: {
     subject: "Mathematics",
-    topic: "Fractions",
+    topicId: "p5-math-fractions",
+    topic: "Fractions & Decimals",
     subtopic: "What is a fraction?",
     module: 1,
     progress: 42,
@@ -152,7 +158,7 @@ export const DEFAULT_STATE: AppState = {
     weeklyMinutes: [20, 35, 15, 0, 18, 0, 0],
   },
   topicProgress: {
-    "p5-math-fractions": { accuracy: 0.82, attempts: 12, lastAttempt: new Date().toISOString() },
-    "p5-sst-uganda": { accuracy: 0.75, attempts: 5, lastAttempt: new Date().toISOString() },
+    "p5-math-fractions": { accuracy: 0.82, attempts: 12, lastAttempt: new Date().toISOString(), completed: false },
+    "p7-sst-session-1": { accuracy: 0.75, attempts: 5, lastAttempt: new Date().toISOString(), completed: true },
   },
 };

@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import { playCorrectSound } from "@/lib/sounds";
 
 const MESSAGES = [
-  "You're doing great!",
-  "Nice work!",
-  "Keep going!",
-  "That’s it!",
-  "Smart thinking!",
-  "You're on fire!",
-  "One step closer!",
-  "Brilliant!",
+  "You're doing fantastic! 🌟",
+  "Spot on! Keep rolling! 🔥",
+  "Smart thinking! 💡",
+  "Uganda's future champion! 🏆",
+  "That’s how it's done! ✨",
+  "Unstoppable focus! 🚀",
+  "Brilliant answer! 🎉",
 ];
 
 interface EncouragementToastProps {
@@ -22,7 +22,6 @@ interface EncouragementToastProps {
 
 export default function EncouragementToast({ trigger, playSound = true }: EncouragementToastProps) {
   const [message, setMessage] = useState<string | null>(null);
-  const [key, setKey] = useState(0);
 
   useEffect(() => {
     if (trigger === 0) {
@@ -32,16 +31,14 @@ export default function EncouragementToast({ trigger, playSound = true }: Encour
 
     const text = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setMessage(text);
-    setKey(prev => prev + 1); // force re-animation
     
     if (playSound) {
       playCorrectSound();
     }
 
-    // Shorter duration + auto-clear
     const t = setTimeout(() => {
       setMessage(null);
-    }, 1400);
+    }, 1600);
 
     return () => clearTimeout(t);
   }, [trigger, playSound]);
@@ -50,14 +47,17 @@ export default function EncouragementToast({ trigger, playSound = true }: Encour
     <AnimatePresence mode="wait">
       {message && (
         <motion.div
-          key={key}
-          initial={{ opacity: 0, y: 15, scale: 0.92 }}
+          key={trigger}
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.9 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-          className="fixed top-5 left-1/2 -translate-x-1/2 z-[65] px-4 py-2 rounded-full bg-foreground text-white text-sm font-semibold shadow-xl pointer-events-none"
+          transition={{ type: "spring", stiffness: 450, damping: 28 }}
+          className="fixed sm:absolute top-20 left-0 right-0 z-50 flex justify-center pointer-events-none px-4"
         >
-          {message}
+          <div className="bg-slate-900/95 text-white font-bold text-[14.5px] px-5 py-3 rounded-2xl shadow-xl border border-slate-700/80 flex items-center gap-2 backdrop-blur-md">
+            <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+            <span>{message}</span>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

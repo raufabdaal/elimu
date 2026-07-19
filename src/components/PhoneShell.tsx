@@ -18,8 +18,8 @@ export default function PhoneShell({
   noScrollPad = false,
 }: PhoneShellProps) {
   return (
-    <div className="stage">
-      <div className="phone">
+    <div className="app-shell">
+      <div className="app-container">
         <StatusBar />
         <div className={noScrollPad ? "scroll no-tab" : "scroll"}>{children}</div>
         {showTabBar && activeTab && <TabBar active={activeTab} />}

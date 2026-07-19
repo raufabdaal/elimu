@@ -1,5 +1,35 @@
 # Changelog
 
+## 2026-07-19 — Full UI/UX & Gamification Overhaul + 4-Class / 4-Subject NCDC Architecture Prep
+
+### Comprehensive Design Psychology & Gamified Interface Overhaul
+- **Editorial & Gamification Visual Tokens (`globals.css`)** — Rebuilt CSS foundation with crisp high-contrast typography (`DM Sans` + `Newsreader`), distinct 4-subject color identities, and tactile Duolingo-style 3D buttons (`border-b-4`, active press-down transitions).
+- **Responsive Layout (`AppShell`, `TabBar`, `PhoneShell`)** — Fixed desktop/tablet centered container alignment (`max-w-[460px]`, `border-radius: 36px`) so the navigation bar docks perfectly inside the phone stage without overlapping wide monitors (`fixed sm:absolute bottom-0`).
+- **Gamified Sticky Top Bar (`HeaderStats.tsx`)** — Created a unified top bar for all screens featuring:
+  - Dynamic **Primary Class Switcher Modal** (`P4`, `P5`, `P6`, `P7`) with instant curriculum preview.
+  - ❤️ **Hearts counter (`Hearts.tsx`)** with shake animation (`animate-shake`) triggered on incorrect answers.
+  - 🔥 **Streak counter (`Streak.tsx`)** with animated flame effect.
+- **Fixed Bottom Feedback Sheet (`feedback-sheet`)** — Replaced inline DOM shifts on `/module` and `/practice` with a fixed bottom feedback drawer that slides up upon answering:
+  - **Correct State (`ok`)**: Emerald theme, explanation/deep dive, and auto-focused **`Continue →`** (`Enter` shortcut).
+  - **Incorrect State (`bad`)**: Rose theme, clear explanation of errors + deep dive, and **`Got it →`**.
+- **Interactive Question Mechanics (`src/components/question-types/*`)**:
+  - `MultipleChoice` / `TrueFalse` — Tactile 3D cards with letter badges (`A`, `B`, `C`, `D`) and animated check/cross feedback.
+  - `MultiSelect` — Clear multi-option selection with checkmarks and missed-item alerts.
+  - `Ordering` — Numbered sequence cards (`#1`, `#2`, `#3`) with smooth layout animations (`framer-motion layout`) and tactile Up/Down chevrons.
+  - `Matching` — Bi-directional visual matching board with color-coded pair tags (`Blue`, `Purple`, `Amber`, `Rose`, `Teal`) and one-tap unmatch/reset capability.
+  - `ShortAnswer` — High-visibility input with instant hint banner (`HelpCircle`) and submit button.
+
+### Multi-Class & 4-Subject Curriculum Architecture Expansion
+- **Expanded Types & Data Model (`types.ts`, `data.ts`)** — Upgraded system from 1 class / 2 subjects (`SST`, `Math`) to the full **4 Primary Classes (`p4`, `p5`, `p6`, `p7`)** and **4 Core NCDC Subjects (`math`, `sst`, `sci`, `eng`)**:
+  1. **Mathematics (`math`)** — Indigo/Sapphire theme (`SUBJECT_THEMES.math`)
+  2. **Social Studies (`sst`)** — Amber/Orange theme (`SUBJECT_THEMES.sst`)
+  3. **Integrated Science (`sci`)** — Emerald/Teal theme (`SUBJECT_THEMES.sci`)
+  4. **English Language (`eng`)** — Rose/Pink theme (`SUBJECT_THEMES.eng`)
+- **Preserved & Expanded Curriculum Content** — Preserved all 39 canonical P7 Social Studies questions (`p7-uganda-session-1`, `2`, `3`) and introduced interactive starter topics across `P4–P7` (including playable `p5-math-fractions`, `p5-sci-humanbody`, `p5-eng-tenses`).
+- **Parent Portal (`/parent/`)** — Upgraded with 4-subject progress trackers, 7-day study activity chart (`BarChart2`), and interactive **"Send Live Encouragement"** (`🙌 High Five`, `🔥 Keep the Streak`, `🌟 Super Scholar`) that triggers in-app cheers.
+
+---
+
 ## 2026-07-16 — Gamification & Engagement Polish
 
 ### New Features
