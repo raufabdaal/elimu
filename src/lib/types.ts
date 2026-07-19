@@ -67,13 +67,34 @@ export interface BaseQuestion {
 
 export type Question = BaseQuestion & QuestionData;
 
+export interface ModuleData {
+  id: string;
+  name: string;
+  order: number;
+  questions: Question[];
+  completed?: boolean;
+  inProgress?: boolean;
+  accuracy?: number;
+}
+
+export interface TopicData {
+  id: string;
+  name: string;
+  subjectId: SubjectId | "math" | "sst" | "sci" | "eng";
+  classLevel?: ClassLevel;
+  modules?: ModuleData[];
+  questions?: Question[]; // Fallback or flat questions if single module
+}
+
 export interface Topic {
   id: string;
   name: string;
-  subtopicCount: number;
+  subtopicCount: number; // Total modules inside this topic
+  totalQuestions: number; // Sum of all questions across modules
   completed: boolean;
   inProgress?: boolean;
   accuracy?: number;
+  modules: ModuleData[];
 }
 
 export interface Subject {
@@ -87,6 +108,7 @@ export interface Subject {
 export interface ContinueState {
   subject?: string;
   topicId?: string;
+  moduleId?: string;
   topic?: string;
   subtopic?: string;
   module?: number;
@@ -148,8 +170,9 @@ export const DEFAULT_STATE: AppState = {
   continue: {
     subject: "Mathematics",
     topicId: "p5-math-fractions",
+    moduleId: "p5-math-fractions-m1",
     topic: "Fractions & Decimals",
-    subtopic: "What is a fraction?",
+    subtopic: "Module 1: Basic Addition & Place Value",
     module: 1,
     progress: 42,
   },
@@ -159,6 +182,6 @@ export const DEFAULT_STATE: AppState = {
   },
   topicProgress: {
     "p5-math-fractions": { accuracy: 0.82, attempts: 12, lastAttempt: new Date().toISOString(), completed: false },
-    "p7-sst-session-1": { accuracy: 0.75, attempts: 5, lastAttempt: new Date().toISOString(), completed: true },
+    "p7-sst-uganda": { accuracy: 0.75, attempts: 5, lastAttempt: new Date().toISOString(), completed: true },
   },
 };

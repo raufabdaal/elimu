@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-19 — Multi-Module Curriculum Architecture (`Subject -> Topic -> Module -> Question`)
+
+### Multi-Module Hierarchy & Accordion Navigation (`types.ts`, `data.ts`, `subjects/page.tsx`, `module/page.tsx`)
+- **Data Model Migration (`src/lib/types.ts`)** — Upgraded `Topic` and `TopicData` to support sequential **Modules (`ModuleData[]`)**, enabling topics to contain dozens or hundreds of questions broken down into bite-sized, non-burnout drills (`12–15 questions per module`).
+- **Unified Canonical Topic: *Our Country Uganda* (`src/lib/data.ts`)** — Consolidated pseudo-session topics into one master NCDC topic (`p7-sst-uganda`) broken into 3 discrete sequential modules:
+  - **Module 1 (`p7-uganda-m1`)**: Location, Position & Physical Features (`12 Questions`) ⭐ Mastered (`92% accuracy`)
+  - **Module 2 (`p7-uganda-m2`)**: Economy, Minerals & Tourism (`12 Questions`) 🚀 In Progress (`78% accuracy`)
+  - **Module 3 (`p7-uganda-m3`)**: People, Culture, Towns & Early History (`15 Questions`) Ready (`Locked / Ready`)
+- **Duolingo-Style Expandable Accordion (`src/app/subjects/page.tsx`)** — Tapping any multi-module topic card smoothly glides down the sequential **Modules Ladder**. Pupils see their exact progress across modules (`Mastered ⭐`, `In Progress 🔥`, `Ready to Start`) and can launch directly into specific modules (`Review →`, `Resume →`, `Start →`).
+- **Sequential Module Advancement (`src/app/module/page.tsx`)** — Updated quiz drill route to accept `moduleId` parameter (`/module/?topic=p7-sst-uganda&moduleId=p7-uganda-m2`). Upon mastering a module, the celebration screen dynamically provides a **`Next: [Module Name] →`** button (`e.g., Next: Economy, Minerals & Tourism`) that immediately loads the next learning phase of the topic without returning to the main menu.
+- **Content Mastery Roadmap Created (`docs/curriculum/CONTENT-MASTERY-ROADMAP.md`)** — Documented the exhaustive multi-module scaling strategy across all 4 classes (`P4–P7`) and 4 core subjects (`Math, SST, Science, English`) mapping out exact module breakdowns for hundreds of guaranteed mastery questions.
+
+---
+
 ## 2026-07-19 — Sourced & Embedded Canonical 4-Class / 4-Subject NCDC & UNEB PLE Curriculum Bank
 
 ### Canonical NCDC & UNEB PLE Question Bank Documents (`docs/curriculum/`)

@@ -282,7 +282,7 @@ export default function Practice() {
               <div className="text-[14.5px] font-bold text-slate-700 leading-relaxed bg-white/80 p-3.5 rounded-2xl border border-slate-200/60 mb-4 max-h-[22vh] overflow-y-auto">
                 <p className="font-extrabold text-slate-900 mb-1.5">{feedback}</p>
                 {q.deepDive ? (
-                  q.deepDive.split("\n\n").map((paragraph, i) => (
+                  q.deepDive.split("\n\n").map((paragraph: string, i: number) => (
                     <p key={i} className="mb-2 last:mb-0 text-slate-600 font-semibold">{paragraph}</p>
                   ))
                 ) : null}

@@ -1,4 +1,4 @@
-import { ClassLevel, Subject, Question, SubjectId, Topic } from "./types";
+import { ClassLevel, Subject, Question, SubjectId, Topic, ModuleData } from "./types";
 
 export const CLASS_LABELS: Record<ClassLevel, string> = {
   p4: "Primary 4",
@@ -12,7 +12,8 @@ export interface TopicData {
   name: string;
   subjectId: SubjectId | "math" | "sst" | "sci" | "eng";
   classLevel?: ClassLevel;
-  questions: Question[];
+  modules?: ModuleData[];
+  questions?: Question[];
 }
 
 // =====================================================
@@ -25,10 +26,18 @@ const TOPICS: TopicData[] = [
   // SESSION 1: Location, Physical Features & Administration
   // =====================================================
   {
-    id: "p7-uganda-session-1",
-    name: "Our Country Uganda (Session 1)",
+    id: "p7-sst-uganda",
+    name: "Our Country Uganda",
     subjectId: "sst",
-    questions: [
+    classLevel: "p7",
+    modules: [
+      {
+        id: "p7-uganda-m1",
+        name: "Location, Position & Physical Features",
+        order: 1,
+        completed: true,
+        accuracy: 92,
+        questions: [
       // --- Location & Position (6 questions) ---
       {
         id: "p7s1-1",
@@ -166,16 +175,14 @@ const TOPICS: TopicData[] = [
         deepDive: "Kampala is located in the Central Region and serves as the political, economic, and cultural centre of the country.",
       },
     ],
-  },
-
-  // =====================================================
-  // SESSION 2: Economy, Tourism & Climate
-  // =====================================================
-  {
-    id: "p7-uganda-session-2",
-    name: "Our Country Uganda (Session 2)",
-    subjectId: "sst",
-    questions: [
+      },
+      {
+        id: "p7-uganda-m2",
+        name: "Economy, Minerals & Tourism",
+        order: 2,
+        inProgress: true,
+        accuracy: 78,
+        questions: [
       // --- Economy (5 questions) ---
       {
         id: "p7s2-1",
@@ -307,16 +314,13 @@ const TOPICS: TopicData[] = [
         deepDive: "Because Uganda lies on the equator, it has a tropical climate with distinct wet and dry seasons.",
       },
     ],
-  },
-
-  // =====================================================
-  // SESSION 3: People, Culture, Symbols & History
-  // =====================================================
-  {
-    id: "p7-uganda-session-3",
-    name: "Our Country Uganda (Session 3)",
-    subjectId: "sst",
-    questions: [
+      },
+      {
+        id: "p7-uganda-m3",
+        name: "People, Culture, Towns & Early History",
+        order: 3,
+        completed: false,
+        questions: [
       // --- People & Culture (4 questions) ---
       {
         id: "p7s3-1",
@@ -487,7 +491,10 @@ const TOPICS: TopicData[] = [
         deepDive: "The Kagera River is also considered one of the sources of the Nile.",
       },
     ],
+      },
+    ],
   },
+  
   // =====================================================
   // P5 MATHEMATICS - "FRACTIONS & DECIMALS"
   // =====================================================
@@ -1057,17 +1064,54 @@ const TOPICS: TopicData[] = [
 
 export function getTopic(topicId: string): TopicData | undefined {
   if (!topicId) return undefined;
+  
   // Direct ID match
   const exact = TOPICS.find((t) => t.id === topicId);
-  if (exact) return exact;
-
-  // If queried by short alias like 'fractions'
-  if (topicId === "fractions") {
-    return TOPICS.find((t) => t.id === "p5-math-fractions");
+  if (exact) {
+    if (!exact.modules && exact.questions) {
+      exact.modules = [
+        {
+          id: `${exact.id}-m1`,
+          name: "Module 1: Core Drill",
+          order: 1,
+          questions: exact.questions,
+          completed: exact.id === "p5-math-fractions",
+          inProgress: false,
+        },
+      ];
+    }
+    return exact;
   }
 
-  // Partial match fallback
+  // Handle alias or session matches
+  if (topicId === "fractions") return getTopic("p5-math-fractions");
+  if (topicId.includes("uganda")) return getTopic("p7-sst-uganda");
+
   return TOPICS.find((t) => t.id.includes(topicId) || topicId.includes(t.id));
+}
+
+export function getModule(topicId: string, moduleId?: string): { topic: TopicData; module: ModuleData } | undefined {
+  const topic = getTopic(topicId);
+  if (!topic || !topic.modules || topic.modules.length === 0) {
+    if (topic && topic.questions) {
+      const mod: ModuleData = {
+        id: `${topic.id}-m1`,
+        name: "Module 1: Core Drill",
+        order: 1,
+        questions: topic.questions,
+      };
+      return { topic: { ...topic, modules: [mod] }, module: mod };
+    }
+    return undefined;
+  }
+
+  if (moduleId) {
+    const foundMod = topic.modules.find((m) => m.id === moduleId);
+    if (foundMod) return { topic, module: foundMod };
+  }
+
+  // Fallback to first module
+  return { topic, module: topic.modules[0] };
 }
 
 export function getTopicsForClass(classLevel?: ClassLevel): TopicData[] {
@@ -1078,32 +1122,46 @@ export function getTopicsForClass(classLevel?: ClassLevel): TopicData[] {
 export function getSubjects(classLevel: ClassLevel = "p5"): Subject[] {
   const allTopics = TOPICS;
 
-  // Filter topics for the current class or general starters
   const classTopics = allTopics.filter((t) => {
     if (t.classLevel === classLevel) return true;
     if (t.id.startsWith(classLevel)) return true;
-    // For testing/preview, if P7 SST is shown or P5 starters
-    if (classLevel === "p7" && t.id.includes("uganda-session")) return true;
+    // For testing/preview
+    if (classLevel === "p7" && t.id.includes("uganda")) return true;
     if (classLevel === "p5" && (t.id.includes("fractions") || t.id.includes("sci-humanbody") || t.id.includes("eng-tenses"))) return true;
     return false;
   });
 
-  const getTopicsBySubject = (subId: SubjectId) => {
+  const getTopicsBySubject = (subId: SubjectId): Topic[] => {
     const matched = classTopics.filter((t) => t.subjectId === subId);
     
-    // Return actual topics if present
     if (matched.length > 0) {
-      return matched.map((t) => ({
-        id: t.id,
-        name: t.name,
-        subtopicCount: t.questions.length,
-        completed: t.id === "p7-uganda-session-1" || t.id === "p5-sci-humanbody",
-        inProgress: t.id === "p5-math-fractions" || t.id === "p7-uganda-session-2",
-        accuracy: t.id === "p5-math-fractions" ? 82 : t.id === "p7-uganda-session-1" ? 90 : 75,
-      }));
+      return matched.map((t) => {
+        const modules: ModuleData[] = t.modules || [
+          {
+            id: `${t.id}-m1`,
+            name: "Module 1: Core Curriculum Drill",
+            order: 1,
+            questions: t.questions || [],
+            completed: t.id === "p5-sci-humanbody",
+            inProgress: t.id === "p5-math-fractions",
+          },
+        ];
+
+        const totalQuestions = modules.reduce((sum, m) => sum + (m.questions?.length || 0), 0) || (t.questions?.length || 0);
+
+        return {
+          id: t.id,
+          name: t.name,
+          subtopicCount: modules.length,
+          totalQuestions,
+          completed: modules.every((m) => m.completed) || t.id === "p5-sci-humanbody",
+          inProgress: modules.some((m) => m.inProgress || m.completed) && !modules.every((m) => m.completed),
+          accuracy: t.id === "p5-math-fractions" ? 82 : t.id === "p7-sst-uganda" ? 88 : 75,
+          modules,
+        };
+      });
     }
 
-    // Otherwise return curriculum topic slots for the chosen class so the UI is fully prepped & browsable
     return getStarterTopicsForClassAndSubject(classLevel, subId);
   };
 
@@ -1140,99 +1198,112 @@ export function getSubjects(classLevel: ClassLevel = "p5"): Subject[] {
 }
 
 function getStarterTopicsForClassAndSubject(classLevel: ClassLevel, subId: SubjectId): Topic[] {
-  const map: Record<ClassLevel, Record<SubjectId, { id: string; name: string; count: number }[]>> = {
+  const map: Record<ClassLevel, Record<SubjectId, { id: string; name: string; count: number; qCount: number }[]>> = {
     p4: {
       math: [
-        { id: "p4-math-numbers", name: "Whole Numbers & Place Value", count: 8 },
-        { id: "p4-math-addition", name: "Addition & Subtraction up to 10,000", count: 10 },
-        { id: "p4-math-shapes", name: "Basic Geometric Shapes & Perimeter", count: 6 },
+        { id: "p4-math-numbers", name: "Whole Numbers & Place Value", count: 3, qCount: 36 },
+        { id: "p4-math-addition", name: "Addition & Subtraction up to 10,000", count: 4, qCount: 48 },
+        { id: "p4-math-shapes", name: "Basic Geometric Shapes & Perimeter", count: 3, qCount: 35 },
       ],
       sst: [
-        { id: "p4-sst-district", name: "Our District & Local Leaders", count: 8 },
-        { id: "p4-sst-compass", name: "Using a Compass & Map Symbols", count: 7 },
+        { id: "p4-sst-district", name: "Our District & Local Leaders", count: 3, qCount: 36 },
+        { id: "p4-sst-compass", name: "Using a Compass & Map Symbols", count: 2, qCount: 26 },
       ],
       sci: [
-        { id: "p4-sci-plants", name: "Parts of a Flowering Plant", count: 9 },
-        { id: "p4-sci-animals", name: "Domestic & Wild Animals of Uganda", count: 8 },
+        { id: "p4-sci-plants", name: "Parts of a Flowering Plant", count: 3, qCount: 38 },
+        { id: "p4-sci-animals", name: "Domestic & Wild Animals of Uganda", count: 3, qCount: 34 },
       ],
       eng: [
-        { id: "p4-eng-nouns", name: "Common & Proper Nouns", count: 8 },
-        { id: "p4-eng-reading", name: "Reading & Simple Comprehension", count: 6 },
+        { id: "p4-eng-nouns", name: "Common & Proper Nouns", count: 3, qCount: 36 },
+        { id: "p4-eng-reading", name: "Reading & Simple Comprehension", count: 2, qCount: 24 },
       ],
     },
     p5: {
       math: [
-        { id: "p5-math-fractions", name: "Fractions & Decimals", count: 6 },
-        { id: "p5-math-multiplication", name: "Multiplication & Long Division", count: 10 },
-        { id: "p5-math-time", name: "Time, Speed & Distance", count: 8 },
+        { id: "p5-math-fractions", name: "Fractions & Decimals", count: 3, qCount: 36 },
+        { id: "p5-math-multiplication", name: "Multiplication & Long Division", count: 4, qCount: 48 },
+        { id: "p5-math-time", name: "Time, Speed & Distance", count: 3, qCount: 36 },
       ],
       sst: [
-        { id: "p5-sst-regions", name: "Regions of Uganda & Physical Features", count: 10 },
-        { id: "p5-sst-vegetation", name: "Natural Vegetation & Climate", count: 8 },
+        { id: "p5-sst-regions", name: "Regions of Uganda & Physical Features", count: 4, qCount: 50 },
+        { id: "p5-sst-vegetation", name: "Natural Vegetation & Climate", count: 3, qCount: 36 },
       ],
       sci: [
-        { id: "p5-sci-humanbody", name: "The Human Body & Sensory Organs", count: 3 },
-        { id: "p5-sci-water", name: "Sanitation, Hygiene & Safe Water", count: 8 },
+        { id: "p5-sci-humanbody", name: "The Human Body & Sensory Organs", count: 3, qCount: 36 },
+        { id: "p5-sci-water", name: "Sanitation, Hygiene & Safe Water", count: 3, qCount: 36 },
       ],
       eng: [
-        { id: "p5-eng-tenses", name: "Verbs, Tenses & Parts of Speech", count: 3 },
-        { id: "p5-eng-vocabulary", name: "Synonyms, Antonyms & Homophones", count: 8 },
+        { id: "p5-eng-tenses", name: "Verbs, Tenses & Parts of Speech", count: 3, qCount: 36 },
+        { id: "p5-eng-vocabulary", name: "Synonyms, Antonyms & Homophones", count: 3, qCount: 36 },
       ],
     },
     p6: {
       math: [
-        { id: "p6-math-percentages", name: "Percentages, Ratios & Proportions", count: 10 },
-        { id: "p6-math-algebra", name: "Simple Algebraic Expressions", count: 8 },
-        { id: "p6-math-angles", name: "Angles, Parallel Lines & Triangles", count: 8 },
+        { id: "p6-math-percentages", name: "Percentages, Ratios & Proportions", count: 4, qCount: 50 },
+        { id: "p6-math-algebra", name: "Simple Algebraic Expressions", count: 3, qCount: 36 },
+        { id: "p6-math-angles", name: "Angles, Parallel Lines & Triangles", count: 3, qCount: 36 },
       ],
       sst: [
-        { id: "p6-sst-eac", name: "East African Community & Neighbors", count: 12 },
-        { id: "p6-sst-history", name: "Early Migration & Kingdoms of East Africa", count: 10 },
+        { id: "p6-sst-eac", name: "East African Community & Neighbors", count: 5, qCount: 60 },
+        { id: "p6-sst-history", name: "Early Migration & Kingdoms of East Africa", count: 4, qCount: 48 },
       ],
       sci: [
-        { id: "p6-sci-electricity", name: "Simple Electric Circuits & Magnetism", count: 10 },
-        { id: "p6-sci-sound", name: "Sound, Light & Heat Energy", count: 8 },
+        { id: "p6-sci-electricity", name: "Simple Electric Circuits & Magnetism", count: 3, qCount: 36 },
+        { id: "p6-sci-sound", name: "Sound, Light & Heat Energy", count: 3, qCount: 36 },
       ],
       eng: [
-        { id: "p6-eng-comprehension", name: "Advanced Reading Comprehension", count: 8 },
-        { id: "p6-eng-clauses", name: "Direct & Indirect Speech", count: 8 },
+        { id: "p6-eng-comprehension", name: "Advanced Reading Comprehension", count: 3, qCount: 36 },
+        { id: "p6-eng-clauses", name: "Direct & Indirect Speech", count: 3, qCount: 36 },
       ],
     },
     p7: {
       math: [
-        { id: "p7-math-geometry", name: "Advanced Geometry & Volume", count: 12 },
-        { id: "p7-math-business", name: "Business Math: Profit, Loss & Interest", count: 10 },
-        { id: "p7-math-sets", name: "Set Theory & Venn Diagrams", count: 8 },
+        { id: "p7-math-geometry", name: "Advanced Geometry & Volume", count: 4, qCount: 48 },
+        { id: "p7-math-business", name: "Business Math: Profit, Loss & Interest", count: 4, qCount: 50 },
+        { id: "p7-math-sets", name: "Set Theory & Venn Diagrams", count: 3, qCount: 36 },
       ],
       sst: [
-        { id: "p7-uganda-session-1", name: "Our Country Uganda (Session 1)", count: 12 },
-        { id: "p7-uganda-session-2", name: "Our Country Uganda (Session 2)", count: 12 },
-        { id: "p7-uganda-session-3", name: "Our Country Uganda (Session 3)", count: 15 },
+        { id: "p7-sst-uganda", name: "Our Country Uganda", count: 6, qCount: 80 },
+        { id: "p7-sst-africa", name: "Physical Features & Regions of Africa", count: 5, qCount: 65 },
+        { id: "p7-sst-world", name: "International Organizations & World Trade", count: 4, qCount: 50 },
       ],
       sci: [
-        { id: "p7-sci-energy", name: "Renewable & Non-Renewable Energy Resources", count: 10 },
-        { id: "p7-sci-ecosystem", name: "Ecosystems & Environmental Conservation", count: 10 },
+        { id: "p7-sci-energy", name: "Renewable & Non-Renewable Energy Resources", count: 4, qCount: 48 },
+        { id: "p7-sci-ecosystem", name: "Ecosystems & Environmental Conservation", count: 4, qCount: 48 },
       ],
       eng: [
-        { id: "p7-eng-composition", name: "PLE Essay Writing & Letter Formatting", count: 8 },
-        { id: "p7-eng-grammar", name: "Comprehensive Grammar & Vocabulary Review", count: 12 },
+        { id: "p7-eng-composition", name: "PLE Essay Writing & Letter Formatting", count: 3, qCount: 36 },
+        { id: "p7-eng-grammar", name: "Comprehensive Grammar & Vocabulary Review", count: 4, qCount: 48 },
       ],
     },
   };
 
   const list = map[classLevel]?.[subId] || [];
-  return list.map((item, index) => ({
-    id: item.id,
-    name: item.name,
-    subtopicCount: item.count,
-    completed: index === 0 && (classLevel === "p5" || classLevel === "p7"),
-    inProgress: index === 1,
-    accuracy: index === 0 ? 85 : undefined,
-  }));
+  return list.map((item, index) => {
+    const modules: ModuleData[] = Array.from({ length: item.count }).map((_, i) => ({
+      id: `${item.id}-m${i + 1}`,
+      name: `Module ${i + 1}: Phase ${i + 1} Drill`,
+      order: i + 1,
+      completed: index === 0 && i === 0,
+      inProgress: index === 0 && i === 1,
+      questions: [],
+    }));
+
+    return {
+      id: item.id,
+      name: item.name,
+      subtopicCount: item.count,
+      totalQuestions: item.qCount,
+      completed: index === 0 && classLevel === "p5",
+      inProgress: index === 1,
+      accuracy: index === 0 ? 85 : undefined,
+      modules,
+    };
+  });
 }
 
 export const PRACTICE_QUESTIONS = TOPICS.flatMap((topic) =>
-  topic.questions.map((q) => ({
+  (topic.modules ? topic.modules.flatMap((m) => m.questions) : topic.questions || []).map((q) => ({
     ...q,
     topicId: `${topic.subjectId}-${topic.id}`,
   }))

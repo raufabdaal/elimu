@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
-import { getTopic } from "@/lib/data";
+import { getTopic, getModule } from "@/lib/data";
 import { checkAnswer } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
@@ -21,7 +21,10 @@ function ModuleContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topic") || "p5-math-fractions";
-  const topic = getTopic(topicId);
+  const moduleId = searchParams.get("moduleId") || undefined;
+  const modData = getModule(topicId, moduleId);
+  const topic = modData?.topic || getTopic(topicId);
+  const currentModule = modData?.module || (topic?.modules ? topic.modules[0] : undefined);
 
   const [index, setIndex] = useState(0);
   const [state, setState] = useState<QuestionState | null>(null);
@@ -35,7 +38,7 @@ function ModuleContent() {
   const [appState, setAppState] = useState(loadState());
   const [shakeHearts, setShakeHearts] = useState(false);
 
-  const questions = topic?.questions || [];
+  const questions = currentModule?.questions || topic?.questions || [];
   const q = questions[index];
 
   useEffect(() => {
@@ -49,13 +52,13 @@ function ModuleContent() {
           <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-3xl mb-4 shadow-inner">
             📚
           </div>
-          <h2 className="text-xl font-black text-slate-900">Topic Under Construction</h2>
+          <h2 className="text-xl font-black text-slate-900">Module Under Construction</h2>
           <p className="text-sm font-semibold text-slate-500 mt-1 max-w-xs">
-            We are curating NCDC curriculum questions for this topic right now.
+            We are curating NCDC curriculum questions for this specific module right now.
           </p>
           <div className="flex items-center gap-3 mt-6">
             <Link href="/subjects/" className="btn btn-primary btn-sm">
-              Explore Available Quizzes
+              Explore Available Modules
             </Link>
             <Link href="/home/" className="btn btn-secondary btn-sm">
               Back to Home
@@ -84,7 +87,7 @@ function ModuleContent() {
     const { correct, partial } = checkAnswer(q, state);
 
     setLocked(true);
-    recordAnswer(`${topic.subjectId}-${topic.id}`, correct, partial);
+    recordAnswer(`${topic.subjectId}-${topic.id}-${currentModule?.id || "m1"}`, correct, partial);
     setAppState(loadState());
 
     if (correct) {
@@ -140,6 +143,9 @@ function ModuleContent() {
   const theme = SUBJECT_THEMES[topic.subjectId] || SUBJECT_THEMES.math;
 
   if (finished) {
+    const nextModIdx = topic.modules?.findIndex((m) => m.id === currentModule?.id) ?? -1;
+    const nextMod = nextModIdx >= 0 && nextModIdx < (topic.modules?.length || 0) - 1 ? topic.modules![nextModIdx + 1] : null;
+
     return (
       <AppShell showTabBar={false} noScrollPad>
         <div className="flex flex-col items-center justify-center min-h-[85vh] p-6 text-center">
@@ -160,13 +166,13 @@ function ModuleContent() {
             </motion.div>
 
             <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">
-              NCDC Topic Mastered
+              Module Mastered ⭐
             </span>
             <h1 className="text-2xl font-black text-slate-900 mt-2 leading-tight">
-              {topic.name}
+              {currentModule?.name || topic.name}
             </h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">
-              You completed all {questions.length} interactive drill questions!
+              You solved all {questions.length} interactive drill questions in this module!
             </p>
 
             <div className="grid grid-cols-2 gap-3 my-6">
@@ -185,19 +191,21 @@ function ModuleContent() {
             </div>
 
             <div className="flex flex-col gap-2.5">
+              {nextMod ? (
+                <button
+                  type="button"
+                  className="btn btn-primary w-full py-4 shadow-md flex items-center justify-center gap-2 text-base font-extrabold"
+                  onClick={() => router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(nextMod.id)}`)}
+                >
+                  <span>Next: {nextMod.name}</span> <ArrowRight className="w-5 h-5 shrink-0" />
+                </button>
+              ) : null}
               <button
                 type="button"
-                className="btn btn-primary w-full py-3.5 shadow-md flex items-center justify-center gap-2 text-base font-extrabold"
+                className={`${nextMod ? "btn btn-secondary" : "btn btn-primary"} w-full py-3.5 font-bold flex items-center justify-center gap-2`}
                 onClick={() => router.push("/subjects/")}
               >
-                Explore More Topics <ArrowRight className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary w-full py-3.5 font-bold"
-                onClick={() => router.push("/practice/")}
-              >
-                Practice Rapid Review
+                Explore Topic Modules <ArrowRight className="w-4 h-4" />
               </button>
               <Link
                 href="/home/"
@@ -215,18 +223,18 @@ function ModuleContent() {
   return (
     <AppShell showTabBar={false} noScrollPad>
       {/* Sleek Gamified Header */}
-      <header className="app-head flex items-center justify-between pb-3">
-        <div className="flex items-center gap-3 min-w-0">
+      <header className="app-head flex items-center justify-between pb-3 gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
           <Link href="/subjects/" className="icon-btn shrink-0" aria-label="Back to subjects">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
-              <span className={`w-2 h-2 rounded-full ${theme.progressBg}`} />
-              <span>{theme.name}</span>
+              <span className={`w-2 h-2 rounded-full shrink-0 ${theme.progressBg}`} />
+              <span className="truncate">{topic.name}</span>
             </div>
             <h1 className="text-base font-extrabold text-slate-900 truncate">
-              {topic.name}
+              {currentModule?.name || topic.name}
             </h1>
           </div>
         </div>
@@ -294,7 +302,7 @@ function ModuleContent() {
                 disabled={!isAnswered(q, state)}
               >
                 <span>Check Answer</span>
-                <CheckCircle2 className="w-5 h-5" />
+                <CheckCircle2 className="w-5 h-5 shrink-0" />
               </button>
             </div>
           )}
@@ -349,7 +357,7 @@ function ModuleContent() {
                 }`}
                 onClick={nextQuestion}
               >
-                <span>{index === questions.length - 1 ? "Complete Topic 🏆" : "Continue to Next →"}</span>
+                <span>{index === questions.length - 1 ? "Complete Module ⭐" : "Continue to Next →"}</span>
               </button>
             </div>
           </motion.div>
