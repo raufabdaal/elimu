@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
-import { getTopic, getModule } from "@/lib/data";
+import { getTopic, getModule, getSubjects } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
@@ -177,6 +177,14 @@ function ModuleContent() {
 
   const theme = SUBJECT_THEMES[topic.subjectId] || SUBJECT_THEMES.math;
 
+  // Determine Topic number and Step number cleanly
+  const allSubs = getSubjects(appState.profile.classLevel || "p5");
+  const currentSub = allSubs.find((s) => s.id === topic.subjectId);
+  const topicIdx = currentSub ? currentSub.topics.findIndex((t) => t.id === topic.id) : -1;
+  const modIdx = topic.modules ? topic.modules.findIndex((m) => m.id === currentModule?.id) : -1;
+  const cleanTopicName = topicIdx >= 0 ? `Topic ${topicIdx + 1}` : topic.name.split(" (")[0];
+  const cleanStepName = modIdx >= 0 ? `Step ${modIdx + 1}` : "Step 1";
+
   if (finished) {
     const nextModIdx = topic.modules?.findIndex((m) => m.id === currentModule?.id) ?? -1;
     const nextMod = nextModIdx >= 0 && nextModIdx < (topic.modules?.length || 0) - 1 ? topic.modules![nextModIdx + 1] : null;
@@ -201,13 +209,13 @@ function ModuleContent() {
             </motion.div>
 
             <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-900">
-              🎉 Module Completed
+              🎉 {cleanStepName} Completed
             </span>
             <h1 className="text-2xl font-black text-slate-900 mt-2">
               Outstanding Work!
             </h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">
-              You successfully mastered <span className="text-slate-900 font-bold">{currentModule?.name}</span>
+              You successfully mastered <span className="text-slate-900 font-bold">{cleanTopicName} ({cleanStepName})</span>
             </p>
 
             <div className="grid grid-cols-2 gap-3 my-6">
@@ -231,7 +239,7 @@ function ModuleContent() {
                   href={`/module?topic=${topic.id}&moduleId=${nextMod.id}`}
                   className="btn btn-primary w-full py-3.5 shadow-md font-extrabold flex items-center justify-center gap-2"
                 >
-                  <span>Start Next Module</span> <ArrowRight className="w-5 h-5" />
+                  <span>Start Next Step</span> <ArrowRight className="w-5 h-5" />
                 </Link>
               ) : (
                 <Link
@@ -244,7 +252,7 @@ function ModuleContent() {
 
               <button
                 type="button"
-                className="btn btn-secondary w-full py-3.5 font-bold flex items-center justify-center gap-2"
+                className="btn btn-secondary w-full py-3 font-bold flex items-center justify-center gap-2 text-xs"
                 onClick={handleReshuffleModule}
               >
                 <Shuffle className="w-4 h-4" /> Practice Again (Shuffled) 🔀
@@ -258,7 +266,7 @@ function ModuleContent() {
 
   return (
     <AppShell showTabBar={false} noScrollPad>
-      {/* Sticky Header */}
+      {/* Sticky Header (`Crisp & Clutter-Free`) */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-3 min-w-0">
           <Link
@@ -269,10 +277,10 @@ function ModuleContent() {
           </Link>
           <div className="min-w-0">
             <h1 className="text-sm font-extrabold text-slate-900 truncate">
-              {topic.name}
+              {cleanTopicName}
             </h1>
             <p className="text-[11px] font-bold text-slate-500 truncate">
-              {currentModule?.name || "Interactive Practice"}
+              {cleanStepName} · {topic.name.split(" (")[0]}
             </p>
           </div>
         </div>
@@ -287,7 +295,7 @@ function ModuleContent() {
 
       {/* Main Question Area */}
       <div className="question-stage px-4 sm:px-6 pt-3 pb-36 max-w-[440px] mx-auto w-full">
-        {/* Progress Bar */}
+        {/* Progress Bar with Clean Icon Shuffle */}
         <div className="flex items-center gap-3 mb-5">
           <div className="progress grow">
             <span style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
@@ -295,11 +303,10 @@ function ModuleContent() {
           <button
             type="button"
             onClick={handleReshuffleModule}
-            title="Shuffle module questions and start fresh"
-            className="text-xs font-bold text-slate-600 hover:text-emerald-700 bg-slate-100 hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-slate-200 transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+            title="Reshuffle Questions"
+            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 flex items-center justify-center transition-colors shrink-0 shadow-2xs border border-slate-200/80 active:scale-95"
           >
-            <Shuffle className="w-3 h-3" />
-            <span>🔀 Shuffle</span>
+            <Shuffle className="w-4 h-4 stroke-[2.5]" />
           </button>
           <span className="font-mono text-xs font-black text-slate-500 shrink-0">
             {index + 1}/{questions.length}
@@ -399,7 +406,7 @@ function ModuleContent() {
                 }`}
                 onClick={nextQuestion}
               >
-                <span>{index === questions.length - 1 ? "Finish Module 🏁" : "Continue to Next →"}</span>
+                <span>{index === questions.length - 1 ? "Finish Step 🏁" : "Continue to Next →"}</span>
               </button>
             </div>
           </motion.div>

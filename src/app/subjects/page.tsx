@@ -2,21 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject, SubjectId, Topic } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { CheckCircle2, Play, ChevronRight, Filter, ChevronDown } from "lucide-react";
+import { CheckCircle2, Play, Filter, ArrowRight } from "lucide-react";
 
 export default function Subjects() {
   const router = useRouter();
   const [state, setState] = useState<AppState | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [activeFilter, setActiveFilter] = useState<"all" | SubjectId>("all");
-  const [expandedTopicId, setExpandedTopicId] = useState<string | null>("p7-sst-uganda");
 
   useEffect(() => {
     const s = loadState();
@@ -32,21 +31,10 @@ export default function Subjects() {
 
     if (targetSubjectId && ["math", "sst", "sci", "eng"].includes(targetSubjectId)) {
       setActiveFilter(targetSubjectId);
-      const targetSub = loadedSubjects.find((sub) => sub.id === targetSubjectId);
-      const firstTargetMulti = targetSub?.topics.find((t) => t.modules && t.modules.length > 1) || targetSub?.topics[0];
-      if (firstTargetMulti) {
-        setExpandedTopicId(firstTargetMulti.id);
-      }
       setTimeout(() => {
         const el = document.getElementById(targetSubjectId);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
-    } else {
-      // Expand first multi-module topic if available
-      const firstMulti = loadedSubjects.flatMap((s) => s.topics).find((t) => t.modules && t.modules.length > 1);
-      if (firstMulti) {
-        setExpandedTopicId(firstMulti.id);
-      }
     }
   }, []);
 
@@ -59,14 +47,6 @@ export default function Subjects() {
     setState(updatedState);
     const newSubjects = getSubjects(newClass);
     setSubjects(newSubjects);
-    if (activeFilter !== "all") {
-      const targetSub = newSubjects.find((sub) => sub.id === activeFilter);
-      const firstTargetMulti = targetSub?.topics.find((t) => t.modules && t.modules.length > 1) || targetSub?.topics[0];
-      setExpandedTopicId(firstTargetMulti ? firstTargetMulti.id : null);
-    } else {
-      const firstMulti = newSubjects.flatMap((s) => s.topics).find((t) => t.modules && t.modules.length > 1);
-      setExpandedTopicId(firstMulti ? firstMulti.id : null);
-    }
   };
 
   if (!state) return null;
@@ -77,12 +57,9 @@ export default function Subjects() {
     ? subjects
     : subjects.filter((s) => s.id === activeFilter);
 
-  const toggleTopic = (topic: Topic) => {
-    if (topic.modules && topic.modules.length > 1) {
-      setExpandedTopicId(expandedTopicId === topic.id ? null : topic.id);
-    } else {
-      router.push(`/module/?topic=${encodeURIComponent(topic.id)}`);
-    }
+  const handleTopicClick = (topic: Topic) => {
+    const firstMod = topic.modules?.[0]?.id || "";
+    router.push(`/module/?topic=${encodeURIComponent(topic.id)}${firstMod ? `&moduleId=${encodeURIComponent(firstMod)}` : ""}`);
   };
 
   return (
@@ -99,23 +76,23 @@ export default function Subjects() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex flex-col gap-4 pt-3"
+        transition={{ duration: 0.35 }}
+        className="flex flex-col gap-4 pt-4 px-1"
       >
         {/* Title & Filter Bar */}
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Curriculum Topics & Modules</h1>
-          <p className="text-xs font-semibold text-slate-500 mt-0.5">
-            Select a topic to view structured bite-sized drill modules (12–15 questions each)
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Curriculum Topics</h1>
+          <p className="text-xs font-semibold text-slate-500 mt-1">
+            Tap any topic below to jump straight into bite-sized interactive drills
           </p>
         </div>
 
         {/* Horizontal Subject Filter Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 no-scrollbar">
           <button
             type="button"
             onClick={() => setActiveFilter("all")}
-            className={`px-3.5 py-2 rounded-2xl text-xs font-black transition-all shrink-0 flex items-center gap-1.5 border ${
+            className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all shrink-0 flex items-center gap-1.5 border ${
               activeFilter === "all"
                 ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-105"
                 : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
@@ -133,7 +110,7 @@ export default function Subjects() {
                 key={sub.id}
                 type="button"
                 onClick={() => setActiveFilter(sub.id)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-black transition-all shrink-0 flex items-center gap-2 border ${
+                className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all shrink-0 flex items-center gap-2 border ${
                   isSelected
                     ? `${theme.iconBg} text-white border-transparent shadow-sm scale-105`
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
@@ -146,8 +123,8 @@ export default function Subjects() {
           })}
         </div>
 
-        {/* Subject Sections */}
-        <div className="flex flex-col gap-6 mt-1">
+        {/* Subject Sections (`Dead Simple, Clutter-Free Cards`) */}
+        <div className="flex flex-col gap-8 mt-2">
           {filteredSubjects.map((subject) => {
             const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
             const completedTopics = subject.topics.filter((t) => t.completed).length;
@@ -155,178 +132,94 @@ export default function Subjects() {
             const pct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
 
             return (
-              <section key={subject.id} className="card bg-white p-5 border-2 border-slate-200/80 shadow-sm" id={subject.id}>
+              <section key={subject.id} className="card bg-white p-6 border-2 border-slate-200/90 rounded-[32px] shadow-sm" id={subject.id}>
                 {/* Subject Header Bar */}
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-2">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-white shadow-sm ${theme.iconBg}`}>
-                      <SubjectIcon subjectId={subject.id} className="w-6 h-6 stroke-[2.2]" />
+                <div className="flex items-center justify-between pb-5 border-b border-slate-100 flex-wrap gap-3">
+                  <div className="flex items-center gap-3.5">
+                    <div className={`w-13 h-13 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${theme.iconBg}`}>
+                      <SubjectIcon subjectId={subject.id} className="w-7 h-7 stroke-[2.2]" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-black text-slate-900 leading-snug">{subject.name}</h2>
-                      <p className="text-xs font-semibold text-slate-500">
+                      <h2 className="text-xl font-black text-slate-900 leading-snug">{subject.name}</h2>
+                      <p className="text-xs font-bold text-slate-500 mt-0.5">
                         {completedTopics} of {totalTopics} topics mastered
                       </p>
                     </div>
                   </div>
-                  <span className={`text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider ${theme.badgeBg} ${theme.badgeText}`}>
-                    {pct}% Done
+                  <span className={`text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider ${theme.badgeBg} ${theme.badgeText}`}>
+                    {pct}% Mastered
                   </span>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden my-4 p-0.5 border border-slate-200">
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden my-5 p-0.5 border border-slate-200">
                   <div
                     className={`h-full rounded-full ${theme.progressBg} transition-all duration-500`}
                     style={{ width: `${Math.max(6, pct)}%` }}
                   />
                 </div>
 
-                {/* Topics List (`Duolingo Accordion Ladder`) */}
-                <div className="flex flex-col gap-3">
+                {/* Direct-Entry Topics List (`Simplified Topic 1, Topic 2 Naming`) */}
+                <div className="grid grid-cols-1 gap-3">
                   {subject.topics.map((topic, idx) => {
-                    const isMultiModule = topic.modules && topic.modules.length > 1;
-                    const isExpanded = expandedTopicId === topic.id;
+                    const shortSubName = topic.name.split(" (")[0];
 
                     return (
-                      <div key={topic.id} className="flex flex-col rounded-2xl border-2 overflow-hidden transition-all bg-slate-50/60 border-slate-200">
-                        {/* Topic Row Button */}
-                        <button
-                          type="button"
-                          onClick={() => toggleTopic(topic)}
-                          className={`w-full text-left p-4 transition-all flex items-center justify-between gap-3 group ${
-                            topic.completed
-                              ? "bg-emerald-50/60 border-b border-emerald-200"
-                              : topic.inProgress
-                              ? "bg-amber-50/50 border-b border-amber-200"
-                              : "bg-white hover:bg-slate-50"
-                          }`}
-                        >
-                          <div className="flex items-center gap-3.5 min-w-0">
-                            <div
-                              className={`w-10 h-10 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 ${
-                                topic.completed
-                                  ? "bg-emerald-600 text-white shadow-xs"
-                                  : topic.inProgress
-                                  ? "bg-amber-500 text-white shadow-xs"
-                                  : "bg-slate-200 text-slate-700"
-                              }`}
-                            >
-                              {topic.completed ? (
-                                <CheckCircle2 className="w-6 h-6 stroke-[2.4]" />
-                              ) : topic.inProgress ? (
-                                <Play className="w-5 h-5 fill-white ml-0.5" />
-                              ) : (
-                                <span>#{idx + 1}</span>
-                              )}
-                            </div>
-
-                            <div className="min-w-0">
-                              <h3 className="font-extrabold text-[15.5px] text-slate-900 truncate group-hover:text-emerald-800 transition-colors">
-                                {topic.name}
-                              </h3>
-                              <div className="flex items-center gap-2 mt-0.5 text-xs font-semibold text-slate-500 flex-wrap">
-                                <span>{topic.subtopicCount || 1} {topic.subtopicCount === 1 ? "module" : "modules"}</span>
-                                <span>•</span>
-                                <span>{topic.totalQuestions || 15} questions</span>
-                                <span>•</span>
-                                <span className={topic.completed ? "text-emerald-700 font-bold" : topic.inProgress ? "text-amber-700 font-bold" : ""}>
-                                  {topic.completed ? "⭐ Mastered" : topic.inProgress ? "🚀 In progress" : "Ready"}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            {topic.accuracy && (
-                              <span className="hidden sm:inline-block text-xs font-mono font-bold px-2 py-0.5 rounded-lg bg-white border border-slate-200 text-slate-700">
-                                {topic.accuracy}% accuracy
-                              </span>
+                      <button
+                        key={topic.id}
+                        type="button"
+                        onClick={() => handleTopicClick(topic)}
+                        className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all flex items-center justify-between gap-4 group active:scale-[0.99] shadow-2xs ${
+                          topic.completed
+                            ? "bg-emerald-50/70 border-emerald-200 hover:border-emerald-500"
+                            : topic.inProgress
+                            ? "bg-amber-50/60 border-amber-300 hover:border-amber-500"
+                            : "bg-slate-50/70 border-slate-200/90 hover:bg-white hover:border-emerald-500"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4 min-w-0">
+                          <div
+                            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
+                              topic.completed
+                                ? "bg-emerald-600 text-white"
+                                : topic.inProgress
+                                ? "bg-amber-500 text-white"
+                                : "bg-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
+                            }`}
+                          >
+                            {topic.completed ? (
+                              <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
+                            ) : topic.inProgress ? (
+                              <Play className="w-5 h-5 fill-white ml-0.5" />
+                            ) : (
+                              <span>#{idx + 1}</span>
                             )}
-                            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 group-hover:text-emerald-600 group-hover:border-emerald-400 transition-all">
-                              {isMultiModule ? (
-                                <ChevronDown className={`w-5 h-5 stroke-[2.5] transition-transform ${isExpanded ? "rotate-180 text-emerald-600" : ""}`} />
-                              ) : (
-                                <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+                          </div>
+
+                          <div className="min-w-0 grow">
+                            <div className="flex items-center gap-2">
+                              <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors">
+                                Topic {idx + 1}
+                              </span>
+                              {topic.completed && (
+                                <span className="text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+                                  Done
+                                </span>
                               )}
                             </div>
+                            <p className="font-semibold text-xs sm:text-[13px] text-slate-500 truncate mt-0.5">
+                              {shortSubName}
+                            </p>
                           </div>
-                        </button>
+                        </div>
 
-                        {/* Expanded Modules Ladder */}
-                        <AnimatePresence>
-                          {isMultiModule && isExpanded && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25 }}
-                              className="bg-white border-t border-slate-200/80 p-3 flex flex-col gap-2"
-                            >
-                              <div className="flex items-center justify-between px-2 pt-1 pb-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                                <span>Sequential Topic Modules</span>
-                                <span>Progress</span>
-                              </div>
-
-                              {topic.modules.map((mod, mIdx) => {
-                                return (
-                                  <button
-                                    key={mod.id}
-                                    type="button"
-                                    onClick={() => {
-                                      router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`);
-                                    }}
-                                    className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 group/mod ${
-                                      mod.completed
-                                        ? "bg-emerald-50/40 border-emerald-200 hover:border-emerald-500"
-                                        : mod.inProgress
-                                        ? "bg-amber-50/50 border-amber-300 hover:border-amber-500 shadow-2xs"
-                                        : "bg-slate-50/50 border-slate-200 hover:bg-white hover:border-slate-300"
-                                    }`}
-                                  >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                      <div
-                                        className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
-                                          mod.completed
-                                            ? "bg-emerald-600 text-white"
-                                            : mod.inProgress
-                                            ? "bg-amber-500 text-white"
-                                            : "bg-slate-200 text-slate-700"
-                                        }`}
-                                      >
-                                        {mod.completed ? "✓" : mod.inProgress ? "▶" : `${mIdx + 1}`}
-                                      </div>
-                                      <div className="min-w-0">
-                                        <h4 className="font-extrabold text-sm text-slate-900 group-hover/mod:text-emerald-800 transition-colors truncate">
-                                          {mod.name}
-                                        </h4>
-                                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 mt-0.5">
-                                          <span>{mod.questions?.length || 12} questions</span>
-                                          <span>•</span>
-                                          <span className={mod.completed ? "text-emerald-700 font-bold" : mod.inProgress ? "text-amber-700 font-bold" : ""}>
-                                            {mod.completed ? "Mastered ⭐" : mod.inProgress ? "In Progress 🔥" : "Locked / Ready"}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 shrink-0">
-                                      {mod.accuracy && (
-                                        <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-700">
-                                          {mod.accuracy}%
-                                        </span>
-                                      )}
-                                      <span className="btn btn-primary btn-sm !min-h-[34px] !py-1 !px-3 text-xs font-bold">
-                                        {mod.completed ? "Review →" : mod.inProgress ? "Resume →" : "Start →"}
-                                      </span>
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="text-xs font-black text-emerald-700 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-colors flex items-center gap-1 shadow-2xs">
+                            <span>{topic.completed ? "Review" : "Start"}</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </span>
+                        </div>
+                      </button>
                     );
                   })}
                 </div>

@@ -7,8 +7,7 @@ import { ClassLevel, Profile } from "@/lib/types";
 import { CLASS_LABELS } from "@/lib/data";
 import { saveState, loadState } from "@/lib/store";
 import Hearts from "./Hearts";
-import Streak from "./Streak";
-import { ChevronDown, RefreshCw } from "lucide-react";
+import { Menu, X, RefreshCw, Sparkles, BookOpen, ShieldCheck } from "lucide-react";
 
 interface HeaderStatsProps {
   profile: Profile;
@@ -30,7 +29,8 @@ export default function HeaderStats({
   onClassChange,
 }: HeaderStatsProps) {
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [showClassModal, setShowClassModal] = useState(false);
   const classes: ClassLevel[] = ["p4", "p5", "p6", "p7"];
 
   const handleSelectClass = (cls: ClassLevel) => {
@@ -41,7 +41,8 @@ export default function HeaderStats({
         classLevel: cls,
       },
     });
-    setShowModal(false);
+    setShowClassModal(false);
+    setShowDrawer(false);
     if (onClassChange) {
       onClassChange(cls);
     } else {
@@ -50,69 +51,193 @@ export default function HeaderStats({
     }
   };
 
+  const handleSwitchToParent = () => {
+    const s = loadState();
+    saveState({
+      profile: {
+        ...s.profile,
+        role: "parent",
+      },
+    });
+    setShowDrawer(false);
+    router.push("/parent/");
+  };
+
   return (
     <>
-      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 px-3.5 sm:px-4 py-2.5 sm:py-3 sm:rounded-t-[36px] shadow-2xs">
-        {/* Responsive Two-Row Stack on Narrow/Tall Screens vs Single Row on Desktop */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 w-full">
-          
-          {/* Top Row: Avatar + Name on Left | Gamification Stats on Right */}
-          <div className="flex items-center justify-between gap-2 w-full sm:w-auto min-w-0">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-xs shrink-0">
-                {(profile.name || "S").charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0 flex items-center gap-1.5 flex-wrap">
-                <span className="font-extrabold text-[15px] sm:text-base text-slate-900 truncate">
-                  {profile.name || "Pupil"}
-                </span>
-                {profile.role === "parent" && (
-                  <span className="bg-purple-100 text-purple-800 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md border border-purple-200 shrink-0">
-                    Parent
-                  </span>
-                )}
-              </div>
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 px-4 py-3 sm:rounded-t-[36px] shadow-2xs">
+        <div className="flex items-center justify-between gap-3 w-full">
+          {/* Left: Brand + Class Level Badge */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-black text-lg sm:text-xl flex items-center justify-center shadow-xs shrink-0">
+              E
             </div>
-
-            {/* Gamification Stats (Always docked to Top Right of Row 1 so it NEVER overlaps Class Pill below) */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              <Streak days={streakDays} />
-              <div className={shakeHearts ? "animate-shake" : ""}>
-                <Hearts count={hearts} max={maxHearts} showCount={true} />
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Row on Mobile (or inline right of name on wider screens): Dedicated Class Pill Line */}
-          <div className="w-full sm:w-auto flex items-center justify-between sm:justify-start pt-1 border-t border-slate-100 sm:border-0 sm:pt-0">
-            {showClassSwitcher ? (
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="flex items-center gap-1 text-[12px] font-extrabold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 active:scale-95 px-2.5 py-1 rounded-xl border border-emerald-300/80 transition-all shadow-2xs"
-              >
-                <span>{CLASS_LABELS[profile.classLevel || "p5"]} · Switch Class</span>
-                <ChevronDown className="w-3.5 h-3.5 text-emerald-700" />
-              </button>
-            ) : (
-              <span className="text-[12px] font-bold text-slate-500 block px-1">
-                {CLASS_LABELS[profile.classLevel || "p5"]}
+            <div className="min-w-0 flex items-center gap-2">
+              <span className="font-black text-base sm:text-lg text-slate-900 tracking-tight">
+                ELIMU
               </span>
-            )}
+              <span className="bg-slate-100 text-slate-700 text-xs font-black px-2.5 py-0.5 rounded-lg border border-slate-200 shrink-0">
+                {(profile.classLevel || "p5").toUpperCase()}
+              </span>
+              {profile.role === "parent" && (
+                <span className="bg-purple-100 text-purple-800 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-md border border-purple-200 shrink-0">
+                  Parent
+                </span>
+              )}
+            </div>
           </div>
 
+          {/* Right: Hamburger Menu Drawer Button (`Dead Simple & Clutter-Free`) */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowDrawer(true)}
+              aria-label="Open Menu and Stats"
+              className="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-all shadow-2xs border border-slate-200/60"
+            >
+              <Menu className="w-5 h-5 stroke-[2.5]" />
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Class Level Switch Modal */}
+      {/* Hamburger Menu Slide-Over Drawer */}
       <AnimatePresence>
-        {showModal && (
+        {showDrawer && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed sm:absolute inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setShowModal(false)}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex justify-end"
+            onClick={() => setShowDrawer(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="bg-white w-full max-w-xs h-full shadow-2xl flex flex-col justify-between overflow-y-auto p-6 text-left"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div>
+                {/* Drawer Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-11 h-11 rounded-2xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-sm">
+                      {(profile.name || "S").charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-base font-black text-slate-900 truncate">
+                        {profile.name || "Student"}
+                      </h3>
+                      <p className="text-xs font-semibold text-slate-500">
+                        {CLASS_LABELS[profile.classLevel || "p5"]}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowDrawer(false)}
+                    className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 shrink-0"
+                  >
+                    <X className="w-4 h-4 stroke-[2.5]" />
+                  </button>
+                </div>
+
+                {/* Gamification Summary Inside Menu */}
+                <div className="my-5 flex flex-col gap-3">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                    Your Study Progress
+                  </span>
+
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-2xs">
+                    <span className="text-xs font-bold text-slate-600">Daily Streak</span>
+                    <div className="flex items-center gap-1 font-mono font-black text-amber-600">
+                      <span>🔥</span>
+                      <span>{streakDays} Days</span>
+                    </div>
+                  </div>
+
+                  <div className={`bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-2xs ${shakeHearts ? "animate-shake" : ""}`}>
+                    <span className="text-xs font-bold text-slate-600">Hearts Remaining</span>
+                    <div className="flex items-center gap-1">
+                      <Hearts count={hearts} max={maxHearts} showCount={true} />
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-2xs">
+                    <span className="text-xs font-bold text-slate-600">Total Experience</span>
+                    <div className="flex items-center gap-1 font-mono font-black text-emerald-600">
+                      <Sparkles className="w-4 h-4 fill-emerald-500 text-emerald-600" />
+                      <span>{loadState().progress.xp} XP</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Switch Primary Class Action */}
+                {showClassSwitcher && (
+                  <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-3">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                      Primary Grade Level
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowClassModal(true)}
+                      className="w-full p-3.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-300/80 text-emerald-900 font-extrabold text-sm flex items-center justify-between transition-all shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-emerald-600" />
+                        <span>Switch Class ({CLASS_LABELS[profile.classLevel || "p5"]})</span>
+                      </div>
+                      <span>→</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Portal Switcher Action */}
+                <div className="mt-4 flex flex-col gap-3">
+                  <button
+                    type="button"
+                    onClick={handleSwitchToParent}
+                    className="w-full p-3.5 rounded-2xl bg-purple-50 hover:bg-purple-100/80 border border-purple-300/80 text-purple-900 font-extrabold text-sm flex items-center justify-between transition-all shadow-2xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-purple-600" />
+                      <span>Switch to Parent Portal</span>
+                    </div>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Drawer Footer */}
+              <div className="pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDrawer(false);
+                    router.push("/onboarding/");
+                  }}
+                  className="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Reset / Reconfigure Profile</span>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Class Level Switch Modal */}
+      <AnimatePresence>
+        {showClassModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed sm:absolute inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowClassModal(false)}
           >
             <motion.div
               initial={{ scale: 0.85, y: 20, opacity: 0 }}
@@ -126,12 +251,12 @@ export default function HeaderStats({
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900">Switch Primary Class</h3>
                   <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                    Explore NCDC curriculum topics across all four primary classes
+                    Select your NCDC curriculum grade level
                   </p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowClassModal(false)}
                   className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800"
                 >
                   ✕
@@ -175,23 +300,6 @@ export default function HeaderStats({
                     </button>
                   );
                 })}
-              </div>
-
-              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400 font-medium">
-                  Switching updates available subjects & questions
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowModal(false);
-                    router.push("/onboarding/");
-                  }}
-                  className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  Full Profile Setup
-                </button>
               </div>
             </motion.div>
           </motion.div>

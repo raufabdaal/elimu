@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-07-20 — Comprehensive Simplicity & Cleanliness Overhaul Across Onboarding, Home, Subjects & Topic/Module Navigation (`onboarding/page.tsx`, `home/page.tsx`, `HeaderStats.tsx`, `subjects/page.tsx`, `module/page.tsx`)
+
+### 1. Onboarding Refinements (`src/app/onboarding/page.tsx`)
+- **Terminology & Typography**: Renamed **"Pupil"** to **"Student (Learner)"** across onboarding cards and increased the font size of primary role titles (`text-xl sm:text-2xl font-black`).
+- **Visual Aesthetic & Glassmorphism**: Added subtle, ambient decorative background blur blobs (`fade blobs`), gentle gradient card glows (`from-white/90 via-white to-emerald-50/30`), and crisp icon sizing (`GraduationCap` and `User`).
+- **Simplicity & Flow**: Maintained maximum clutter-free simplicity across Step 2 ("Select your primary class"), and updated `finishLearner()` to route directly to `/subjects/` as the default post-onboarding landing tab (`router.push("/subjects/")`).
+
+### 2. Home Page & Header De-cluttering (`src/components/HeaderStats.tsx`, `src/app/home/page.tsx`)
+- **Single-Row Minimalist Header (`HeaderStats.tsx`)**: Replaced the multi-row stat clutter on mobile with a clean single-row bar containing only the `ELIMU` brand logo + class badge (`P5`) on the left, and a single **Hamburger Menu (`☰` / `Menu`)** on the right.
+- **Hamburger Stats Drawer**: Clicking the hamburger menu opens a slide-over drawer housing all gamification stats (`Hearts ❤️ 5/5`, `Streak 🔥 3 Days`, `XP ⚡ 1240 XP`), Primary Class Switcher (`[Switch Class]`), and Role Switcher (`[Switch to Parent Portal]`).
+- **Compact Continue Bar (`home/page.tsx`)**: Replaced the large, heavy green resume card with a sleek, high-action white/emerald **"Continue Learning"** bar/button (`[ 🚀 Resume Where You Left Off ] -> [ Continue → ]`).
+- **High-Visibility Subject Cards**: Enlarged and centered the text (`text-xl font-black`) on the 4 NCDC Core Subject cards (`Mathematics`, `Social Studies`, `Integrated Science`, `English Language`) with prominent icon badges.
+- **Removed Noise**: Completely removed extraneous promotional/challenge bottom cards on the home screen to ensure a calm, straightforward user experience.
+
+### 3. Subjects Tab & Navigation Simplification (`src/app/subjects/page.tsx`, `src/app/module/page.tsx`, `src/app/practice/page.tsx`)
+- **One-Click Direct Topic Entry (`subjects/page.tsx`)**: Removed clunky accordion dropdown lists. Clicking any Topic Card now navigates straight into interactive practice (`router.push("/module?topic=${t.id}&moduleId=${t.modules?.[0]?.id || ''}")`).
+- **Simplified Topic & Step Naming**: Formatted topic titles on cards and module headers as **`Topic 1`**, **`Topic 2`**, **`Topic 3`** (with crisp subtitles preventing text cut-offs), and formatted module names inside `/module/` as **`Step 1`**, **`Step 2`**, **`Step 3`**.
+- **Minimalist Icon Shuffle Button**: Replaced the pill shuffle button (`[🔀 Shuffle]`) with a clean, circular icon button (`<Shuffle className="w-4 h-4 stroke-[2.5]" />`) right beside the question progress indicator (`1/12`) across both `/practice` and `/module`.
+
 ## 2026-07-20 — Multi-Approach Phrasing Variants, Randomized Shuffling Engine & Non-AI Keyword Scoring Architecture (`src/lib/scoring.ts`, `ShortAnswer.tsx`, `variants.ts`)
 
 ### 1. Multi-Approach Phrasing Variants (`Listing vs Defining vs Application` across Subjects)

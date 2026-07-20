@@ -9,9 +9,8 @@ import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
-import EnergyBar from "@/components/EnergyBar";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { Play, Sparkles, Clock, Award, ArrowRight, BookOpen, ChevronRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -48,7 +47,7 @@ export default function Home() {
 
   return (
     <AppShell activeTab="home" role={profile.role}>
-      {/* Gamified Sticky Top Header (`Responsive 2-row support on narrow screens`) */}
+      {/* Clean Header with Hamburger Drawer */}
       <HeaderStats
         profile={profile}
         hearts={progress.hearts}
@@ -61,190 +60,91 @@ export default function Home() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex flex-col gap-5 pt-3"
+        transition={{ duration: 0.35 }}
+        className="flex flex-col gap-6 pt-4 px-1"
       >
-        {/* Welcome Greeting Banner */}
-        <div className="flex items-center justify-between gap-2 px-1">
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 truncate">{greeting}</p>
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5 truncate">
-              Ready to learn, {profile.name || "Champion"}?
-            </h1>
-          </div>
-          <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200/80 px-3 py-1.5 rounded-2xl shadow-xs shrink-0">
-            <Award className="w-5 h-5 text-amber-500 fill-amber-500 shrink-0" />
-            <span className="font-mono font-black text-sm text-amber-950">{progress.xp} XP</span>
-          </div>
+        {/* Welcome Greeting */}
+        <div className="flex flex-col">
+          <p className="text-xs font-black uppercase tracking-wider text-slate-400">{greeting}</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">
+            Welcome, {profile.name || "Student"}
+          </h1>
         </div>
 
-        {/* Hero Continue Card (`Tactile Duolingo Portal`) */}
+        {/* Clean, Simple Continue Bar (`Dead Simple & High Action`) */}
         <section
-          className="card card-continue card-press cursor-pointer relative overflow-hidden"
           onClick={() => router.push(continueLink)}
-          role="link"
+          role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") router.push(continueLink);
           }}
+          className="bg-white hover:bg-emerald-50/60 border-2 border-emerald-600/80 rounded-[28px] p-5 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-sm hover:shadow-md group"
         >
-          {/* Background decoration */}
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/10 pointer-events-none blur-xl" />
-          <div className="absolute right-4 top-4 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 flex items-center justify-center text-white backdrop-blur-md shadow-inner shrink-0">
-            <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white ml-0.5" />
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2.5 py-0.5 rounded-full bg-white/20 text-white font-extrabold text-[11px] uppercase tracking-wider border border-white/30 backdrop-blur-sm">
-              🚀 Quick Resume
-            </span>
-            <span className="text-xs font-bold text-emerald-100">
-              {continueState.progress || 42}% Mastery
-            </span>
-          </div>
-
-          <h2 className="text-lg sm:text-xl font-extrabold text-white mt-3 leading-snug break-words pr-12">
-            {profile.classLevel === "p7" ? "Our Country Uganda (SST)" : (continueState.topic || "Fractions & Decimals")}
-          </h2>
-          <p className="text-xs font-semibold text-emerald-100/90 mt-1 flex items-center gap-1.5 break-words">
-            <BookOpen className="w-3.5 h-3.5 opacity-80 shrink-0" />
-            <span className="truncate">{profile.classLevel === "p7" ? "Session 1 · Location & Position" : (continueState.subtopic || "What is a fraction?")}</span>
-          </p>
-
-          <div className="w-full h-2.5 bg-black/20 rounded-full overflow-hidden mt-4 p-0.5 border border-white/15">
-            <motion.div
-              className="h-full rounded-full bg-white shadow-sm"
-              initial={{ width: 0 }}
-              animate={{ width: `${continueState.progress || 42}%` }}
-              transition={{ duration: 0.8 }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-white/15 flex-wrap">
-            <div className="flex items-center gap-2 text-xs font-bold text-white/90">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 shrink-0" /> ~5 min drill
-              </span>
-              <span>•</span>
-              <span className="text-amber-300 font-extrabold">🔥 +25 XP</span>
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+              <BookOpen className="w-6 h-6 stroke-[2.3]" />
             </div>
-            <span className="text-xs font-black bg-white text-emerald-900 px-3.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1 group-hover:bg-emerald-50 shrink-0">
-              Start Quiz <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-            </span>
+            <div className="min-w-0">
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-700 block">
+                Resume Where You Left Off
+              </span>
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 truncate mt-0.5 group-hover:text-emerald-950">
+                {profile.classLevel === "p7" ? "Our Country Uganda (SST)" : (continueState.topic || "Fractions & Decimals")}
+              </h2>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 text-emerald-700 font-extrabold text-sm shrink-0 bg-emerald-100/80 px-3.5 py-2 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+            <span>Continue</span>
+            <ArrowRight className="w-4 h-4" />
           </div>
         </section>
 
-        {/* 4 Core Subjects Portal Grid */}
+        {/* 4 Core Subjects Grid (`High-Visibility & Centered`) */}
         <div>
-          <div className="flex items-center justify-between mb-3 px-1 gap-2 flex-wrap">
-            <div className="min-w-0">
-              <h2 className="text-lg font-black text-slate-900 flex items-center gap-2 flex-wrap">
-                <span>NCDC Core Subjects</span>
-                <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-200 text-slate-700 shrink-0">
-                  {profile.classLevel?.toUpperCase()}
-                </span>
-              </h2>
-              <p className="text-xs font-semibold text-slate-500 mt-0.5 truncate">
-                Uganda Primary Curriculum · 4 Subjects
-              </p>
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-black text-slate-900">
+              Your Primary Subjects
+            </h2>
             <Link
               href="/subjects/"
-              className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-0.5 shrink-0"
+              className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"
             >
-              View All Topics <ChevronRight className="w-4 h-4 shrink-0" />
+              <span>Explore All</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {subjects.map((subject) => {
               const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
-              const completedTopics = subject.topics.filter((t) => t.completed).length;
-              const totalTopics = subject.topics.length;
-              const pct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
-
               return (
                 <Link
                   key={subject.id}
                   href={`/subjects/?subject=${subject.id}#${subject.id}`}
-                  className="card card-press flex flex-col justify-between p-4 group relative overflow-hidden bg-white hover:border-slate-300"
+                  className="card card-press flex flex-col items-center justify-center p-6 text-center group relative overflow-hidden bg-white hover:border-slate-300 border-2 rounded-[28px] shadow-sm hover:shadow-md transition-all"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-sm shrink-0 ${theme.iconBg} text-white group-hover:scale-105 transition-transform`}>
-                      <SubjectIcon subjectId={subject.id} className="w-5 h-5 stroke-[2.2]" />
-                    </div>
-                    <span className={`text-[10.5px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0 ${theme.badgeBg} ${theme.badgeText}`}>
-                      {completedTopics}/{totalTopics} Mastered
-                    </span>
+                  <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-sm shrink-0 ${theme.iconBg} text-white group-hover:scale-110 transition-transform mb-4`}>
+                    <SubjectIcon subjectId={subject.id} className="w-8 h-8 stroke-[2.2]" />
                   </div>
 
-                  <div className="mt-3 min-w-0">
-                    <h3 className="text-base font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors truncate">
-                      {subject.name}
-                    </h3>
-                    <p className="text-xs font-semibold text-slate-500 mt-0.5 truncate">
-                      {totalTopics} NCDC Topics · Quizzes
-                    </p>
-                  </div>
+                  <h3 className="text-xl font-black text-slate-900 group-hover:text-emerald-800 transition-colors">
+                    {subject.name}
+                  </h3>
+                  <p className="text-xs font-bold text-slate-400 mt-1">
+                    {subject.topics.length} Curriculum Topics
+                  </p>
 
-                  <div className="mt-3.5">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-1">
-                      <span>Progress</span>
-                      <span className="font-mono">{pct}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
-                      <div
-                        className={`h-full rounded-full ${theme.progressBg} transition-all duration-500`}
-                        style={{ width: `${Math.max(8, pct)}%` }}
-                      />
-                    </div>
+                  <div className="mt-5 w-full pt-4 border-t border-slate-100 flex items-center justify-center text-xs font-extrabold text-emerald-700 gap-1 group-hover:gap-2 transition-all">
+                    <span>Open Subject</span>
+                    <ArrowRight className="w-4 h-4" />
                   </div>
                 </Link>
               );
             })}
           </div>
         </div>
-
-        {/* Gamification & Daily Goal Card (`Explicit Dark Card — no white override`) */}
-        <section className="card card-dark p-5 mt-1 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-          
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider border border-amber-500/30 flex items-center gap-1 w-fit">
-                <Sparkles className="w-3.5 h-3.5 shrink-0" /> Daily Practice Challenge
-              </span>
-              <h3 className="text-base sm:text-lg font-black text-white mt-2 leading-snug">
-                Keep your {progress.streakDays}-day streak alive! 🔥
-              </h3>
-              <p className="text-xs font-semibold text-slate-300 mt-1 leading-relaxed">
-                Complete a 3-minute mixed review across Math, SST, Science & English to earn +50 XP and protect your hearts.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-white/10">
-            <EnergyBar value={progress.energy} className="mb-3 text-white/90" />
-            
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 mt-4">
-              <Link
-                href="/practice/"
-                className="btn bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-b-4 border-amber-600 active:border-b-0 py-3 px-5 rounded-2xl flex items-center justify-center gap-2 shadow-md flex-1 text-center"
-              >
-                <Sparkles className="w-5 h-5 fill-slate-950 shrink-0" />
-                <span>Launch Practice Review</span>
-              </Link>
-              {profile.role === "parent" && (
-                <Link
-                  href="/parent/"
-                  className="btn bg-white/10 hover:bg-white/20 text-white font-bold py-3 px-4 rounded-2xl border border-white/20 text-center sm:w-auto"
-                >
-                  Parent Dashboard →
-                </Link>
-              )}
-            </div>
-          </div>
-        </section>
       </motion.div>
     </AppShell>
   );
