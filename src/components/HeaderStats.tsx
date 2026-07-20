@@ -178,7 +178,7 @@ export default function HeaderStats({
                 {showClassSwitcher && (
                   <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-3">
                     <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
-                      Primary Grade Level
+                      Profile & Class Control
                     </span>
                     <button
                       type="button"
@@ -188,6 +188,21 @@ export default function HeaderStats({
                       <div className="flex items-center gap-2">
                         <BookOpen className="w-4 h-4 text-emerald-600" />
                         <span>Switch Class ({CLASS_LABELS[profile.classLevel || "p5"]})</span>
+                      </div>
+                      <span>→</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowDrawer(false);
+                        router.push("/onboarding/");
+                      }}
+                      className="w-full p-3.5 rounded-2xl bg-amber-50 hover:bg-amber-100/80 border border-amber-300/80 text-amber-950 font-extrabold text-sm flex items-center justify-between transition-all shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <RefreshCw className="w-4 h-4 text-amber-600" />
+                        <span>Back to Onboarding / Profile Setup</span>
                       </div>
                       <span>→</span>
                     </button>
@@ -211,14 +226,14 @@ export default function HeaderStats({
               </div>
 
               {/* Drawer Footer */}
-              <div className="pt-4 border-t border-slate-100">
+              <div className="pt-4 border-t border-slate-100 mt-4">
                 <button
                   type="button"
                   onClick={() => {
                     setShowDrawer(false);
                     router.push("/onboarding/");
                   }}
-                  className="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                  className="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Reset / Reconfigure Profile</span>

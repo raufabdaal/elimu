@@ -48,7 +48,7 @@ export default function MultipleChoice({ question, selected, locked, onSelect }:
               >
                 {letters[index] || (index + 1)}
               </span>
-              <span className="text-left font-bold text-[15.5px] leading-snug">{opt.text}</span>
+              <span className="text-left font-bold text-[15.5px] leading-snug break-words w-full">{opt.text}</span>
             </div>
 
             {showCorrect && (

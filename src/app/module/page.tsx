@@ -2,7 +2,7 @@
 
 import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
 import { getTopic, getModule, getSubjects } from "@/lib/data";
@@ -19,6 +19,7 @@ import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkl
 import { Question } from "@/lib/types";
 
 function ModuleContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topic") || "p5-math-fractions";
   const moduleId = searchParams.get("moduleId") || undefined;
@@ -295,6 +296,35 @@ function ModuleContent() {
 
       {/* Main Question Area */}
       <div className="question-stage px-4 sm:px-6 pt-3 pb-36 max-w-[440px] mx-auto w-full">
+        {/* Module Step Switcher Bar */}
+        {topic.modules && topic.modules.length > 1 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 mb-3 no-scrollbar border-b border-slate-200/60">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 mr-1 shrink-0">
+              Steps:
+            </span>
+            {topic.modules.map((mod, mIdx) => {
+              const isCurrentMod = mod.id === currentModule?.id;
+              return (
+                <button
+                  key={mod.id}
+                  type="button"
+                  onClick={() => router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all shrink-0 flex items-center gap-1.5 border ${
+                    isCurrentMod
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                      : mod.completed
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  <span>Step {mIdx + 1}</span>
+                  {mod.completed && <span>✓</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* Progress Bar with Clean Icon Shuffle */}
         <div className="flex items-center gap-3 mb-5">
           <div className="progress grow">

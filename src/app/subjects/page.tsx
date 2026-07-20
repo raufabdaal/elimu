@@ -23,7 +23,6 @@ export default function Subjects() {
     const loadedSubjects = getSubjects(s.profile.classLevel || "p5");
     setSubjects(loadedSubjects);
 
-    // Read query parameter '?subject=' or hash '#sst' to navigate directly to the exact subject
     const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
     const querySub = searchParams?.get("subject") as SubjectId | null;
     const hashSub = typeof window !== "undefined" ? (window.location.hash.replace("#", "") as SubjectId) : null;
@@ -83,7 +82,7 @@ export default function Subjects() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Curriculum Topics</h1>
           <p className="text-xs font-semibold text-slate-500 mt-1">
-            Tap any topic below to jump straight into bite-sized interactive drills
+            Tap a topic or select a specific step pill to jump straight into bite-sized interactive drills
           </p>
         </div>
 
@@ -123,7 +122,7 @@ export default function Subjects() {
           })}
         </div>
 
-        {/* Subject Sections (`Dead Simple, Clutter-Free Cards`) */}
+        {/* Subject Sections (`Dead Simple, Clutter-Free Cards with Direct Step Pills`) */}
         <div className="flex flex-col gap-8 mt-2">
           {filteredSubjects.map((subject) => {
             const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
@@ -159,17 +158,21 @@ export default function Subjects() {
                   />
                 </div>
 
-                {/* Direct-Entry Topics List (`Simplified Topic 1, Topic 2 Naming`) */}
-                <div className="grid grid-cols-1 gap-3">
+                {/* Direct-Entry Topics List (`Simplified Topic 1, Topic 2 Naming + Step Pills`) */}
+                <div className="grid grid-cols-1 gap-3.5">
                   {subject.topics.map((topic, idx) => {
                     const shortSubName = topic.name.split(" (")[0];
 
                     return (
-                      <button
+                      <div
                         key={topic.id}
-                        type="button"
                         onClick={() => handleTopicClick(topic)}
-                        className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all flex items-center justify-between gap-4 group active:scale-[0.99] shadow-2xs ${
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") handleTopicClick(topic);
+                        }}
+                        className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3 group cursor-pointer active:scale-[0.99] shadow-2xs ${
                           topic.completed
                             ? "bg-emerald-50/70 border-emerald-200 hover:border-emerald-500"
                             : topic.inProgress
@@ -177,49 +180,80 @@ export default function Subjects() {
                             : "bg-slate-50/70 border-slate-200/90 hover:bg-white hover:border-emerald-500"
                         }`}
                       >
-                        <div className="flex items-center gap-4 min-w-0">
-                          <div
-                            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
-                              topic.completed
-                                ? "bg-emerald-600 text-white"
-                                : topic.inProgress
-                                ? "bg-amber-500 text-white"
-                                : "bg-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
-                            }`}
-                          >
-                            {topic.completed ? (
-                              <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
-                            ) : topic.inProgress ? (
-                              <Play className="w-5 h-5 fill-white ml-0.5" />
-                            ) : (
-                              <span>#{idx + 1}</span>
-                            )}
-                          </div>
-
-                          <div className="min-w-0 grow">
-                            <div className="flex items-center gap-2">
-                              <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors">
-                                Topic {idx + 1}
-                              </span>
-                              {topic.completed && (
-                                <span className="text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
-                                  Done
-                                </span>
+                        <div className="flex items-center justify-between gap-4 w-full">
+                          <div className="flex items-center gap-4 min-w-0">
+                            <div
+                              className={`w-11 h-11 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
+                                topic.completed
+                                  ? "bg-emerald-600 text-white"
+                                  : topic.inProgress
+                                  ? "bg-amber-500 text-white"
+                                  : "bg-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
+                              }`}
+                            >
+                              {topic.completed ? (
+                                <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
+                              ) : topic.inProgress ? (
+                                <Play className="w-5 h-5 fill-white ml-0.5" />
+                              ) : (
+                                <span>#{idx + 1}</span>
                               )}
                             </div>
-                            <p className="font-semibold text-xs sm:text-[13px] text-slate-500 truncate mt-0.5">
-                              {shortSubName}
-                            </p>
+
+                            <div className="min-w-0 grow">
+                              <div className="flex items-center gap-2">
+                                <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors">
+                                  Topic {idx + 1}
+                                </span>
+                                {topic.completed && (
+                                  <span className="text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+                                    Done
+                                  </span>
+                                )}
+                              </div>
+                              <p className="font-semibold text-xs sm:text-[13px] text-slate-500 truncate mt-0.5">
+                                {shortSubName}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 shrink-0">
+                            <span className="text-xs font-black text-emerald-700 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-colors flex items-center gap-1 shadow-2xs">
+                              <span>{topic.completed ? "Review" : "Start"}</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-xs font-black text-emerald-700 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-colors flex items-center gap-1 shadow-2xs">
-                            <span>{topic.completed ? "Review" : "Start"}</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </span>
-                        </div>
-                      </button>
+                        {/* Direct Module Step Pills inside Topic Card */}
+                        {topic.modules && topic.modules.length > 1 && (
+                          <div className="flex items-center gap-1.5 pt-2.5 border-t border-slate-200/60 overflow-x-auto no-scrollbar w-full">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 mr-1 shrink-0">
+                              Steps:
+                            </span>
+                            {topic.modules.map((mod, mIdx) => (
+                              <button
+                                key={mod.id}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`);
+                                }}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all shrink-0 flex items-center gap-1 border ${
+                                  mod.completed
+                                    ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
+                                    : mod.inProgress
+                                    ? "bg-amber-500 text-white border-amber-500 shadow-2xs"
+                                    : "bg-white text-slate-600 border-slate-300 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400"
+                                }`}
+                              >
+                                <span>Step {mIdx + 1}</span>
+                                {mod.completed && <span>✓</span>}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>

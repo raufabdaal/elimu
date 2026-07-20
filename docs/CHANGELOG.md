@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-07-20 — UI Polish & Study Content / Practice Separation (`data.ts`, `Ordering.tsx`, `Matching.tsx`, `HeaderStats.tsx`, `module/page.tsx`, `subjects/page.tsx`)
+
+### 1. Separation of Multi-Approach Variants into Practice Only (`data.ts`)
+- **Clean Study Content (`TOPICS`)**: Removed all multi-approach phrasing variant topics (`p7-sst-variants`, `p7-sci-variants`, `p6-variants-mastery`) from the core `TOPICS` array so `/subjects/` and `/module/` display strictly our original 111 canonical NCDC Master Topics without tricky phrasing friction.
+- **De-labeled Practice Variants (`PRACTICE_QUESTIONS`)**: Stripped all `"Approach 1 (Defining Variant): "`, `"Approach 2 (Listing Variant): "`, and `"Approach 3 ..."` prefixes from the 72 variant questions, making them read naturally (`e.g. "What is the specific geographical definition..."`), and assigned them strictly to `VARIANT_PRACTICE_QUESTIONS` inside `PRACTICE_QUESTIONS` for dynamic practice review.
+
+### 2. Elimination of Text Truncation & Cut-offs (`Ordering.tsx`, `Matching.tsx`, `MultipleChoice.tsx`, `MultiSelect.tsx`)
+- **Full Text Wrapping**: Replaced `truncate` (`...` dots) with `leading-snug break-words w-full text-left pr-2` across ordering sequence cards, matching pairs, and multi-select/multiple-choice options. Long definitions and complex mathematical formulas now wrap cleanly across multiple lines with zero continuation dots or overflow.
+
+### 3. Hamburger Profile Control & Module Step Visibility (`HeaderStats.tsx`, `subjects/page.tsx`, `module/page.tsx`)
+- **Onboarding Control in Hamburger**: Added a prominent **`[ ✨ Back to Onboarding / Profile Setup ]`** action button inside the main Hamburger menu action list (`HeaderStats.tsx`), giving learners complete 1-click re-configuration control at any time.
+- **Direct Module Step Switchers (`Step 1 • Step 2 • Step 3`)**: Displayed clean horizontal step pills directly beneath each topic card on `/subjects/page.tsx` and directly below the sticky header on `/module/page.tsx`. Learners can jump between Step 1, Step 2, and Step 3 inside any topic instantly with zero accordion friction.
+
 ## 2026-07-20 — Comprehensive Simplicity & Cleanliness Overhaul Across Onboarding, Home, Subjects & Topic/Module Navigation (`onboarding/page.tsx`, `home/page.tsx`, `HeaderStats.tsx`, `subjects/page.tsx`, `module/page.tsx`)
 
 ### 1. Onboarding Refinements (`src/app/onboarding/page.tsx`)

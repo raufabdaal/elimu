@@ -65,7 +65,7 @@ export default function Ordering({ question, order, locked, onReorder }: Orderin
                   >
                     #{idx + 1}
                   </span>
-                  <span className="font-bold text-[15px] text-slate-900 truncate">{item.text}</span>
+                  <span className="font-bold text-[14.5px] text-slate-900 leading-snug break-words pr-2">{item.text}</span>
                 </div>
 
                 {!locked ? (

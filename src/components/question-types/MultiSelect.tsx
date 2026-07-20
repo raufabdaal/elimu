@@ -63,7 +63,7 @@ export default function MultiSelect({ question, selected, locked, onToggle }: Mu
                   </div>
                 )}
               </span>
-              <span className="text-left font-bold text-[15.5px] leading-snug">{opt.text}</span>
+              <span className="text-left font-bold text-[15.5px] leading-snug break-words w-full">{opt.text}</span>
             </div>
 
             {showCorrect && <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0 ml-2 animate-bounce-soft" />}

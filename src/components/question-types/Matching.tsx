@@ -148,7 +148,7 @@ export default function Matching({ question, matches, locked, onMatch }: Matchin
                   )}
                 </div>
                 {matchedRight && !locked && (
-                  <span className="text-[11px] font-semibold text-slate-500 truncate w-full mt-1">
+                  <span className="text-[11px] font-semibold text-slate-600 leading-snug break-words w-full mt-1 text-left">
                     → {matchedRight}
                   </span>
                 )}
@@ -184,8 +184,8 @@ export default function Matching({ question, matches, locked, onMatch }: Matchin
                 onClick={() => handleRightClick(rightValue)}
                 className={cardClass}
               >
-                <div className="flex items-center justify-between w-full">
-                  <span className="font-bold text-[14px] leading-snug">{rightValue}</span>
+                <div className="flex items-center justify-between w-full gap-2">
+                  <span className="font-bold text-[14px] leading-snug text-left break-words w-full">{rightValue}</span>
                   {theme && !locked && (
                     <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${theme.badge}`}>
                       {leftIdx + 1}
