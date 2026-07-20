@@ -166,7 +166,7 @@ export default function Home() {
               return (
                 <Link
                   key={subject.id}
-                  href={`/subjects/#${subject.id}`}
+                  href={`/subjects/?subject=${subject.id}#${subject.id}`}
                   className="card card-press flex flex-col justify-between p-4 group relative overflow-hidden bg-white hover:border-slate-300"
                 >
                   <div className="flex items-start justify-between gap-2">

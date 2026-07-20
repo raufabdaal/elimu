@@ -1,7 +1,7 @@
 "use client";
 
 import { Question } from "@/lib/types";
-import { HelpCircle, CornerDownLeft } from "lucide-react";
+import { HelpCircle, CornerDownLeft, CheckCircle2, KeyRound } from "lucide-react";
 
 interface ShortAnswerProps {
   question: Extract<Question, { type: "short_answer" }>;
@@ -35,7 +35,7 @@ export default function ShortAnswer({ question, value, locked, onChange, onSubmi
           disabled={locked}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !locked && value.trim() && onSubmit()}
-          className="answer-input pr-12 text-slate-900 placeholder:text-slate-400 font-bold"
+          className="answer-input pr-12 text-slate-900 placeholder:text-slate-400 font-bold disabled:bg-slate-50 disabled:text-slate-700 disabled:border-slate-300"
         />
         {!locked && value.trim() && (
           <button
@@ -48,9 +48,33 @@ export default function ShortAnswer({ question, value, locked, onChange, onSubmi
           </button>
         )}
       </div>
-      <p className="text-[11.5px] font-semibold text-slate-400 px-1">
-        Press <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-600 font-mono font-bold text-[10px]">ENTER</kbd> or click Check below when done
-      </p>
+
+      {!locked ? (
+        <p className="text-[11.5px] font-semibold text-slate-400 px-1">
+          Press <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-600 font-mono font-bold text-[10px]">ENTER</kbd> or click Check below when done
+        </p>
+      ) : (
+        <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 mt-1 flex flex-col gap-2 shadow-2xs">
+          <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 pb-2">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Standard Model Answer:
+            </span>
+            <span className="text-xs sm:text-sm font-mono font-extrabold text-emerald-800 bg-emerald-100/90 border border-emerald-300 px-2.5 py-1 rounded-xl">
+              {question.answer}
+            </span>
+          </div>
+          {question.keywords && question.keywords.length > 0 ? (
+            <div className="flex items-center justify-between gap-2 text-xs text-slate-600 pt-0.5">
+              <span className="font-bold flex items-center gap-1.5 text-slate-500">
+                <KeyRound className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Scored Keywords:
+              </span>
+              <span className="font-mono text-slate-800 font-semibold bg-slate-200/80 px-2.5 py-0.5 rounded-lg text-right">
+                {question.keywords.join(", ")}
+              </span>
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

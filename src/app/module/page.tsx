@@ -2,11 +2,11 @@
 
 import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
 import { getTopic, getModule } from "@/lib/data";
-import { checkAnswer } from "@/lib/scoring";
+import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
 import Celebration from "@/components/Celebration";
@@ -15,10 +15,10 @@ import Hearts from "@/components/Hearts";
 import Streak from "@/components/Streak";
 import QuestionRenderer, { getInitialState, isAnswered, QuestionState } from "@/components/QuestionRenderer";
 import { SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkles, Shuffle } from "lucide-react";
+import { Question } from "@/lib/types";
 
 function ModuleContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topic") || "p5-math-fractions";
   const moduleId = searchParams.get("moduleId") || undefined;
@@ -26,6 +26,10 @@ function ModuleContent() {
   const topic = modData?.topic || getTopic(topicId);
   const currentModule = modData?.module || (topic?.modules ? topic.modules[0] : undefined);
 
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    const raw = currentModule?.questions || topic?.questions || [];
+    return shuffleArray(raw);
+  });
   const [index, setIndex] = useState(0);
   const [state, setState] = useState<QuestionState | null>(null);
   const [locked, setLocked] = useState(false);
@@ -38,12 +42,37 @@ function ModuleContent() {
   const [appState, setAppState] = useState(loadState());
   const [shakeHearts, setShakeHearts] = useState(false);
 
-  const questions = currentModule?.questions || topic?.questions || [];
-  const q = questions[index];
-
   useEffect(() => {
     setAppState(loadState());
   }, [index, locked]);
+
+  useEffect(() => {
+    const raw = currentModule?.questions || topic?.questions || [];
+    setQuestions(shuffleArray(raw));
+    setIndex(0);
+    setState(null);
+    setLocked(false);
+    setFeedback("");
+    setFeedbackType("");
+    setShowExplanation(false);
+    setFinished(false);
+  }, [currentModule?.id, topic?.id, currentModule?.questions, topic?.questions]);
+
+  const handleReshuffleModule = () => {
+    const raw = currentModule?.questions || topic?.questions || [];
+    setQuestions(shuffleArray(raw));
+    setIndex(0);
+    setState(null);
+    setLocked(false);
+    setFeedback("");
+    setFeedbackType("");
+    setShowExplanation(false);
+    setCelebrate(false);
+    setEncourage(0);
+    setFinished(false);
+  };
+
+  const q = questions[index];
 
   if (!topic || questions.length === 0) {
     return (
@@ -54,14 +83,14 @@ function ModuleContent() {
           </div>
           <h2 className="text-xl font-black text-slate-900">Module Under Construction</h2>
           <p className="text-sm font-semibold text-slate-500 mt-1 max-w-xs">
-            We are curating NCDC curriculum questions for this specific module right now.
+            We are preparing more engaging interactive curriculum exercises for this unit.
           </p>
-          <div className="flex items-center gap-3 mt-6">
-            <Link href="/subjects/" className="btn btn-primary btn-sm">
-              Explore Available Modules
-            </Link>
-            <Link href="/home/" className="btn btn-secondary btn-sm">
-              Back to Home
+          <div className="mt-6 flex flex-col gap-3 w-full max-w-[220px]">
+            <Link
+              href="/subjects/"
+              className="btn btn-primary w-full py-3.5 shadow-md font-extrabold flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" /> <span>Explore Subjects</span>
             </Link>
           </div>
         </div>
@@ -70,8 +99,8 @@ function ModuleContent() {
   }
 
   // Initialize state when question changes
-  if (!state || state.type !== q.type) {
-    setState(getInitialState(q));
+  if (!state || !q || state.type !== q.type) {
+    if (q) setState(getInitialState(q));
     return null;
   }
 
@@ -84,14 +113,17 @@ function ModuleContent() {
       return;
     }
 
-    const { correct, partial } = checkAnswer(q, state);
+    const { correct, partial, keywordMatch } = checkAnswer(q, state);
 
     setLocked(true);
     recordAnswer(`${topic.subjectId}-${topic.id}-${currentModule?.id || "m1"}`, correct, partial);
     setAppState(loadState());
 
     if (correct) {
-      setFeedback("That's exactly right! " + q.explanation);
+      const prefix = keywordMatch && q.type === "short_answer"
+        ? `✨ Keyword Match! Standard model answer: "${q.answer}". `
+        : "That's exactly right! ";
+      setFeedback(prefix + q.explanation);
       setFeedbackType("ok");
       setCelebrate(true);
       setEncourage((n) => n + 1);
@@ -100,7 +132,10 @@ function ModuleContent() {
       loseHeart();
       playWrongSound();
       playHeartLossSound();
-      setFeedback("Not quite right. " + q.explanation);
+      const prefix = q.type === "short_answer"
+        ? `Standard model answer: "${q.answer}". `
+        : "Not quite right. ";
+      setFeedback(prefix + q.explanation);
       setFeedbackType("bad");
       setShakeHearts(true);
       setTimeout(() => setShakeHearts(false), 600);
@@ -152,38 +187,38 @@ function ModuleContent() {
           <motion.div
             initial={{ scale: 0.5, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 450, damping: 25 }}
+            transition={{ type: "spring", stiffness: 450, damping: 26 }}
             className="bg-white rounded-[36px] p-8 max-w-sm w-full border-4 border-emerald-400 shadow-2xl relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600" />
-            
+
             <motion.div
-              animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.15, 1] }}
+              animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
               transition={{ duration: 1.5, repeat: Infinity }}
               className="w-24 h-24 rounded-full bg-emerald-100 border-4 border-emerald-300 mx-auto flex items-center justify-center text-emerald-600 mb-4 shadow-inner"
             >
-              <Award className="w-12 h-12 fill-emerald-500 text-emerald-600" />
+              <Award className="w-12 h-12 stroke-[2.5]" />
             </motion.div>
 
-            <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">
-              Module Mastered ⭐
+            <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-900">
+              🎉 Module Completed
             </span>
-            <h1 className="text-2xl font-black text-slate-900 mt-2 leading-tight">
-              {currentModule?.name || topic.name}
+            <h1 className="text-2xl font-black text-slate-900 mt-2">
+              Outstanding Work!
             </h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">
-              You solved all {questions.length} interactive drill questions in this module!
+              You successfully mastered <span className="text-slate-900 font-bold">{currentModule?.name}</span>
             </p>
 
             <div className="grid grid-cols-2 gap-3 my-6">
               <div className="bg-amber-50 rounded-2xl p-3 border border-amber-200">
-                <span className="text-[11px] font-bold uppercase text-amber-800 block">XP Earned</span>
+                <span className="text-[11px] font-bold uppercase text-amber-800 block">Reward Earned</span>
                 <span className="text-xl font-mono font-black text-amber-950 flex items-center justify-center gap-1 mt-0.5">
-                  <Sparkles className="w-4 h-4 fill-amber-500 text-amber-600" /> +35 XP
+                  <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400" /> +35 XP
                 </span>
               </div>
               <div className="bg-emerald-50 rounded-2xl p-3 border border-emerald-200">
-                <span className="text-[11px] font-bold uppercase text-emerald-800 block">Accuracy</span>
+                <span className="text-[11px] font-bold uppercase text-emerald-800 block">Mastery Score</span>
                 <span className="text-xl font-mono font-black text-emerald-950 mt-0.5 block">
                   100%
                 </span>
@@ -192,27 +227,28 @@ function ModuleContent() {
 
             <div className="flex flex-col gap-2.5">
               {nextMod ? (
-                <button
-                  type="button"
-                  className="btn btn-primary w-full py-4 shadow-md flex items-center justify-center gap-2 text-base font-extrabold"
-                  onClick={() => router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(nextMod.id)}`)}
+                <Link
+                  href={`/module?topic=${topic.id}&moduleId=${nextMod.id}`}
+                  className="btn btn-primary w-full py-3.5 shadow-md font-extrabold flex items-center justify-center gap-2"
                 >
-                  <span>Next: {nextMod.name}</span> <ArrowRight className="w-5 h-5 shrink-0" />
-                </button>
-              ) : null}
+                  <span>Start Next Module</span> <ArrowRight className="w-5 h-5" />
+                </Link>
+              ) : (
+                <Link
+                  href={`/subjects/`}
+                  className="btn btn-primary w-full py-3.5 shadow-md font-extrabold flex items-center justify-center gap-2"
+                >
+                  <span>Back to Subjects</span> <ArrowRight className="w-5 h-5" />
+                </Link>
+              )}
+
               <button
                 type="button"
-                className={`${nextMod ? "btn btn-secondary" : "btn btn-primary"} w-full py-3.5 font-bold flex items-center justify-center gap-2`}
-                onClick={() => router.push("/subjects/")}
+                className="btn btn-secondary w-full py-3.5 font-bold flex items-center justify-center gap-2"
+                onClick={handleReshuffleModule}
               >
-                Explore Topic Modules <ArrowRight className="w-4 h-4" />
+                <Shuffle className="w-4 h-4" /> Practice Again (Shuffled) 🔀
               </button>
-              <Link
-                href="/home/"
-                className="text-xs font-extrabold text-slate-500 hover:text-slate-800 py-2 inline-block"
-              >
-                Back to Dashboard
-              </Link>
             </div>
           </motion.div>
         </div>
@@ -222,20 +258,22 @@ function ModuleContent() {
 
   return (
     <AppShell showTabBar={false} noScrollPad>
-      {/* Sleek Gamified Header */}
-      <header className="app-head flex items-center justify-between pb-3 gap-2">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Link href="/subjects/" className="icon-btn shrink-0" aria-label="Back to subjects">
-            <ArrowLeft className="w-5 h-5" />
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3 flex items-center justify-between shadow-2xs">
+        <div className="flex items-center gap-3 min-w-0">
+          <Link
+            href={`/subjects/`}
+            className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-95 transition-all shrink-0 shadow-2xs"
+          >
+            <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
           </Link>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-500 truncate">
-              <span className={`w-2 h-2 rounded-full shrink-0 ${theme.progressBg}`} />
-              <span className="truncate">{topic.name}</span>
-            </div>
-            <h1 className="text-base font-extrabold text-slate-900 truncate">
-              {currentModule?.name || topic.name}
+            <h1 className="text-sm font-extrabold text-slate-900 truncate">
+              {topic.name}
             </h1>
+            <p className="text-[11px] font-bold text-slate-500 truncate">
+              {currentModule?.name || "Interactive Practice"}
+            </p>
           </div>
         </div>
 
@@ -247,13 +285,22 @@ function ModuleContent() {
         </div>
       </header>
 
-      {/* Main Question Area (`Tactile & Spacious`) */}
+      {/* Main Question Area */}
       <div className="question-stage px-4 sm:px-6 pt-3 pb-36 max-w-[440px] mx-auto w-full">
         {/* Progress Bar */}
         <div className="flex items-center gap-3 mb-5">
           <div className="progress grow">
             <span style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
           </div>
+          <button
+            type="button"
+            onClick={handleReshuffleModule}
+            title="Shuffle module questions and start fresh"
+            className="text-xs font-bold text-slate-600 hover:text-emerald-700 bg-slate-100 hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-slate-200 transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+          >
+            <Shuffle className="w-3 h-3" />
+            <span>🔀 Shuffle</span>
+          </button>
           <span className="font-mono text-xs font-black text-slate-500 shrink-0">
             {index + 1}/{questions.length}
           </span>
@@ -294,22 +341,22 @@ function ModuleContent() {
           </div>
 
           {!showExplanation && (
-            <div className="mt-4 pt-2">
+            <div className="flex items-center gap-2.5 mt-4 pt-2">
               <button
                 type="button"
-                className="btn btn-primary w-full py-4 text-lg font-black shadow-md flex items-center justify-center gap-2"
+                className="btn btn-primary grow py-3.5 text-base font-black shadow-md flex items-center justify-center gap-2"
                 onClick={handleCheck}
-                disabled={!isAnswered(q, state)}
+                disabled={locked || !isAnswered(q, state)}
               >
                 <span>Check Answer</span>
-                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <CheckCircle2 className="w-5 h-5" />
               </button>
             </div>
           )}
         </motion.div>
       </div>
 
-      {/* Fixed Bottom Feedback Sheet (`Tactile Duolingo Sheet`) */}
+      {/* Fixed Bottom Feedback Sheet */}
       <AnimatePresence>
         {showExplanation && (
           <motion.div
@@ -322,26 +369,21 @@ function ModuleContent() {
             }`}
           >
             <div className="max-w-[440px] mx-auto">
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${
-                    feedbackType === "ok" ? "bg-emerald-600" : "bg-rose-600"
-                  }`}>
-                    {feedbackType === "ok" ? <CheckCircle2 className="w-5 h-5 stroke-[2.8]" /> : <XCircle className="w-5 h-5 stroke-[2.8]" />}
-                  </div>
-                  <div>
-                    <h3 className={`text-lg font-black ${feedbackType === "ok" ? "text-emerald-950" : "text-rose-950"}`}>
-                      {feedbackType === "ok" ? "🎉 Excellent! That's right!" : "❌ Incorrect — let's review why"}
-                    </h3>
-                  </div>
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${
+                  feedbackType === "ok" ? "bg-emerald-600" : "bg-rose-600"
+                }`}>
+                  {feedbackType === "ok" ? <CheckCircle2 className="w-5 h-5 stroke-[2.8]" /> : <XCircle className="w-5 h-5 stroke-[2.8]" />}
                 </div>
+                <h3 className={`text-lg font-black ${feedbackType === "ok" ? "text-emerald-950" : "text-rose-950"}`}>
+                  {feedbackType === "ok" ? "🎉 Excellent! +15 XP" : "❌ Let's Review"}
+                </h3>
               </div>
 
-              {/* Explanation Paragraphs */}
               <div className="text-[14.5px] font-bold text-slate-700 leading-relaxed bg-white/80 p-3.5 rounded-2xl border border-slate-200/60 mb-4 max-h-[22vh] overflow-y-auto">
                 <p className="font-extrabold text-slate-900 mb-1.5">{feedback}</p>
                 {q.deepDive ? (
-                  q.deepDive.split("\n\n").map((paragraph, i) => (
+                  q.deepDive.split("\n\n").map((paragraph: string, i: number) => (
                     <p key={i} className="mb-2 last:mb-0 text-slate-600 font-semibold">{paragraph}</p>
                   ))
                 ) : null}
@@ -357,22 +399,30 @@ function ModuleContent() {
                 }`}
                 onClick={nextQuestion}
               >
-                <span>{index === questions.length - 1 ? "Complete Module ⭐" : "Continue to Next →"}</span>
+                <span>{index === questions.length - 1 ? "Finish Module 🏁" : "Continue to Next →"}</span>
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Celebration show={celebrate} message="Brilliant!" onDone={() => setCelebrate(false)} />
+      <Celebration show={celebrate} message="Well Done!" subMessage="+15 XP Earned" onDone={() => setCelebrate(false)} />
       <EncouragementToast trigger={encourage} playSound={true} />
     </AppShell>
   );
 }
 
-export default function Module() {
+export default function ModulePage() {
   return (
-    <Suspense fallback={<AppShell showTabBar={false} noScrollPad><div className="p-10 text-center font-bold text-slate-500">Loading NCDC quiz module…</div></AppShell>}>
+    <Suspense
+      fallback={
+        <AppShell showTabBar={false}>
+          <div className="flex items-center justify-center min-h-[70vh]">
+            <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+          </div>
+        </AppShell>
+      }
+    >
       <ModuleContent />
     </Suspense>
   );

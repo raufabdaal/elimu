@@ -26,6 +26,7 @@ export interface MultipleChoiceQuestion {
 export interface ShortAnswerQuestion {
   type: "short_answer";
   answer: string;
+  keywords?: string[];
 }
 
 export interface TrueFalseQuestion {
@@ -63,6 +64,8 @@ export interface BaseQuestion {
   hint?: string;
   explanation: string;
   deepDive?: string;
+  keywords?: string[];
+  topicId?: string;
 }
 
 export type Question = BaseQuestion & QuestionData;

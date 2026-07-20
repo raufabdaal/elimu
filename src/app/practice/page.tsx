@@ -5,18 +5,23 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
-import { checkAnswer } from "@/lib/scoring";
+import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
 import QuestionRenderer, { getInitialState, isAnswered, QuestionState } from "@/components/QuestionRenderer";
-import { CheckCircle2, XCircle, HelpCircle, ArrowRight, Sparkles, Zap, SkipForward } from "lucide-react";
+import { CheckCircle2, XCircle, HelpCircle, ArrowRight, Sparkles, Zap, SkipForward, Shuffle } from "lucide-react";
+import { Question } from "@/lib/types";
 
 export default function Practice() {
   const router = useRouter();
   const [appState, setAppState] = useState(loadState());
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    const pool = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
+    return shuffleArray(pool);
+  });
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [state, setState] = useState<QuestionState | null>(null);
@@ -29,7 +34,6 @@ export default function Practice() {
   const [finished, setFinished] = useState(false);
   const [shakeHearts, setShakeHearts] = useState(false);
 
-  const questions = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
   const q = questions[index];
 
   useEffect(() => {
@@ -42,23 +46,42 @@ export default function Practice() {
     return null;
   }
 
+  const handleReshuffle = () => {
+    const pool = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
+    setQuestions(shuffleArray(pool));
+    setIndex(0);
+    setState(null);
+    setLocked(false);
+    setFeedback("");
+    setFeedbackType("");
+    setShowExplanation(false);
+    setCelebrate(false);
+    setEncourage(0);
+  };
+
   const handleCheck = () => {
     if (locked || !q || !isAnswered(q, state)) return;
-    const { correct, partial } = checkAnswer(q, state);
+    const { correct, partial, keywordMatch } = checkAnswer(q, state);
 
     setLocked(true);
-    recordAnswer(q.topicId, correct, partial);
+    recordAnswer(q.topicId || "general-practice", correct, partial);
     setAppState(loadState());
 
     if (correct) {
       setScore((s) => s + 1);
-      setFeedback("Spot on! " + q.explanation);
+      const prefix = keywordMatch && q.type === "short_answer"
+        ? `✨ Keyword Match! Standard model answer: "${q.answer}". `
+        : "Spot on! ";
+      setFeedback(prefix + q.explanation);
       setFeedbackType("ok");
       setCelebrate(true);
       setEncourage((n) => n + 1);
       playCorrectSound();
     } else {
-      setFeedback("Not quite. " + q.explanation);
+      const prefix = q.type === "short_answer"
+        ? `Standard model answer: "${q.answer}". `
+        : "Not quite. ";
+      setFeedback(prefix + q.explanation);
       setFeedbackType("bad");
       loseHeart();
       playWrongSound();
@@ -100,7 +123,8 @@ export default function Practice() {
   const handleSkip = () => {
     if (locked || !q) return;
     setLocked(true);
-    setFeedback("Question skipped. " + q.explanation);
+    const prefix = q.type === "short_answer" ? `Model answer: "${q.answer}". ` : "Question skipped. ";
+    setFeedback(prefix + q.explanation);
     setFeedbackType("bad");
     setShowExplanation(true);
   };
@@ -163,10 +187,13 @@ export default function Practice() {
               </button>
               <button
                 type="button"
-                className="btn btn-secondary w-full py-3.5 font-bold"
-                onClick={() => window.location.reload()}
+                className="btn btn-secondary w-full py-3.5 font-bold flex items-center justify-center gap-2"
+                onClick={() => {
+                  handleReshuffle();
+                  setFinished(false);
+                }}
               >
-                Practice Again 🔄
+                <Shuffle className="w-4 h-4" /> Practice Again (Shuffled) 🔀
               </button>
             </div>
           </motion.div>
@@ -193,9 +220,20 @@ export default function Practice() {
             <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-400" />
             <span>🔥 2x Streak Multiplier Active</span>
           </div>
-          <span className="font-mono text-xs font-black text-slate-500">
-            {index + 1}/{questions.length}
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleReshuffle}
+              title="Shuffle all questions and start fresh"
+              className="text-xs font-bold text-slate-600 hover:text-amber-700 bg-slate-100 hover:bg-amber-50 px-2.5 py-1 rounded-full border border-slate-200 transition-colors flex items-center gap-1.5 shadow-2xs"
+            >
+              <Shuffle className="w-3 h-3" />
+              <span>🔀 Shuffle</span>
+            </button>
+            <span className="font-mono text-xs font-black text-slate-500">
+              {index + 1}/{questions.length}
+            </span>
+          </div>
         </div>
 
         <div className="progress mb-4">
@@ -255,7 +293,7 @@ export default function Practice() {
         </motion.div>
       </div>
 
-      {/* Fixed Bottom Feedback Sheet (`Tactile Sheet`) */}
+      {/* Fixed Bottom Feedback Sheet */}
       <AnimatePresence>
         {showExplanation && (
           <motion.div

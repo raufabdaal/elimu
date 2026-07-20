@@ -23,10 +23,30 @@ export default function Subjects() {
     setState(s);
     const loadedSubjects = getSubjects(s.profile.classLevel || "p5");
     setSubjects(loadedSubjects);
-    // Expand first multi-module topic if available
-    const firstMulti = loadedSubjects.flatMap(s => s.topics).find(t => t.modules && t.modules.length > 1);
-    if (firstMulti) {
-      setExpandedTopicId(firstMulti.id);
+
+    // Read query parameter '?subject=' or hash '#sst' to navigate directly to the exact subject
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const querySub = searchParams?.get("subject") as SubjectId | null;
+    const hashSub = typeof window !== "undefined" ? (window.location.hash.replace("#", "") as SubjectId) : null;
+    const targetSubjectId = querySub || hashSub;
+
+    if (targetSubjectId && ["math", "sst", "sci", "eng"].includes(targetSubjectId)) {
+      setActiveFilter(targetSubjectId);
+      const targetSub = loadedSubjects.find((sub) => sub.id === targetSubjectId);
+      const firstTargetMulti = targetSub?.topics.find((t) => t.modules && t.modules.length > 1) || targetSub?.topics[0];
+      if (firstTargetMulti) {
+        setExpandedTopicId(firstTargetMulti.id);
+      }
+      setTimeout(() => {
+        const el = document.getElementById(targetSubjectId);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    } else {
+      // Expand first multi-module topic if available
+      const firstMulti = loadedSubjects.flatMap((s) => s.topics).find((t) => t.modules && t.modules.length > 1);
+      if (firstMulti) {
+        setExpandedTopicId(firstMulti.id);
+      }
     }
   }, []);
 
@@ -39,8 +59,14 @@ export default function Subjects() {
     setState(updatedState);
     const newSubjects = getSubjects(newClass);
     setSubjects(newSubjects);
-    const firstMulti = newSubjects.flatMap(s => s.topics).find(t => t.modules && t.modules.length > 1);
-    setExpandedTopicId(firstMulti ? firstMulti.id : null);
+    if (activeFilter !== "all") {
+      const targetSub = newSubjects.find((sub) => sub.id === activeFilter);
+      const firstTargetMulti = targetSub?.topics.find((t) => t.modules && t.modules.length > 1) || targetSub?.topics[0];
+      setExpandedTopicId(firstTargetMulti ? firstTargetMulti.id : null);
+    } else {
+      const firstMulti = newSubjects.flatMap((s) => s.topics).find((t) => t.modules && t.modules.length > 1);
+      setExpandedTopicId(firstMulti ? firstMulti.id : null);
+    }
   };
 
   if (!state) return null;

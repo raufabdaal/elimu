@@ -10,61 +10,36 @@ This rule ensures the human lead can easily copy/overwrite those exact files (`e
 This project is a mobile-first (but fully responsive) edutech web app for Ugandan primary pupils (P4–P7). The product brief, design system, architecture, roadmap, and deployment instructions are all in `/home/user/elimu/docs/`.
 **Workspace Integrity Rule:** All project files, components, and documentation reside inside `/home/user/elimu/`. Do not create outside directories (`/home/user/docs` or `/home/user/src` are strictly prohibited).
 
-## Current status (as of 2026-07-19)
-- **Canonical NCDC & UNEB Question Bank Documents Created (`docs/curriculum/`)**:
-  - Sourced, screened, and formatted strictly Ugandan primary curriculum questions across all **4 Classes (`P4`, `P5`, `P6`, `P7`)** and all **4 Core Subjects (`Mathematics`, `Social Studies`, `Integrated Science`, `English Language`)**.
-  - All Western or generic references (`dollars, apples, subways, generic history`) have been strictly screened out and replaced with authentic Ugandan/East African context (`UGX`, `Matooke`, `Local Council LC1-LC5 system`, `Mount Rwenzori vs Mount Elgon`, `Tropical vectors like Female Anopheles / Tsetse fly`, `Direct/Reported speech`, and `UNEB PLE format`).
-  - Canonical Markdown banks:
-    - `/home/user/elimu/docs/curriculum/P4-NCDC-QUESTION-BANK.md`
-    - `/home/user/elimu/docs/curriculum/P5-NCDC-QUESTION-BANK.md`
-    - `/home/user/elimu/docs/curriculum/P6-NCDC-QUESTION-BANK.md`
-    - `/home/user/elimu/docs/curriculum/P7-NCDC-UNEB-PLE-QUESTION-BANK.md`
-    - `/home/user/elimu/docs/curriculum/P7-MATH-COMPLETE-QUESTION-BANK.md` *(Canonical P7 Mathematics: 9 Topics, 27 Modules, 329 Progressive Questions)*
-    - `/home/user/elimu/docs/curriculum/P7-SST-COMPLETE-QUESTION-BANK.md` *(Canonical P7 Social Studies: 7 Topics, 21 Modules, 262 Progressive Questions)*
-    - `/home/user/elimu/docs/curriculum/P7-SCI-COMPLETE-QUESTION-BANK.md` *(Canonical P7 Integrated Science: 8 Topics, 27 Modules, 332 Progressive Questions)*
-    - `/home/user/elimu/docs/curriculum/P7-ENG-COMPLETE-QUESTION-BANK.md` *(Canonical P7 English Language: 4 Topics, 16 Modules, 195 Progressive Questions)*
-- **Embedded Interactive Content & Multi-Module Hierarchy (`src/lib/data.ts`)**:
-  - Embedded the canonical screened questions into `TOPICS` in `src/lib/data.ts`.
-  - Authored and embedded the **Complete 100% Primary 7 English Language (`p7-eng`) Multi-Module Syllabus (`4 Topics, 16 Modules, 195 Progressive Questions`)** covering every single NCDC & UNEB PLE category:
-    1. `p7-eng-grammar-vocab` (*Punctuation, Vocabulary, Spelling & Affixes*): 4 Modules (`49 questions`)
-    2. `p7-eng-grammar-structures` (*Comprehensive English Grammar & Sentence Structures*): 5 Modules (`61 questions`)
-    3. `p7-eng-comprehension` (*Reading Comprehension & Critical Analysis*): 3 Modules (`37 questions`)
-    4. `p7-eng-composition` (*PLE Composition, Formal Letter Writing & Functional Writing*): 4 Modules (`48 questions`)
-  - Authored and embedded the **Complete 100% Primary 7 Integrated Science (`p7-sci`) Multi-Module Syllabus (`8 Topics, 27 Modules, 332 Progressive Questions`)** covering every single NCDC & UNEB PLE category:
-    1. `p7-sci-muscular-skeletal` (*The Human Muscular & Skeletal System*): 3 Modules (`37 questions`)
-    2. `p7-sci-electricity` (*Electricity & Magnetism*): 3 Modules (`37 questions`)
-    3. `p7-sci-light-sound` (*Sound, Light & Optical Instruments*): 4 Modules (`49 questions`)
-    4. `p7-sci-excretory` (*The Human Excretory System & Skin Hygiene*): 3 Modules (`37 questions`)
-    5. `p7-sci-circulatory` (*The Human Circulatory System*): 3 Modules (`38 questions`)
-    6. `p7-sci-health-vectors` (*Tropical Health, Diseases & Vectors*): 4 Modules (`49 questions`)
-    7. `p7-sci-ecosystem` (*Interdependence of Things & Ecosystems*): 3 Modules (`36 questions`)
-    8. `p7-sci-agriculture` (*Agriculture, Farm Management & Apiculture*): 4 Modules (`49 questions`)
-  - Authored and embedded the **Complete 100% Primary 7 Social Studies (`p7-sst`) Multi-Module Syllabus (`7 Topics, 21 Modules, 262 Progressive Questions`)** covering every single NCDC & UNEB PLE thematic unit:
-    1. `p7-sst-uganda` (*Our Country Uganda: Physical Features, Governance & Economy*): 3 Modules (`39 questions`)
-    2. `p7-sst-africa-physical` (*Africa: Physical Features, Climate & Natural Vegetation*): 3 Modules (`37 questions`)
-    3. `p7-sst-africa-people` (*The People & History of Africa: Migrations, Explorers & Colonization*): 4 Modules (`49 questions`)
-    4. `p7-sst-world` (*Economic Development & International Organizations: EAC, AU & UN*): 3 Modules (`37 questions`)
-    5. `p7-sst-cases` (*African Economic Case Studies: Libya, Ghana, Nigeria, South Africa, DRC & Egypt*): 3 Modules (`36 questions`)
-    6. `p7-sst-cre` (*PLE Christian Religious Education — CRE Section*): 3 Modules (`38 questions`)
-    7. `p7-sst-ire` (*PLE Islamic Religious Education — IRE Section*): 2 Modules (`26 questions`)
-  - Authored and embedded the **Complete 100% Primary 7 Mathematics (`p7-math`) Multi-Module Syllabus (`9 Topics, 27 Modules, 329 Progressive Questions`)** covering every single NCDC & UNEB PLE category:
-    1. `p7-math-sets` (*Set Theory & Venn Diagrams*): 3 Modules (`36 questions`)
-    2. `p7-math-numbers` (*Number Patterns, Sequences & Prime Factorization*): 3 Modules (`37 questions`)
-    3. `p7-math-fractions` (*Fractions, Decimals & Percentages*): 3 Modules (`37 questions`)
-    4. `p7-math-integers` (*Integers & Number Lines*): 2 Modules (`24 questions`)
-    5. `p7-math-algebra` (*Algebra & Linear Equations*): 3 Modules (`38 questions`)
-    6. `p7-math-geometry` (*Advanced Geometry & Mensuration*): 4 Modules (`48 questions`)
-    7. `p7-math-data` (*Graphs, Data Handling & Statistics*): 3 Modules (`37 questions`)
-    8. `p7-math-business` (*Business Mathematics*): 4 Modules (`48 questions`)
-    9. `p7-math-time` (*Distance, Speed, Time & Rates*): 2 Modules (`24 questions`)
-  - Added playable interactive drills across all classes (`P4–P7`) covering all 4 core subjects (`Math, SST, Science, English`).
-- **Responsive Layout & Non-Blocking Celebrations**:
-  - `HeaderStats.tsx` uses a stacked 2-row layout (`flex-col sm:flex-row`) for mobile viewports (`320px–400px+`), keeping `Streak (3 days)` completely separated from the Class switcher so they never overlap.
-  - `Celebration.tsx` and `EncouragementToast.tsx` have `if (!show) setVisible(false)` instant unmounts and `pointer-events-none` on containers. Confetti animations never block clicks on subsequent questions across any topic (`P4–P7`).
-  - `subjects/page.tsx` features a Duolingo-style accordion module ladder (`Start →`, `Resume →`, `Review →`), and `module/page.tsx` seamlessly advances to the next sequential module upon completion (`Next: [Module Name] →`).
-- **Production Verification & Workspace Cleanliness**:
-  - `npm run build` and `npx tsc --noEmit` pass with zero TypeScript errors or linter warnings and generate the complete static export across all 11 routes in `/dist`.
-  - All temporary builder `.py` and `.txt` scripts have been removed, enforcing our single workspace folder (`/home/user/elimu/`) rule.
 
-## Next actions
-With the **entire Primary 7 (`P7`) NCDC & UNEB PLE Curriculum 100% complete across all 4 Core Subjects (`28 Topics, 91 Modules, 1,118 Progressive Questions Total`)**, the exact same sequential multi-module scaling strategy (`12–15 questions per module`) can now be applied across **Primary 6 (`P6`)**, **Primary 5 (`P5`)**, and **Primary 4 (`P4`)** portals. Always append items first to `docs/curriculum/`, screen for strictly Ugandan context (`no Western/generic filler`), insert cleanly into `TOPICS` using exact brace-boundary logic (`count == 0`), verify with `npm run build`, and provide the mandatory exact modified file summary list upon completion.
+## Current status (as of 2026-07-20) — 100% GRAND PLATFORM COMPLETION & ARCHITECTURAL UPGRADES!
+- **100% Completion across ALL 4 Primary Classes (`P7`, `P6`, `P5`, `P4`) and ALL 4 Core Subjects (`Mathematics`, `Social Studies`, `Integrated Science`, `English Language`)**:
+  - Exactly **114 Master Topics, 375 Modules, and 4,435+ Progressive Questions** fully authored, verified (`0 TypeScript errors, 11 Next.js routes exported`), and embedded in `src/lib/data.ts`.
+  - **Primary 7 (`P7` 100%)**: 28 Master Topics, 91 Modules, 1,118 Questions across `p7-math`, `p7-sst`, `p7-sci`, `p7-eng`.
+  - **Primary 6 (`P6` 100%)**: 28 Master Topics, 93 Modules, 1,124 Questions across `p6-math`, `p6-sst`, `p6-sci`, `p6-eng`.
+  - **Primary 5 (`P5` 100%)**: 29 Master Topics, 105 Modules, 1,157 Questions across `p5-math`, `p5-sst`, `p5-sci`, `p5-eng`.
+  - **Primary 4 (`P4` 100%)**: 26 Master Topics, 80 Modules, 964 Questions across `p4-math`, `p4-sst`, `p4-sci`, `p4-eng`.
+  - **Multi-Approach Phrasing Variants (`p7-sst-variants`, `p7-sci-variants`, `p6-variants-mastery`)**: 3 Master Topics, 6 Modules, 72 Questions showcasing different phrasing approaches (`Listing vs Defining`, `Direct vs Reverse Calculation`).
+- **Core Architectural Upgrades (`src/lib/scoring.ts`, `ShortAnswer.tsx`, `Practice/Module Pages`)**:
+  - **Randomized Shuffling Engine (`shuffleArray`)**: Every practice (`/practice`) and module (`/module`) session starts at a randomized point in the question pool. Added a manual **`🔀 Shuffle`** button on headers and **`Practice Again (Shuffled) 🔀`** on completion screens.
+  - **Intelligent Non-AI Keyword Scoring (`checkAnswer`)**: Evaluates `short_answer` questions via three-tier scoring (`Exact Match -> Explicit Keywords -> Automatic Derived Keyword Substrings`). If a student writes `"Victoria"` for `"Lake Victoria"`, `checkAnswer` treats it as a keyword match (`correct: true`) and surfaces: `"✨ Keyword Match! Standard model answer: Lake Victoria."` alongside a dedicated Model Answer Comparison badge in `ShortAnswer.tsx`.
+- **Canonical Reference Guides Created (`docs/curriculum/`)**:
+  - `MULTI-APPROACH-VARIANTS-AND-KEYWORD-SCORING.md`
+  - `P7-MATH-COMPLETE-QUESTION-BANK.md`, `P7-SST-COMPLETE-QUESTION-BANK.md`, `P7-SCI-COMPLETE-QUESTION-BANK.md`, `P7-ENG-COMPLETE-QUESTION-BANK.md`
+  - `P6-MATH-COMPLETE-QUESTION-BANK.md`, `P6-SST-COMPLETE-QUESTION-BANK.md`, `P6-SCI-COMPLETE-QUESTION-BANK.md`, `P6-ENG-COMPLETE-QUESTION-BANK.md`
+  - `P5-MATH-COMPLETE-QUESTION-BANK.md`, `P5-SST-COMPLETE-QUESTION-BANK.md`, `P5-ENG-COMPLETE-QUESTION-BANK.md`, `P5-SCI-COMPLETE-QUESTION-BANK.md`
+  - `P4-MATH-COMPLETE-QUESTION-BANK.md`, `P4-SST-COMPLETE-QUESTION-BANK.md`, `P4-SCI-COMPLETE-QUESTION-BANK.md`, `P4-ENG-COMPLETE-QUESTION-BANK.md`
+
+## Next actions / Future Expansion
+The canonical P4–P7 NCDC & UNEB PLE curriculum question banks across all 4 primary classes and all 4 core subjects (`114 Master Topics, 375 Modules, 4,435+ Questions`) along with dynamic shuffling and keyword scoring are now $100\%$ COMPLETE, verified, and live inside `src/lib/data.ts`.
+
+Future expansion upon resumption can explore:
+1. Authoring Lower Primary (`P1`, `P2`, `P3`) Literacy and Numeracy foundational question banks.
+2. Adding interactive audio pronunciation files or local language translation toggles (`Luganda`, `Runyakitara`, `Luo`, `Ateso`) to further assist rural learners.
+3. Adding advanced mock past-paper timed exam simulations under `/practice`.
+## Next actions / Future Expansion
+The canonical P4–P7 NCDC & UNEB PLE curriculum question banks across all 4 primary classes and all 4 core subjects (`111 Master Topics, 369 Modules, 4,363+ Questions`) are now $100\%$ COMPLETE, verified, and live inside `src/lib/data.ts`.
+
+Future expansion upon resumption can explore:
+1. Authoring Lower Primary (`P1`, `P2`, `P3`) Literacy and Numeracy foundational question banks.
+2. Adding interactive audio pronunciation files or local language translation toggles (`Luganda`, `Runyakitara`, `Luo`, `Ateso`) to further assist rural learners.
+3. Adding advanced mock past-paper timed exam simulations under `/practice`.

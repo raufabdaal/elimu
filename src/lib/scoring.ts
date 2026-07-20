@@ -5,7 +5,24 @@ export function normalizeAnswer(value: string): string {
   return value.trim().replace(/\s+/g, "").toLowerCase();
 }
 
-export function checkAnswer(question: Question, state: QuestionState): { correct: boolean; partial: number } {
+export function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+export interface CheckAnswerResult {
+  correct: boolean;
+  partial: number;
+  keywordMatch?: boolean;
+  standardAnswer?: string;
+  scoredKeywords?: string[];
+}
+
+export function checkAnswer(question: Question, state: QuestionState): CheckAnswerResult {
   switch (question.type) {
     case "multiple_choice": {
       const selected = (state as Extract<QuestionState, { type: "multiple_choice" }>).selected;
@@ -14,8 +31,67 @@ export function checkAnswer(question: Question, state: QuestionState): { correct
     }
     case "short_answer": {
       const value = (state as Extract<QuestionState, { type: "short_answer" }>).value;
-      const correct = normalizeAnswer(value) === normalizeAnswer(question.answer);
-      return { correct, partial: correct ? 1 : 0 };
+      const userNorm = normalizeAnswer(value);
+      const exactNorm = normalizeAnswer(question.answer);
+      const exactMatch = userNorm === exactNorm;
+
+      if (exactMatch) {
+        return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
+      }
+
+      // Keyword & Fuzzy/Substring match check
+      const userClean = value.trim().toLowerCase();
+      const ansClean = question.answer.trim().toLowerCase();
+
+      // Get explicit or derived keywords
+      let keywords: string[] = question.keywords && question.keywords.length > 0
+        ? question.keywords.map((k) => k.trim().toLowerCase())
+        : [];
+
+      // If no explicit keywords, derive key terms from question.answer (e.g. "Lake Victoria" -> "victoria")
+      if (keywords.length === 0 && ansClean.length > 2) {
+        const stopWords = new Set([
+          "the", "a", "an", "is", "of", "to", "in", "on", "at", "for", "by", "with",
+          "and", "or", "lake", "mount", "mt", "st", "river", "district", "city", "town"
+        ]);
+        const words = ansClean
+          .split(/[\s,.\-_/()]+/)
+          .filter((w) => w.length > 2 && !stopWords.has(w));
+        if (words.length > 0) {
+          keywords = words;
+        }
+      }
+
+      let keywordMatch = false;
+      let matchedList: string[] = [];
+
+      if (keywords.length > 0) {
+        matchedList = keywords.filter((k) => userClean.includes(k) || k.includes(userClean));
+        if (matchedList.length > 0) {
+          keywordMatch = true;
+        }
+      } else if (ansClean.includes(userClean) || userClean.includes(ansClean)) {
+        keywordMatch = true;
+        matchedList = [ansClean];
+      }
+
+      if (keywordMatch) {
+        return {
+          correct: true,
+          partial: 1,
+          keywordMatch: true,
+          standardAnswer: question.answer,
+          scoredKeywords: matchedList,
+        };
+      }
+
+      return {
+        correct: false,
+        partial: 0,
+        keywordMatch: false,
+        standardAnswer: question.answer,
+        scoredKeywords: keywords,
+      };
     }
     case "true_false": {
       const selected = (state as Extract<QuestionState, { type: "true_false" }>).selected;
