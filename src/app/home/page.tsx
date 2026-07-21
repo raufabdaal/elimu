@@ -110,6 +110,33 @@ export default function Home() {
           )}
         </div>
 
+        {/* Weekly Mock Exam Gate Banner */}
+        {progress.pendingMockExam && (
+          <div
+            onClick={() => router.push("/practice/?mode=mock")}
+            role="button"
+            tabIndex={0}
+            className="bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 rounded-[28px] shadow-lg cursor-pointer flex items-center justify-between gap-4 border-2 border-emerald-400 animate-pulse"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center font-black text-2xl shrink-0">
+                🎓
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-200 block">
+                  Required Weekly Checkpoint
+                </span>
+                <h3 className="text-base sm:text-lg font-black text-white truncate">
+                  Launch 20-Question Mock Exam
+                </h3>
+              </div>
+            </div>
+            <span className="text-xs font-black bg-white text-emerald-950 px-3.5 py-2 rounded-xl shrink-0">
+              Start Now →
+            </span>
+          </div>
+        )}
+
         {/* Clean, Simple Continue Bar (`Dead Simple & High Action`) */}
         <section
           onClick={() => router.push(continueLink)}
@@ -155,7 +182,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {subjects.map((subject) => {
               const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
               return (

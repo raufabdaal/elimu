@@ -145,6 +145,9 @@ export interface AppState {
     practiceAccuracy: number;
     totalAttempts: number;
     correctAnswers: number;
+    pendingMockExam?: boolean;
+    lastMockScore?: number;
+    mockExamsPassed?: number;
   };
   continue: ContinueState;
   session: SessionStats;
@@ -169,6 +172,9 @@ export const DEFAULT_STATE: AppState = {
     practiceAccuracy: 82,
     totalAttempts: 17,
     correctAnswers: 14,
+    pendingMockExam: false,
+    lastMockScore: 85,
+    mockExamsPassed: 2,
   },
   continue: {
     subject: "Mathematics",

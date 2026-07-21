@@ -124,7 +124,7 @@ export default function Subjects() {
 
         {/* If 'all' is selected, show only the 4 clean Subject Portal Cards first */}
         {activeFilter === "all" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-3">
             {subjects.map((subject) => {
               const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
               const completedTopics = subject.topics.filter((t) => t.completed).length;
@@ -213,7 +213,7 @@ export default function Subjects() {
                   </div>
 
                   {/* Direct-Entry Topics List (`Simplified Topic 1, Topic 2 Naming + Step Pills`) */}
-                  <div className="grid grid-cols-1 gap-3.5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     {subject.topics.map((topic, idx) => {
                       const shortSubName = topic.name.split(" (")[0];
                       const isCompleted = topic.completed;

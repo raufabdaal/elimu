@@ -25,6 +25,11 @@ export default function Onboarding() {
     if (s.profile.name && s.profile.name !== "Amina") {
       setName(s.profile.name);
     }
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    if (searchParams?.get("role") === "parent") {
+      setRole("parent");
+      setStep(2);
+    }
   }, []);
 
   if (!mounted) return null;

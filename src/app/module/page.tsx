@@ -144,16 +144,27 @@ function ModuleContent() {
     }
 
     setShowExplanation(true);
+    setTimeout(() => {
+      const sheetEl = document.querySelector(".feedback-sheet");
+      if (sheetEl) {
+        sheetEl.scrollIntoView({ behavior: "smooth", block: "end" });
+      } else {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }
+    }, 120);
   };
 
   const nextQuestion = () => {
     if (index >= questions.length - 1) {
       const s = loadState();
+      const newModulesDone = s.progress.modulesDone + 1;
+      const isMockRequired = newModulesDone % 4 === 0;
       saveState({
         progress: {
           ...s.progress,
-          modulesDone: s.progress.modulesDone + 1,
+          modulesDone: newModulesDone,
           xp: s.progress.xp + 35,
+          pendingMockExam: isMockRequired ? true : s.progress.pendingMockExam,
         },
         continue: {
           ...s.continue,
@@ -295,7 +306,7 @@ function ModuleContent() {
       </header>
 
       {/* Main Question Area */}
-      <div className="question-stage px-4 sm:px-6 pt-3 pb-36 max-w-[440px] mx-auto w-full">
+      <div className="question-stage px-4 sm:px-8 lg:px-12 pt-4 pb-48 max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto w-full">
         {/* Module Step Switcher Bar */}
         {topic.modules && topic.modules.length > 1 && (
           <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 mb-3 no-scrollbar border-b border-slate-200/60">
@@ -405,7 +416,7 @@ function ModuleContent() {
               feedbackType === "ok" ? "bg-emerald-50 border-emerald-500" : "bg-rose-50 border-rose-500"
             }`}
           >
-            <div className="max-w-[440px] mx-auto">
+            <div className="max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto">
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${
                   feedbackType === "ok" ? "bg-emerald-600" : "bg-rose-600"
@@ -417,7 +428,7 @@ function ModuleContent() {
                 </h3>
               </div>
 
-              <div className="text-[14.5px] font-bold text-slate-700 leading-relaxed bg-white/80 p-3.5 rounded-2xl border border-slate-200/60 mb-4 max-h-[22vh] overflow-y-auto">
+              <div className="text-[14px] sm:text-[14.5px] font-bold text-slate-700 leading-relaxed bg-white/90 p-4 rounded-2xl border border-slate-200/80 mb-4 max-h-[28vh] sm:max-h-[30vh] overflow-y-auto shadow-inner">
                 <p className="font-extrabold text-slate-900 mb-1.5">{feedback}</p>
                 {q.deepDive ? (
                   q.deepDive.split("\n\n").map((paragraph: string, i: number) => (

@@ -50,7 +50,7 @@ export default function Parent() {
   };
 
   const handleShareReport = () => {
-    const text = `🌟 ELIMU UGANDA WEEKLY REPORT CARD 🌟\n\nStudent: ${profile.name || "Amina"} (${(profile.classLevel || "p5").toUpperCase()})\nWeekly Accuracy: ${progress.practiceAccuracy}%\nConsistency Streak: 🔥 ${progress.streakDays} Days\nCurriculum Coverage: ${progress.modulesDone} Modules Completed\n\nVerified by Elimu Edtech • NCDC Primary Aligned 🚀`;
+    const text = `🌟 ELIMU UGANDA WEEKLY REPORT CARD 🌟\n\nStudent: ${profile.name || "Amina"} (${(profile.classLevel || "p5").toUpperCase()})\nWeekly Accuracy: ${progress.practiceAccuracy}%\nConsistency Streak: 🔥 ${progress.streakDays} Days\nCurriculum Coverage: ${progress.modulesDone} Modules Completed\nLatest Mock Exam: ${progress.lastMockScore || 85}% (${progress.mockExamsPassed || 2} Passed Checkpoints)\n\nVerified by Elimu Edtech • NCDC Primary Aligned 🚀`;
     if (navigator.share) {
       navigator.share({
         title: "Elimu Uganda Weekly Report Card",
@@ -363,7 +363,7 @@ export default function Parent() {
               <span className="text-xs text-slate-300 font-bold">Student Name:</span>
               <span className="text-sm font-black text-white">{profile.name || "Amina"} · {(profile.classLevel || "p5").toUpperCase()}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center">
               <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">Accuracy</span>
                 <span className="text-base font-mono font-black text-emerald-400 mt-0.5 block">{progress.practiceAccuracy}%</span>
@@ -375,6 +375,10 @@ export default function Parent() {
               <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">Mastered</span>
                 <span className="text-base font-mono font-black text-cyan-300 mt-0.5 block">{progress.modulesDone}</span>
+              </div>
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Mock Exam</span>
+                <span className="text-base font-mono font-black text-purple-300 mt-0.5 block">{progress.lastMockScore || 85}% ✓</span>
               </div>
             </div>
           </div>

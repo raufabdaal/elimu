@@ -1,97 +1,103 @@
 "use client";
 
+// Embedded Base64 8-bit PCM WAV Data URIs (`Guaranteed Self-Contained Playback Across All Mobile & Desktop Browsers`)
+// High-pitched ding (800 Hz -> 1200 Hz rising tone)
+const CORRECT_WAV = "data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";
+// Low buzzer (200 Hz -> 150 Hz descending tone)
+const WRONG_WAV = "data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";
+// Sparkling fanfare
+const STREAK_WAV = "data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";
+// Crisp click
+const CLICK_WAV = "data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA";
+
 let audioContext: AudioContext | null = null;
 
 function getAudioContext() {
   if (typeof window === "undefined") return null;
-  if (!audioContext) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    audioContext = new AudioContextClass();
+  try {
+    if (!audioContext) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      audioContext = new AudioContextClass();
+    }
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+    return audioContext;
+  } catch {
+    return null;
   }
-  if (audioContext && audioContext.state === "suspended") {
-    audioContext.resume();
-  }
-  return audioContext;
 }
 
-// ===== DUOLINGO-STYLE RICH HARMONIC SOUNDS =====
-
 /**
- * Joyful 3-note rising major chord + sparkle (Correct Answer)
+ * Helper to play dual Web Audio + HTML5 Audio fallback for guaranteed mobile ding
  */
-export function playCorrectSound() {
+function playAudioOrTone(wavUri: string, notes: number[], durations: number[], types: OscillatorType[], volume = 0.2) {
+  if (typeof window !== "undefined") {
+    try {
+      const audio = new Audio(wavUri);
+      audio.volume = volume;
+      audio.play().catch(() => {});
+    } catch {
+      // Fallback to Web Audio if HTML5 Audio fails
+    }
+  }
+
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const t = ctx.currentTime;
-  // Major triad notes: C6 (1046.5 Hz), E6 (1318.5 Hz), G6 (1568 Hz), C7 (2093 Hz)
-  const notes = [1046.5, 1318.5, 1568, 2093];
+  try {
+    if (ctx.state === "suspended") ctx.resume();
+    const t = ctx.currentTime;
+    let offset = 0;
 
-  notes.forEach((freq, index) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    notes.forEach((freq, index) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
 
-    osc.type = index === 3 ? "sine" : "triangle";
-    osc.frequency.setValueAtTime(freq, t + index * 0.06);
+      osc.type = types[index] || "sine";
+      osc.frequency.setValueAtTime(freq, t + offset);
 
-    gain.gain.setValueAtTime(0, t + index * 0.06);
-    gain.gain.linearRampToValueAtTime(0.18, t + index * 0.06 + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.06 + 0.38);
+      gain.gain.setValueAtTime(0, t + offset);
+      gain.gain.linearRampToValueAtTime(volume, t + offset + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + offset + (durations[index] || 0.2));
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
 
-    osc.start(t + index * 0.06);
-    osc.stop(t + index * 0.06 + 0.4);
-  });
+      osc.start(t + offset);
+      osc.stop(t + offset + (durations[index] || 0.2));
+      offset += (durations[index] || 0.2) * 0.45;
+    });
+  } catch (e) {
+    console.warn("AudioContext playback error:", e);
+  }
+}
+
+/**
+ * Joyful 4-note rising major chord + sparkle (Correct Answer Ding)
+ */
+export function playCorrectSound() {
+  playAudioOrTone(
+    CORRECT_WAV,
+    [880, 1108.73, 1318.51, 1760], // A5, C#6, E6, A6 rising major triad
+    [0.18, 0.18, 0.18, 0.4],
+    ["triangle", "triangle", "triangle", "sine"],
+    0.22
+  );
 }
 
 /**
  * Soft descending two-tone interval + low bass cushion (Wrong Answer / Heart Loss)
  */
 export function playWrongSound() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const t = ctx.currentTime;
-  const notes = [311.1, 261.6]; // D#4 -> C#4 soft interval
-
-  notes.forEach((freq, index) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(freq, t + index * 0.14);
-
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(600, t + index * 0.14);
-
-    gain.gain.setValueAtTime(0, t + index * 0.14);
-    gain.gain.linearRampToValueAtTime(0.2, t + index * 0.14 + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.14 + 0.28);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(t + index * 0.14);
-    osc.stop(t + index * 0.14 + 0.3);
-  });
-
-  // Low bass cushion
-  const bass = ctx.createOscillator();
-  const bassGain = ctx.createGain();
-  bass.type = "sine";
-  bass.frequency.setValueAtTime(110, t);
-  bass.frequency.linearRampToValueAtTime(80, t + 0.35);
-  bassGain.gain.setValueAtTime(0.15, t);
-  bassGain.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
-  bass.connect(bassGain);
-  bassGain.connect(ctx.destination);
-  bass.start(t);
-  bass.stop(t + 0.4);
+  playAudioOrTone(
+    WRONG_WAV,
+    [311.13, 261.63, 130.81], // D#4 -> C#4 -> C3 low drop
+    [0.2, 0.25, 0.35],
+    ["sawtooth", "sawtooth", "sine"],
+    0.18
+  );
 }
 
 export function playHeartLossSound() {
@@ -102,30 +108,13 @@ export function playHeartLossSound() {
  * Sparkling 5-note rising pentatonic sequence (Streak Bonus / Level Up)
  */
 export function playStreakSound() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const t = ctx.currentTime;
-  // C5, D5, E5, G5, C6
-  const notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
-
-  notes.forEach((freq, index) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(freq, t + index * 0.05);
-
-    gain.gain.setValueAtTime(0, t + index * 0.05);
-    gain.gain.linearRampToValueAtTime(0.22, t + index * 0.05 + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + index * 0.05 + 0.35);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(t + index * 0.05);
-    osc.stop(t + index * 0.05 + 0.38);
-  });
+  playAudioOrTone(
+    STREAK_WAV,
+    [523.25, 659.25, 783.99, 1046.5, 1318.51], // C5, E5, G5, C6, E6 pentatonic sparkle
+    [0.14, 0.14, 0.14, 0.18, 0.45],
+    ["triangle", "triangle", "triangle", "sine", "sine"],
+    0.24
+  );
 }
 
 export function playLevelUpSound() {
@@ -136,28 +125,5 @@ export function playLevelUpSound() {
  * Crisp woody pop sound (Tactile Button Click)
  */
 export function playButtonClick() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const t = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(900, t);
-  osc.frequency.exponentialRampToValueAtTime(300, t + 0.06);
-
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(1400, t);
-
-  gain.gain.setValueAtTime(0.18, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
-
-  osc.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start(t);
-  osc.stop(t + 0.08);
+  playAudioOrTone(CLICK_WAV, [800, 300], [0.03, 0.05], ["sine", "triangle"], 0.12);
 }

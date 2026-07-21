@@ -78,38 +78,71 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
         return { correct: false, partial: 0, keywordMatch: false, standardAnswer: question.answer };
       }
 
-      // For English, Social Studies, and non-numeric Science short answers: run intelligent keyword scoring
+      // For English, Social Studies, and non-numeric Science short answers: run intelligent multi-answer & keyword scoring
       const userClean = value.trim().toLowerCase();
       const ansClean = question.answer.trim().toLowerCase();
+      const qText = question.question.toLowerCase();
 
-      let keywords: string[] = question.keywords && question.keywords.length > 0
-        ? question.keywords.map((k) => k.trim().toLowerCase())
-        : [];
-
-      if (keywords.length === 0 && ansClean.length > 2) {
-        const stopWords = new Set([
-          "the", "a", "an", "is", "of", "to", "in", "on", "at", "for", "by", "with",
-          "and", "or", "lake", "mount", "mt", "st", "river", "district", "city", "town"
-        ]);
-        const words = ansClean
-          .split(/[\s,.\-_/()]+/)
-          .filter((w) => w.length > 2 && !stopWords.has(w));
-        if (words.length > 0) {
-          keywords = words;
-        }
-      }
+      // Uganda Primary Domain Multi-Answer & Synonym Expansion Map
+      const domainMap: { [key: string]: string[] } = {
+        "national park": ["bwindi", "queen elizabeth", "murchison", "kidepo", "mgahinga", "lake mburo", "semuliki", "rwenzori", "elgon", "kibale"],
+        "equator": ["kasese", "kamwenge", "ibanda", "kiruhura", "sembabule", "mpigi", "masaka", "kalangala", "kayabwe", "0 degree", "zero degree", "0°"],
+        "lake": ["victoria", "albert", "kyoga", "edward", "george", "bunyonyi", "mutanda", "bisina"],
+        "river": ["nile", "victoria nile", "katonga", "kafue", "achwa", "semliki", "kagera", "mpologoma"],
+        "vector": ["mosquito", "anopheles", "aedes", "housefly", "tsetse", "fly", "rat", "flea", "cockroach", "snail"],
+        "photosynthesis": ["photosynthesis", "chlorophyll", "sunlight", "carbon dioxide", "glucose", "stomata", "water"],
+        "first aid": ["first aid", "help", "immediate", "temporary", "bandage", "gauze", "antiseptic", "cool water"],
+        "mountain": ["rwenzori", "elgon", "mufumbiro", "moroto", "kadam", "margherita", "wagagai"],
+        "tribe": ["baganda", "banyankole", "basoga", "bakiga", "acholi", "iteso", "langi", "lugbara", "banyoro", "batoro", "karamojong"],
+        "cash crop": ["coffee", "tea", "cotton", "tobacco", "sugarcane", "vanilla", "cocoa", "sunflower"],
+        "food crop": ["matooke", "banana", "cassava", "sweet potato", "maize", "beans", "millet", "sorghum", "groundnuts"],
+      };
 
       let keywordMatch = false;
       let matchedList: string[] = [];
+      let keywords: string[] = [];
 
-      if (keywords.length > 0) {
-        matchedList = keywords.filter((k) => userClean.includes(k) || k.includes(userClean));
-        if (matchedList.length > 0) {
-          keywordMatch = true;
+      // Check domain expansion first if applicable
+      for (const [key, validAnswers] of Object.entries(domainMap)) {
+        if (qText.includes(key) || ansClean.includes(key)) {
+          const matched = validAnswers.filter((va) => userClean.includes(va) || va.includes(userClean));
+          if (matched.length > 0) {
+            keywordMatch = true;
+            matchedList = matched;
+            keywords = validAnswers;
+            break;
+          }
         }
-      } else if (ansClean.includes(userClean) || userClean.includes(ansClean)) {
-        keywordMatch = true;
-        matchedList = [ansClean];
+      }
+
+      // If not matched via domain dictionary, check explicit keywords or derived key terms
+      if (!keywordMatch) {
+        keywords = question.keywords && question.keywords.length > 0
+          ? question.keywords.map((k) => k.trim().toLowerCase())
+          : [];
+
+        if (keywords.length === 0 && ansClean.length > 2) {
+          const stopWords = new Set([
+            "the", "a", "an", "is", "of", "to", "in", "on", "at", "for", "by", "with",
+            "and", "or", "lake", "mount", "mt", "st", "river", "district", "city", "town"
+          ]);
+          const words = ansClean
+            .split(/[\s,.\-_/()]+/)
+            .filter((w) => w.length > 2 && !stopWords.has(w));
+          if (words.length > 0) {
+            keywords = words;
+          }
+        }
+
+        if (keywords.length > 0) {
+          matchedList = keywords.filter((k) => userClean.includes(k) || k.includes(userClean));
+          if (matchedList.length > 0) {
+            keywordMatch = true;
+          }
+        } else if (ansClean.includes(userClean) || userClean.includes(ansClean)) {
+          keywordMatch = true;
+          matchedList = [ansClean];
+        }
       }
 
       if (keywordMatch) {

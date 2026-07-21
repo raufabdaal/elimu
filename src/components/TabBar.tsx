@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Home, BookOpen, Sparkles, User } from "lucide-react";
 
 interface TabBarProps {
-  active: "home" | "subjects" | "practice" | "parent";
+  active: "home" | "subjects" | "practice" | "parent" | "pair";
   role?: "learner" | "parent";
 }
 
@@ -15,8 +15,8 @@ const learnerTabs = [
 ] as const;
 
 const parentTabs = [
-  { id: "home", label: "Pupil Home", href: "/home/", Icon: Home },
-  { id: "parent", label: "Parent Portal", href: "/parent/", Icon: User },
+  { id: "parent", label: "Dashboard", href: "/parent/", Icon: User },
+  { id: "pair", label: "Pair Child", href: "/onboarding/?role=parent", Icon: Sparkles },
 ] as const;
 
 export default function TabBar({ active, role = "learner" }: TabBarProps) {

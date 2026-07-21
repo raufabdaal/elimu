@@ -5,7 +5,7 @@ import TabBar from "./TabBar";
 
 interface AppShellProps {
   children: ReactNode;
-  activeTab?: "home" | "subjects" | "practice" | "parent";
+  activeTab?: "home" | "subjects" | "practice" | "parent" | "pair";
   showTabBar?: boolean;
   noScrollPad?: boolean;
   role?: "learner" | "parent";

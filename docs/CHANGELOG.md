@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-07-20 — Responsive Desktop/Tablet Layouts, Math Exponent Superscripts, Symbol Cleanup & Weekly Mock Exam Checkpoints (`globals.css`, `scoring.ts`, `data.ts`, `parent/page.tsx`, `practice/page.tsx`)
+
+### 1. Responsive 3-Tier Layout Architecture (`src/app/globals.css`, `src/app/home/page.tsx`, `src/app/subjects/page.tsx`)
+- **Desktop & Tablet Expansion**: Removed the rigid `max-width: 460px; max-height: 94dvh; overflow: hidden` constraints that trapped desktop/tablet views inside a phone strip.
+- **Dynamic Container Scaling**:
+  - **Mobile (`< 640px`)**: Full-width mobile shell (`max-w-[460px] mx-auto`) with bottom navigation tab bar.
+  - **Tablet (`640px – 1024px`)**: Expanded rounded container (`max-w-[768px] min-h-[880px]`) with spacious padding and multi-column grids (`grid-cols-2`).
+  - **Desktop (`> 1024px`)**: Sleek, wide web application layout (`max-w-[1200px] border-radius: 40px`). Subject portal cards and home grids now expand to 4 wide columns (`lg:grid-cols-4`), while practice stages expand to `lg:max-w-3xl` for comfortable reading.
+
+### 2. Math Scoring Strictness & Exponent Notation (`2²` vs `2^2`) (`src/lib/scoring.ts`, `src/lib/data.ts`)
+- **Strict Math Evaluation (`isMathOrNumeric`)**: Updated `checkAnswer` so that short-answer math questions (`topicId.includes("-math")` or purely numeric answers) strictly require exact normalized or equivalent numerical match (`"3600"` vs `"3,600"` or `"1 1/4"` vs `"5/4"`), completely bypassing fuzzy keyword matching.
+- **Ordinary Superscript Exponents**: Replaced all caret notations (`^0` to `^9`, `^{10}`) across `data.ts` with ordinary unicode superscripts (`⁰`, `¹`, `²`, `³`, `⁴`, `⁵`, `⁶`, `⁷`, `⁸`, `⁹`). For instance, `2^2` now renders as **`2²`** and `10^1` renders as **`10¹`**.
+- **Fixed Exponent Ordering Card (`p7nm1-11`)**: Updated `p7nm1-11` (`Arrange exponential numbers from smallest to largest`) so items display clean superscripts (`10 to the power of 1 (10¹)`, `2 to the power of 4 (2⁴)`, `5 to the power of 2 (5²)`, `3 to the power of 3 (3³)`) without side notes that gave away the answer.
+
+### 3. Total Symbol & Notation Clean-up (`src/lib/data.ts`)
+- **Universal String Sanitation**: Processed every single question, option, and explanation across all 4,435+ items in `data.ts` to strip out backtick code boxes around brackets (`(EAT)` instead of ``(`EAT`)``), odd dollar signs around numbers (`1,000 metres` instead of `$1,000	ext{ m}$`, `45°E` instead of `$45^\circ	ext{E}$`), weird slashes/hyphens, and LaTeX markup, creating clean, minimal human-readable questions.
+
+### 4. Subjects Tab Default View & Set Theory Card (`src/app/subjects/page.tsx`)
+- **Subject Portal Cards First**: When landing on `/subjects/` (or choosing `All Subjects`), the page displays our **4 clean Subject Cards (`Mathematics`, `Social Studies`, `Integrated Science`, `English Language`)**. Clicking a Subject Card drills down cleanly into that subject's topics with a `[ ← Back to All Subjects ]` button.
+- **Set Theory Amber Status**: Updated `isInProgress` logic (`topic.inProgress || (!topic.completed && idx === 0)`) so the very first topic of any subject (`e.g. Set Theory`) automatically gets our signature warm amber/yellow styling and `Play ▶` badge.
+
+### 5. Parent Portal De-cluttering & Code Linking (`src/app/parent/page.tsx`, `TabBar.tsx`)
+- **Streamlined Navigation**: Removed `Pupil Home` / `Student Home` from the parent tab bar (`TabBar.tsx`) and header options. Parents now have two dedicated, high-focus tabs: **`Dashboard`** (`/parent`) and **`Pair Child`** (`/onboarding/?role=parent`).
+- **Live Encouragement Inbox & Report Card**: Sent cheers persist to `localStorage` and trigger an interactive **`💌 Parent Cheers`** inbox modal on the student home screen. The parent dashboard features the **Weekly Scholar Report Card & Certificate (`ELIMU EDTECH BRANDED`)**, tracking Accuracy, Streaks, Modules Mastered, and **Latest Mock Exam Score (`85% ✓`)** with 1-click WhatsApp/SMS sharing.
+
+### 6. Weekly Mock Examination Checkpoints (`src/app/practice/page.tsx`, `src/app/module/page.tsx`)
+- **Curriculum Checkpoint Gate**: Upon completing every 4 modules (`(modulesDone + 1) % 4 === 0`), `pendingMockExam: true` is triggered in state.
+- **20-Question Mock Assessment**: Learners are prompted with the **`🚨 Weekly Mock Exam Checkpoint`** banner on `/home` and `/subjects`. Launching the mock exam runs a 20-question mixed assessment (`mode=mock`). Completing it issues their **`🏆 Weekly Mock Examination Certificate`** (`+100 XP`), unlocks subsequent modules, and updates the Parent Dashboard report card!
+
 ## 2026-07-20 — UI Polish & Study Content / Practice Separation (`data.ts`, `Ordering.tsx`, `Matching.tsx`, `HeaderStats.tsx`, `module/page.tsx`, `subjects/page.tsx`)
 
 ### 1. Separation of Multi-Approach Variants into Practice Only (`data.ts`)
