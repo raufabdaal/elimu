@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-20 — Progressive Web App (PWA) Offline Engine, App Manifest & Custom Favicons (`public/sw.js`, `manifest.json`, `PWAControls.tsx`, `layout.tsx`)
+
+### 1. PWA Offline Service Worker & Asset Caching (`public/sw.js`)
+- **Stale-While-Revalidate / Cache-First Architecture**: Created a production-grade Service Worker (`sw.js`) that caches core navigation routes (`/`, `/subjects/`, `/home/`, `/practice/`, `/parent/`) and static assets (`data.ts`, `sounds.ts`, `scoring.ts`, JS chunks).
+- **100% Offline Capability**: Because our 4,435+ questions, scoring engine, audio data URIs, and user state (`localStorage`) run entirely client-side, caching static bundles enables full offline functionality across rural and urban Uganda without network access.
+
+### 2. Web App Manifest & Custom Favicons (`public/manifest.json`, `layout.tsx`, `/public/icon-*.png`)
+- **Elimu Branded Icons**: Generated custom, high-resolution gradient app icons (`icon-512.png`, `icon-192.png`, `apple-touch-icon.png`, `favicon.ico`) featuring our signature emerald-to-teal rounded geometric branding (`E`).
+- **Standalone App Experience**: Configured `/public/manifest.json` with `display: "standalone"`, `theme_color: "#0d7a54"`, and `start_url: "/subjects/"`, allowing one-tap installation from mobile web browsers right onto iOS and Android home screens.
+
+### 3. PWA Installation Banner & Offline Indicator (`src/components/PWAControls.tsx`)
+- **Native & Guided Install Prompt**: Surfaces an elegant **`[ 📲 Download Elimu App • Offline Ready ]`** banner when not installed (`beforeinstallprompt` capture + iOS Safari helper).
+- **Live Offline Status Bar**: Displays a fixed top alert (`⚡ Offline Mode Active — All 4,435+ Questions & Local Storage Ready!`) whenever network connectivity drops (`!navigator.onLine`).
+
 ## 2026-07-20 — Responsive Desktop/Tablet Layouts, Math Exponent Superscripts, Symbol Cleanup & Weekly Mock Exam Checkpoints (`globals.css`, `scoring.ts`, `data.ts`, `parent/page.tsx`, `practice/page.tsx`)
 
 ### 1. Responsive 3-Tier Layout Architecture (`src/app/globals.css`, `src/app/home/page.tsx`, `src/app/subjects/page.tsx`)

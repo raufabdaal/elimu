@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import PWAControls from "@/components/PWAControls";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Elimu · Uganda Primary P4–P7",
+  title: "Elimu · Uganda Primary P4–P7 Edtech",
   description:
-    "Premium mobile-first learning for Ugandan primary pupils. Quick quizzes, instant feedback, and parent progress tracking.",
+    "Uganda National Curriculum Development Centre (NCDC) & UNEB PLE interactive primary question banks across P4–P7. Offline PWA ready.",
+  manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -24,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <PWAControls />
+        {children}
+      </body>
     </html>
   );
 }
