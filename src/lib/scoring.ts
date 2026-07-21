@@ -39,16 +39,53 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
         return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
       }
 
-      // Keyword & Fuzzy/Substring match check
+      // Check if this is a Mathematics or strictly number-based question
+      const isMathOrNumeric = question.topicId?.includes("-math") ||
+        question.id.includes("math") ||
+        question.id.includes("nm") ||
+        question.id.includes("am") ||
+        question.id.includes("st") ||
+        (/\d/.test(question.answer) && /^[\d\s+\-*/.,=()^%°$€£¥A-Za-z:;]+$/.test(question.answer.trim()));
+
+      if (isMathOrNumeric) {
+        // Strict exact evaluation for math/numbers without fuzzy keyword matching
+        const cleanUserNum = userNorm.replace(/,/g, "");
+        const cleanExactNum = exactNorm.replace(/,/g, "");
+        if (cleanUserNum === cleanExactNum) {
+          return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
+        }
+        // Check fraction/decimal equivalence if numeric
+        const parseFractionOrDecimal = (str: string): number | null => {
+          if (!isNaN(Number(str))) return Number(str);
+          if (str.includes("/")) {
+            const parts = str.trim().split(/\s+/);
+            if (parts.length === 2 && parts[1].includes("/")) {
+              const [whole, frac] = parts;
+              const [num, den] = frac.split("/").map(Number);
+              if (den && !isNaN(Number(whole)) && !isNaN(num)) return Number(whole) + num / den;
+            } else if (parts.length === 1 && str.includes("/")) {
+              const [num, den] = str.split("/").map(Number);
+              if (den && !isNaN(num)) return num / den;
+            }
+          }
+          return null;
+        };
+        const uVal = parseFractionOrDecimal(value.trim());
+        const eVal = parseFractionOrDecimal(question.answer.trim());
+        if (uVal !== null && eVal !== null && Math.abs(uVal - eVal) < 0.0001) {
+          return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
+        }
+        return { correct: false, partial: 0, keywordMatch: false, standardAnswer: question.answer };
+      }
+
+      // For English, Social Studies, and non-numeric Science short answers: run intelligent keyword scoring
       const userClean = value.trim().toLowerCase();
       const ansClean = question.answer.trim().toLowerCase();
 
-      // Get explicit or derived keywords
       let keywords: string[] = question.keywords && question.keywords.length > 0
         ? question.keywords.map((k) => k.trim().toLowerCase())
         : [];
 
-      // If no explicit keywords, derive key terms from question.answer (e.g. "Lake Victoria" -> "victoria")
       if (keywords.length === 0 && ansClean.length > 2) {
         const stopWords = new Set([
           "the", "a", "an", "is", "of", "to", "in", "on", "at", "for", "by", "with",

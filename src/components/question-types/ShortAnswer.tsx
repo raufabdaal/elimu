@@ -1,7 +1,7 @@
 "use client";
 
 import { Question } from "@/lib/types";
-import { HelpCircle, CornerDownLeft, CheckCircle2, KeyRound } from "lucide-react";
+import { CornerDownLeft, CheckCircle2, KeyRound } from "lucide-react";
 
 interface ShortAnswerProps {
   question: Extract<Question, { type: "short_answer" }>;
@@ -14,13 +14,6 @@ interface ShortAnswerProps {
 export default function ShortAnswer({ question, value, locked, onChange, onSubmit }: ShortAnswerProps) {
   return (
     <div className="flex flex-col gap-3 my-1">
-      {question.hint && (
-        <div className="flex items-center gap-2 bg-emerald-50/80 border border-emerald-200 text-emerald-900 px-3.5 py-2 rounded-xl text-xs font-bold">
-          <HelpCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Hint: {question.hint}</span>
-        </div>
-      )}
-
       <div className="relative">
         <label className="sr-only" htmlFor="answer">
           Your answer

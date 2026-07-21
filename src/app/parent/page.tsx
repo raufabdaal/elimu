@@ -9,7 +9,7 @@ import { AppState, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { Flame, Send, CheckCircle2, BarChart2 } from "lucide-react";
+import { Flame, Send, CheckCircle2, BarChart2, Share2, Award, Sparkles } from "lucide-react";
 
 export default function Parent() {
   const router = useRouter();
@@ -31,10 +31,36 @@ export default function Parent() {
   const maxWeeklyMin = Math.max(...session.weeklyMinutes, 40);
 
   const handleSendCheers = (cheer: string) => {
-    setSentToast(`Sent "${cheer}" to ${profile.name || "your child"}'s screen! ✨`);
+    try {
+      const existing = JSON.parse(localStorage.getItem("elimu_inbox_cheers") || "[]");
+      const newCheer = {
+        id: Date.now().toString(),
+        text: cheer,
+        sender: "Parent Portal",
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      localStorage.setItem("elimu_inbox_cheers", JSON.stringify([newCheer, ...existing]));
+    } catch (e) {
+      console.error(e);
+    }
+    setSentToast(`Sent "${cheer}" directly to ${profile.name || "your child"}'s inbox! ✨`);
     setTimeout(() => {
       setSentToast(null);
     }, 2800);
+  };
+
+  const handleShareReport = () => {
+    const text = `🌟 ELIMU UGANDA WEEKLY REPORT CARD 🌟\n\nStudent: ${profile.name || "Amina"} (${(profile.classLevel || "p5").toUpperCase()})\nWeekly Accuracy: ${progress.practiceAccuracy}%\nConsistency Streak: 🔥 ${progress.streakDays} Days\nCurriculum Coverage: ${progress.modulesDone} Modules Completed\n\nVerified by Elimu Edtech • NCDC Primary Aligned 🚀`;
+    if (navigator.share) {
+      navigator.share({
+        title: "Elimu Uganda Weekly Report Card",
+        text: text,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text);
+      setSentToast("Copied weekly report card! Share via WhatsApp or SMS 📋✨");
+      setTimeout(() => setSentToast(null), 2800);
+    }
   };
 
   return (
@@ -308,21 +334,67 @@ export default function Parent() {
           </div>
         </section>
 
-        {/* Quick Action Footer (`Explicit Dark Card`) */}
-        <section className="card card-dark p-5 relative overflow-hidden">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="min-w-0">
-              <h3 className="text-base font-black text-white">Need to test learner view?</h3>
-              <p className="text-xs font-semibold text-slate-300 mt-0.5 leading-relaxed">
-                Switch back to learner mode or jump into a practice drill with your child.
+        {/* Shareable Weekly Report Card (`Organic Branded Marketing`) */}
+        <section className="card bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 relative overflow-hidden text-white border-2 border-indigo-400/40 shadow-xl rounded-[32px]">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500/15 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="flex items-center justify-between pb-4 border-b border-white/15 flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shadow-sm shrink-0">
+                <Award className="w-6 h-6 stroke-[2.4]" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                  Official Verification
+                </span>
+                <h3 className="text-lg font-black text-white">
+                  Weekly Scholar Report Card
+                </h3>
+              </div>
+            </div>
+            <span className="text-xs font-mono font-bold bg-white/10 px-3 py-1 rounded-xl border border-white/15">
+              ELIMU EDTECH
+            </span>
+          </div>
+
+          <div className="my-5 p-4 rounded-2xl bg-white/5 border border-white/10 flex flex-col gap-3 backdrop-blur-xs">
+            <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+              <span className="text-xs text-slate-300 font-bold">Student Name:</span>
+              <span className="text-sm font-black text-white">{profile.name || "Amina"} · {(profile.classLevel || "p5").toUpperCase()}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 pt-1 text-center">
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Accuracy</span>
+                <span className="text-base font-mono font-black text-emerald-400 mt-0.5 block">{progress.practiceAccuracy}%</span>
+              </div>
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Streak</span>
+                <span className="text-base font-mono font-black text-amber-400 mt-0.5 block">🔥 {progress.streakDays}d</span>
+              </div>
+              <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Mastered</span>
+                <span className="text-base font-mono font-black text-cyan-300 mt-0.5 block">{progress.modulesDone}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <div className="text-left w-full sm:w-auto min-w-0">
+              <span className="text-xs font-extrabold text-emerald-300 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 shrink-0" /> Branded Family Certificate
+              </span>
+              <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
+                Share this weekly summary on WhatsApp & family groups!
               </p>
             </div>
             <button
               type="button"
-              onClick={() => router.push("/home/")}
-              className="btn bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm py-2.5 px-4 rounded-xl shrink-0"
+              onClick={handleShareReport}
+              className="btn bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-xs sm:text-sm py-3 px-5 rounded-2xl flex items-center justify-center gap-2 shadow-lg shrink-0 w-full sm:w-auto"
             >
-              Open Pupil Home
+              <Share2 className="w-4 h-4 stroke-[2.4]" />
+              <span>Share Report Card</span>
             </button>
           </div>
         </section>

@@ -3,14 +3,21 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, MessageSquareHeart, Heart, X } from "lucide-react";
+
+interface InboxCheer {
+  id: string;
+  text: string;
+  sender: string;
+  time: string;
+}
 
 export default function Home() {
   const router = useRouter();
@@ -18,13 +25,32 @@ export default function Home() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [greeting, setGreeting] = useState("Good morning");
 
+  const [inboxCheers, setInboxCheers] = useState<InboxCheer[]>([]);
+  const [showInboxModal, setShowInboxModal] = useState(false);
+
   useEffect(() => {
     const s = loadState();
     setState(s);
     setSubjects(getSubjects(s.profile.classLevel || "p5"));
     const hour = new Date().getHours();
     setGreeting(hour < 12 ? "Good morning ☀️" : hour < 17 ? "Good afternoon 🌤️" : "Good evening 🌙");
+    try {
+      const stored = JSON.parse(localStorage.getItem("elimu_inbox_cheers") || "[]");
+      setInboxCheers(stored);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
+
+  const handleClearInbox = () => {
+    try {
+      localStorage.removeItem("elimu_inbox_cheers");
+      setInboxCheers([]);
+      setShowInboxModal(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleClassChange = (newClass: ClassLevel) => {
     if (!state) return;
@@ -63,12 +89,25 @@ export default function Home() {
         transition={{ duration: 0.35 }}
         className="flex flex-col gap-6 pt-4 px-1"
       >
-        {/* Welcome Greeting */}
-        <div className="flex flex-col">
-          <p className="text-xs font-black uppercase tracking-wider text-slate-400">{greeting}</p>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">
-            Welcome, {profile.name || "Student"}
-          </h1>
+        {/* Welcome Greeting & Parent Cheers Inbox Banner */}
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex flex-col">
+            <p className="text-xs font-black uppercase tracking-wider text-slate-400">{greeting}</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">
+              Welcome, {profile.name || "Student"}
+            </h1>
+          </div>
+
+          {inboxCheers.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowInboxModal(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-xs px-3.5 py-2 rounded-2xl shadow-md hover:scale-105 transition-all animate-pulse"
+            >
+              <MessageSquareHeart className="w-4 h-4 shrink-0" />
+              <span>💌 Parent Cheers ({inboxCheers.length})</span>
+            </button>
+          )}
         </div>
 
         {/* Clean, Simple Continue Bar (`Dead Simple & High Action`) */}
@@ -146,6 +185,66 @@ export default function Home() {
           </div>
         </div>
       </motion.div>
+
+      {/* Parent Cheers Inbox Modal */}
+      <AnimatePresence>
+        {showInboxModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4"
+            onClick={() => setShowInboxModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 10, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 450, damping: 26 }}
+              className="bg-white rounded-[32px] p-6 max-w-sm w-full shadow-2xl border-2 border-amber-400 text-center relative overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600" />
+
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-900 flex items-center gap-1">
+                  💌 Parent Portal Cheers
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowInboxModal(false)}
+                  className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800"
+                >
+                  <X className="w-4 h-4 stroke-[2.5]" />
+                </button>
+              </div>
+
+              <div className="my-4 flex flex-col gap-3 max-h-[40vh] overflow-y-auto pr-1 text-left">
+                {inboxCheers.map((item, idx) => (
+                  <div key={idx} className="bg-amber-50/80 border border-amber-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-1">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-amber-800">
+                      <span>{item.sender || "Parent"}</span>
+                      <span>{item.time || "Today"}</span>
+                    </div>
+                    <p className="text-sm font-extrabold text-slate-900 mt-0.5 leading-snug">
+                      &ldquo;{item.text}&rdquo;
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleClearInbox}
+                className="btn btn-primary w-full py-3.5 font-extrabold mt-3 shadow-md flex items-center justify-center gap-2"
+              >
+                <Heart className="w-4 h-4 fill-white" />
+                <span>Say Thanks & Mark Read</span>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AppShell>
   );
 }

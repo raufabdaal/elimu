@@ -7,6 +7,7 @@ import { ClassLevel, Profile } from "@/lib/types";
 import { CLASS_LABELS } from "@/lib/data";
 import { saveState, loadState } from "@/lib/store";
 import Hearts from "./Hearts";
+import Streak from "./Streak";
 import { Menu, X, RefreshCw, Sparkles, BookOpen, ShieldCheck } from "lucide-react";
 
 interface HeaderStatsProps {
@@ -87,13 +88,17 @@ export default function HeaderStats({
             </div>
           </div>
 
-          {/* Right: Hamburger Menu Drawer Button (`Dead Simple & Clutter-Free`) */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right: Gamification Pills + Hamburger Menu */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <Streak days={streakDays} />
+            <div className={shakeHearts ? "animate-shake hidden sm:inline-flex" : "hidden sm:inline-flex"}>
+              <Hearts count={hearts} max={maxHearts} showCount={true} />
+            </div>
             <button
               type="button"
               onClick={() => setShowDrawer(true)}
               aria-label="Open Menu and Stats"
-              className="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-all shadow-2xs border border-slate-200/60"
+              className="w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 flex items-center justify-center transition-all shadow-2xs border border-slate-200/60 ml-0.5"
             >
               <Menu className="w-5 h-5 stroke-[2.5]" />
             </button>
