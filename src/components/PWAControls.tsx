@@ -15,7 +15,6 @@ export default function PWAControls() {
   const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   useEffect(() => {
-    // Register Service Worker for offline PWA capabilities
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
@@ -23,26 +22,22 @@ export default function PWAControls() {
         .catch((err) => console.warn("Service Worker registration failed:", err));
     }
 
-    // Check offline status
     setIsOffline(!navigator.onLine);
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Check standalone (installed app) status
-    if (typeof window !== "undefined") {
-      const standalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as unknown as { standalone?: boolean }).standalone;
-      setIsStandalone(!!standalone);
-    }
+    const standalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as unknown as { standalone?: boolean }).standalone;
+    setIsStandalone(!!standalone);
 
-    // Capture install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
-      // Show prompt if not dismissed or installed
       const dismissed = localStorage.getItem("elimu_pwa_dismissed");
-      if (!dismissed && !isStandalone) {
+      if (!dismissed && !standalone) {
         setShowInstallBanner(true);
       }
     };
@@ -54,7 +49,7 @@ export default function PWAControls() {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
-  }, [isStandalone]);
+  }, []);
 
   const handleInstallClick = async () => {
     if (installPrompt) {
@@ -66,7 +61,7 @@ export default function PWAControls() {
       setInstallPrompt(null);
     } else {
       alert(
-        "To install Elimu App on your phone/tablet:\n\n• On iPhone/iPad (Safari): Tap the Share button (⎋) below and select 'Add to Home Screen' (➕).\n• On Android (Chrome): Tap the 3 dots menu (⋮) at top right and select 'Install app' or 'Add to Home Screen'."
+        "To install Elimu App on your phone/tablet:\n\n• On iPhone/iPad (Safari): Tap the Share button below and select 'Add to Home Screen'.\n• On Android (Chrome): Tap the 3 dots menu at top right and select 'Install app' or 'Add to Home Screen'."
       );
     }
   };
@@ -80,51 +75,49 @@ export default function PWAControls() {
 
   return (
     <>
-      {/* Offline Status Banner (`Top Fixed Bar when Offline`) */}
       {isOffline && (
-        <div className="w-full bg-amber-600 text-white font-extrabold text-xs py-2 px-4 text-center flex items-center justify-center gap-2 shadow-md z-[100] relative">
-          <WifiOff className="w-4 h-4 shrink-0 animate-pulse" />
-          <span>⚡ Offline Mode Active — All 4,435+ Questions & Local Storage Ready!</span>
+        <div className="fixed left-1/2 z-[100] flex max-w-[calc(100vw-24px)] -translate-x-1/2 items-center justify-center gap-2 rounded-full border border-amber-300/70 bg-amber-600/95 px-3.5 py-2 text-center text-[11px] font-black text-white shadow-lg backdrop-blur-md top-[calc(env(safe-area-inset-top,0px)+10px)]">
+          <WifiOff className="h-3.5 w-3.5 shrink-0 animate-pulse" />
+          <span className="min-w-0 truncate">Offline mode — saved lessons ready</span>
         </div>
       )}
 
-      {/* Install Elimu App Banner (`High-Visibility PWA Prompt`) */}
       {!isStandalone && showInstallBanner && (
-        <div className="w-full bg-gradient-to-r from-emerald-700 via-teal-800 to-emerald-900 text-white px-4 py-3 shadow-md z-[90] relative border-b border-emerald-500/40">
-          <div className="max-w-[768px] mx-auto flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-2xl bg-white text-emerald-800 font-black text-xl flex items-center justify-center shrink-0 shadow-sm">
+        <div className="fixed inset-x-0 bottom-0 z-[95] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+12px)]">
+          <div className="mx-auto flex w-full max-w-[460px] items-center justify-between gap-3 rounded-[24px] border border-emerald-400/40 bg-gradient-to-r from-emerald-700 via-teal-800 to-emerald-900 px-3.5 py-3 text-white shadow-2xl sm:max-w-[768px]">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-xl font-black text-emerald-800 shadow-sm">
                 E
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-black text-sm text-white">Download Elimu App</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/40 text-emerald-100 px-2 py-0.5 rounded-md border border-emerald-400/30">
-                    Offline Ready
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <span className="truncate text-sm font-black text-white">Download Elimu App</span>
+                  <span className="hidden shrink-0 rounded-md border border-emerald-400/30 bg-emerald-500/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-100 sm:inline-flex">
+                    Offline
                   </span>
                 </div>
-                <p className="text-xs text-emerald-100/90 font-semibold truncate sm:whitespace-normal">
-                  Install on your phone or tablet for instant 1-tap access anytime!
+                <p className="truncate text-xs font-semibold text-emerald-100/90">
+                  Install for 1-tap learning anytime.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+            <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
                 onClick={handleInstallClick}
-                className="btn bg-white hover:bg-emerald-50 text-emerald-900 font-extrabold text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5 shadow-sm transition-all shrink-0"
+                className="inline-flex min-h-0 items-center justify-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-extrabold text-emerald-900 shadow-sm transition-all hover:bg-emerald-50 active:scale-95"
               >
-                <Download className="w-3.5 h-3.5" />
-                <span>Install App</span>
+                <Download className="h-3.5 w-3.5" />
+                <span>Install</span>
               </button>
               <button
                 type="button"
                 onClick={handleDismiss}
-                className="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 text-white/80 hover:text-white flex items-center justify-center transition-colors shrink-0"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/20 text-white/80 transition-colors hover:bg-black/40 hover:text-white"
                 title="Dismiss"
               >
-                <X className="w-4 h-4 stroke-[2.5]" />
+                <X className="h-4 w-4 stroke-[2.5]" />
               </button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,10 +26,17 @@ function ModuleContent() {
   const modData = getModule(topicId, moduleId);
   const topic = modData?.topic || getTopic(topicId);
   const currentModule = modData?.module || (topic?.modules ? topic.modules[0] : undefined);
+  const getQuestionSet = useCallback((): Question[] => {
+    const raw = currentModule?.questions || topic?.questions || [];
+    if (!topic) return raw;
+    return raw.map((question) => ({
+      ...question,
+      topicId: question.topicId || `${topic.subjectId}-${topic.id}`,
+    }));
+  }, [currentModule?.questions, topic]);
 
   const [questions, setQuestions] = useState<Question[]>(() => {
-    const raw = currentModule?.questions || topic?.questions || [];
-    return shuffleArray(raw);
+    return shuffleArray(getQuestionSet());
   });
   const [index, setIndex] = useState(0);
   const [state, setState] = useState<QuestionState | null>(null);
@@ -48,8 +55,7 @@ function ModuleContent() {
   }, [index, locked]);
 
   useEffect(() => {
-    const raw = currentModule?.questions || topic?.questions || [];
-    setQuestions(shuffleArray(raw));
+    setQuestions(shuffleArray(getQuestionSet()));
     setIndex(0);
     setState(null);
     setLocked(false);
@@ -57,11 +63,10 @@ function ModuleContent() {
     setFeedbackType("");
     setShowExplanation(false);
     setFinished(false);
-  }, [currentModule?.id, topic?.id, currentModule?.questions, topic?.questions]);
+  }, [currentModule?.id, topic?.id, currentModule?.questions, topic?.questions, getQuestionSet]);
 
   const handleReshuffleModule = () => {
-    const raw = currentModule?.questions || topic?.questions || [];
-    setQuestions(shuffleArray(raw));
+    setQuestions(shuffleArray(getQuestionSet()));
     setIndex(0);
     setState(null);
     setLocked(false);

@@ -1,8 +1,135 @@
 import { Question } from "@/lib/types";
 import { QuestionState } from "@/components/QuestionRenderer";
 
+function normalizeQuotes(value: string): string {
+  return value
+    .replace(/[‘’‛`]/g, "'")
+    .replace(/[“”„]/g, '"')
+    .replace(/\u00A0/g, " ");
+}
+
 export function normalizeAnswer(value: string): string {
-  return value.trim().replace(/\s+/g, "").toLowerCase();
+  return normalizeQuotes(value).trim().replace(/\s+/g, "").toLowerCase();
+}
+
+function normalizeLooseText(value: string): string {
+  return normalizeQuotes(value).trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function normalizeKeywordText(value: string): string {
+  return normalizeLooseText(value)
+    .replace(/[.,!?;:"()\[\]{}]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const PUNCTUATION_ALIASES: Array<{ symbol: string; names: string[] }> = [
+  { symbol: ".", names: ["full stop", "period", "dot"] },
+  { symbol: ",", names: ["comma"] },
+  { symbol: "?", names: ["question mark"] },
+  { symbol: "!", names: ["exclamation mark", "exclamation point"] },
+  { symbol: "'", names: ["apostrophe", "single quote", "single quotation mark", "inverted comma"] },
+  { symbol: '"', names: ["quotation mark", "quotation marks", "speech mark", "speech marks", "inverted commas", "double quote"] },
+  { symbol: ":", names: ["colon"] },
+  { symbol: ";", names: ["semicolon", "semi colon"] },
+  { symbol: "-", names: ["hyphen"] },
+  { symbol: "(", names: ["opening bracket", "left bracket", "open bracket"] },
+  { symbol: ")", names: ["closing bracket", "right bracket", "close bracket"] },
+];
+
+function normalizePunctuationName(value: string): string {
+  return normalizeLooseText(value)
+    .replace(/^(a|an|the)\s+/, "")
+    .replace(/[._,!?;:"'()\[\]{}]/g, " ")
+    .replace(/[-\s]+/g, "")
+    .trim();
+}
+
+function punctuationAliasKeysForAnswer(answer: string): Set<string> {
+  const answerLoose = normalizeLooseText(answer).replace(/^(a|an|the)\s+/, "").trim();
+  const answerName = normalizePunctuationName(answer);
+  const keys = new Set<string>();
+
+  for (const item of PUNCTUATION_ALIASES) {
+    const names = item.names.map(normalizePunctuationName);
+    const answerIsThisMark = answerLoose === item.symbol || names.includes(answerName);
+    if (!answerIsThisMark) continue;
+
+    keys.add(item.symbol);
+    for (const name of item.names) keys.add(normalizePunctuationName(name));
+  }
+
+  return keys;
+}
+
+function punctuationAliasMatch(userAnswer: string, modelAnswer: string): boolean {
+  const validKeys = punctuationAliasKeysForAnswer(modelAnswer);
+  if (validKeys.size === 0) return false;
+
+  const userLoose = normalizeLooseText(userAnswer).trim();
+  const userName = normalizePunctuationName(userAnswer);
+  return validKeys.has(userLoose) || validKeys.has(userName);
+}
+
+function isMathOrNumericQuestion(question: Extract<Question, { type: "short_answer" }>): boolean {
+  const id = question.id.toLowerCase();
+  const topicId = (question.topicId || "").toLowerCase();
+  const answer = question.answer.trim();
+
+  const isMathTopic =
+    topicId.startsWith("math-") ||
+    topicId.includes("-math-") ||
+    /(^|-)math($|-)/.test(id) ||
+    /^p[4-7]-(st|nm|am|fm|dm|im|gm|me)\d/.test(id) ||
+    /^p[4-7](st|nm|am|fm|dm|im|gm|me)\d/.test(id);
+
+  const isStrictNumericAnswer =
+    /\d/.test(answer) &&
+    /^[\d\s+\-*/.,=()^%°$€£¥:;\/]+$/.test(answer);
+
+  return isMathTopic || isStrictNumericAnswer;
+}
+
+function isEnglishQuestion(question: Extract<Question, { type: "short_answer" }>): boolean {
+  const id = question.id.toLowerCase();
+  const topicId = (question.topicId || "").toLowerCase();
+  const combined = `${question.question} ${question.answer} ${question.hint || ""}`.toLowerCase();
+
+  return (
+    topicId.startsWith("eng-") ||
+    topicId.includes("-eng-") ||
+    /(^|-)eng($|-)/.test(id) ||
+    /^p[4-7]-(eg|eng|er|ew|co)/.test(id) ||
+    /^p[4-7](eg|er|ew|co)\d/.test(id) ||
+    /\b(grammar|punctuation|apostrophe|comma|full stop|question mark|exclamation|quotation|direct speech|capital letter|spelling|prefix|suffix|conjunction|preposition|adverb|adjective|verb|noun|pronoun|composition)\b/.test(combined)
+  );
+}
+
+function requiresExactEnglishText(question: Extract<Question, { type: "short_answer" }>): boolean {
+  if (!isEnglishQuestion(question)) return false;
+
+  const combined = `${question.question} ${question.answer} ${question.hint || ""}`.toLowerCase();
+  const hasExplicitKeywords = !!(question.keywords && question.keywords.length > 0);
+  const mechanicsOrFormQuestion = /(punctuat|apostrophe|comma|full stop|question mark|exclamation|quotation|speech mark|inverted comma|capital|capitalize|capitalise|contracted|contraction|corrected word|corrected sentence|correctly written|spell|spelling|plural form|singular form|prefix|suffix|rewrite|write only|direct speech)/.test(combined);
+
+  return mechanicsOrFormQuestion || !hasExplicitKeywords;
+}
+
+function parseFractionOrDecimal(str: string): number | null {
+  const cleaned = str.trim().replace(/,/g, "");
+  if (!Number.isNaN(Number(cleaned)) && cleaned !== "") return Number(cleaned);
+  if (cleaned.includes("/")) {
+    const parts = cleaned.trim().split(/\s+/);
+    if (parts.length === 2 && parts[1].includes("/")) {
+      const [whole, frac] = parts;
+      const [num, den] = frac.split("/").map(Number);
+      if (den && !Number.isNaN(Number(whole)) && !Number.isNaN(num)) return Number(whole) + num / den;
+    } else if (parts.length === 1 && cleaned.includes("/")) {
+      const [num, den] = cleaned.split("/").map(Number);
+      if (den && !Number.isNaN(num)) return num / den;
+    }
+  }
+  return null;
 }
 
 export function shuffleArray<T>(array: T[]): T[] {
@@ -35,55 +162,34 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
       const exactNorm = normalizeAnswer(question.answer);
       const exactMatch = userNorm === exactNorm;
 
-      if (exactMatch) {
+      if (exactMatch || punctuationAliasMatch(value, question.answer)) {
         return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
       }
 
-      // Check if this is a Mathematics or strictly number-based question
-      const isMathOrNumeric = question.topicId?.includes("-math") ||
-        question.id.includes("math") ||
-        question.id.includes("nm") ||
-        question.id.includes("am") ||
-        question.id.includes("st") ||
-        (/\d/.test(question.answer) && /^[\d\s+\-*/.,=()^%°$€£¥A-Za-z:;]+$/.test(question.answer.trim()));
-
-      if (isMathOrNumeric) {
-        // Strict exact evaluation for math/numbers without fuzzy keyword matching
+      if (isMathOrNumericQuestion(question)) {
         const cleanUserNum = userNorm.replace(/,/g, "");
         const cleanExactNum = exactNorm.replace(/,/g, "");
         if (cleanUserNum === cleanExactNum) {
           return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
         }
-        // Check fraction/decimal equivalence if numeric
-        const parseFractionOrDecimal = (str: string): number | null => {
-          if (!isNaN(Number(str))) return Number(str);
-          if (str.includes("/")) {
-            const parts = str.trim().split(/\s+/);
-            if (parts.length === 2 && parts[1].includes("/")) {
-              const [whole, frac] = parts;
-              const [num, den] = frac.split("/").map(Number);
-              if (den && !isNaN(Number(whole)) && !isNaN(num)) return Number(whole) + num / den;
-            } else if (parts.length === 1 && str.includes("/")) {
-              const [num, den] = str.split("/").map(Number);
-              if (den && !isNaN(num)) return num / den;
-            }
-          }
-          return null;
-        };
-        const uVal = parseFractionOrDecimal(value.trim());
-        const eVal = parseFractionOrDecimal(question.answer.trim());
+
+        const uVal = parseFractionOrDecimal(value);
+        const eVal = parseFractionOrDecimal(question.answer);
         if (uVal !== null && eVal !== null && Math.abs(uVal - eVal) < 0.0001) {
           return { correct: true, partial: 1, keywordMatch: false, standardAnswer: question.answer };
         }
         return { correct: false, partial: 0, keywordMatch: false, standardAnswer: question.answer };
       }
 
-      // For English, Social Studies, and non-numeric Science short answers: run intelligent multi-answer & keyword scoring
-      const userClean = value.trim().toLowerCase();
-      const ansClean = question.answer.trim().toLowerCase();
-      const qText = question.question.toLowerCase();
+      if (requiresExactEnglishText(question)) {
+        return { correct: false, partial: 0, keywordMatch: false, standardAnswer: question.answer };
+      }
 
-      // Uganda Primary Domain Multi-Answer & Synonym Expansion Map
+      const userClean = normalizeKeywordText(value);
+      const ansClean = normalizeKeywordText(question.answer);
+      const qText = normalizeKeywordText(question.question);
+      const meaningfulUser = userClean.length >= 3;
+
       const domainMap: { [key: string]: string[] } = {
         "national park": ["bwindi", "queen elizabeth", "murchison", "kidepo", "mgahinga", "lake mburo", "semuliki", "rwenzori", "elgon", "kibale"],
         "equator": ["kasese", "kamwenge", "ibanda", "kiruhura", "sembabule", "mpigi", "masaka", "kalangala", "kayabwe", "0 degree", "zero degree", "0°"],
@@ -102,26 +208,26 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
       let matchedList: string[] = [];
       let keywords: string[] = [];
 
-      // Check domain expansion first if applicable
-      for (const [key, validAnswers] of Object.entries(domainMap)) {
-        if (qText.includes(key) || ansClean.includes(key)) {
-          const matched = validAnswers.filter((va) => userClean.includes(va) || va.includes(userClean));
-          if (matched.length > 0) {
-            keywordMatch = true;
-            matchedList = matched;
-            keywords = validAnswers;
-            break;
+      if (meaningfulUser) {
+        for (const [key, validAnswers] of Object.entries(domainMap)) {
+          if (qText.includes(key) || ansClean.includes(key)) {
+            const matched = validAnswers.filter((va) => userClean.includes(va) || va.includes(userClean));
+            if (matched.length > 0) {
+              keywordMatch = true;
+              matchedList = matched;
+              keywords = validAnswers;
+              break;
+            }
           }
         }
       }
 
-      // If not matched via domain dictionary, check explicit keywords or derived key terms
       if (!keywordMatch) {
         keywords = question.keywords && question.keywords.length > 0
-          ? question.keywords.map((k) => k.trim().toLowerCase())
+          ? question.keywords.map((k) => normalizeKeywordText(k)).filter(Boolean)
           : [];
 
-        if (keywords.length === 0 && ansClean.length > 2) {
+        if (keywords.length === 0 && ansClean.length > 2 && !isEnglishQuestion(question)) {
           const stopWords = new Set([
             "the", "a", "an", "is", "of", "to", "in", "on", "at", "for", "by", "with",
             "and", "or", "lake", "mount", "mt", "st", "river", "district", "city", "town"
@@ -134,12 +240,12 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
           }
         }
 
-        if (keywords.length > 0) {
-          matchedList = keywords.filter((k) => userClean.includes(k) || k.includes(userClean));
+        if (keywords.length > 0 && meaningfulUser) {
+          matchedList = keywords.filter((k) => userClean.includes(k) || (userClean.length >= 4 && k.includes(userClean)));
           if (matchedList.length > 0) {
             keywordMatch = true;
           }
-        } else if (ansClean.includes(userClean) || userClean.includes(ansClean)) {
+        } else if (meaningfulUser && (ansClean.includes(userClean) || userClean.includes(ansClean))) {
           keywordMatch = true;
           matchedList = [ansClean];
         }
