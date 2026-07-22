@@ -2,14 +2,15 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { hasCompletedOnboarding } from "@/lib/store";
+import { hasCompletedOnboarding, loadState } from "@/lib/store";
 
 export default function EntryRedirect() {
   const router = useRouter();
 
   useEffect(() => {
     if (hasCompletedOnboarding()) {
-      router.replace("/home/");
+      const state = loadState();
+      router.replace(state.profile.role === "parent" ? "/parent/" : "/home/");
     } else {
       router.replace("/onboarding/");
     }

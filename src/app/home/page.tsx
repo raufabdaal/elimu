@@ -66,10 +66,27 @@ export default function Home() {
 
   const { profile, progress, continue: continueState } = state;
 
-  // Determine continue topic link based on class or previous session
-  const continueLink = profile.classLevel === "p7"
-    ? "/module/?topic=p7-uganda-session-1"
-    : "/module/?topic=p5-math-fractions";
+  const allTopics = subjects.flatMap((subject) => subject.topics);
+  const storedTopic = continueState.topicId
+    ? allTopics.find((topic) => topic.id === continueState.topicId)
+    : undefined;
+  const fallbackTopic =
+    allTopics.find((topic) => topic.inProgress) ||
+    allTopics.find((topic) => !topic.completed) ||
+    allTopics[0];
+  const activeTopic = storedTopic || fallbackTopic;
+  const storedModule = activeTopic?.modules?.find((module) => module.id === continueState.moduleId);
+  const fallbackModule =
+    activeTopic?.modules?.find((module) => module.inProgress) ||
+    activeTopic?.modules?.find((module) => !module.completed) ||
+    activeTopic?.modules?.[0];
+  const activeModule = storedModule || fallbackModule;
+  const continueLink = activeTopic
+    ? `/module/?topic=${encodeURIComponent(activeTopic.id)}${activeModule ? `&moduleId=${encodeURIComponent(activeModule.id)}` : ""}`
+    : "/subjects/";
+  const continueTitle = storedTopic && continueState.topic
+    ? continueState.topic
+    : activeTopic?.name?.split(" (")[0] || "Your next lesson";
 
   return (
     <AppShell activeTab="home" role={profile.role}>
@@ -156,7 +173,7 @@ export default function Home() {
                 Resume Where You Left Off
               </span>
               <h2 className="text-lg sm:text-xl font-black text-slate-900 truncate mt-0.5 group-hover:text-emerald-950">
-                {profile.classLevel === "p7" ? "Our Country Uganda (SST)" : (continueState.topic || "Fractions & Decimals")}
+                {continueTitle}
               </h2>
             </div>
           </div>

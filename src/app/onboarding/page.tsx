@@ -71,7 +71,7 @@ export default function Onboarding() {
         classLevel: classLevel || "p5",
       },
     });
-    router.push("/subjects/");
+    router.push("/home/");
   };
 
   return (

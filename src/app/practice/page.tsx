@@ -332,7 +332,7 @@ function PracticeContent() {
           </div>
         )}
 
-        {/* Practice Banner & Progress (`Zero 4,363 Count Display`) */}
+        {/* Practice Banner & Progress */}
         <div className="flex items-center justify-between mb-3 px-1">
           <div className="flex items-center gap-2 bg-amber-100/90 text-amber-950 px-3 py-1 rounded-full border border-amber-300 text-xs font-black">
             <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-400" />

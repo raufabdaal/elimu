@@ -1,4 +1,4 @@
-const CACHE_NAME = "elimu-pwa-cache-v2";
+const CACHE_NAME = "elimu-pwa-cache-v3";
 const APP_SHELL_ROUTES = ["/", "/subjects/", "/home/", "/module/", "/practice/", "/parent/", "/onboarding/"];
 const STATIC_ASSETS = [
   ...APP_SHELL_ROUTES,

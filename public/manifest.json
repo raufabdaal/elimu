@@ -2,7 +2,7 @@
   "name": "Elimu Uganda — P4–P7 Primary Edtech",
   "short_name": "Elimu",
   "description": "Uganda National Curriculum Development Centre (NCDC) & UNEB PLE interactive primary question banks across P4–P7.",
-  "start_url": "/subjects/",
+  "start_url": "/home/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0d7a54",
