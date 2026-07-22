@@ -394,24 +394,29 @@ function PracticeContent() {
           </div>
 
           {!showExplanation && (
-            <div className="flex items-center gap-2.5 mt-4 pt-2">
-              <button
-                type="button"
-                className="btn btn-secondary py-3.5 px-4 text-sm font-bold flex items-center justify-center gap-1.5 shrink-0"
-                onClick={handleSkip}
-                disabled={locked}
-              >
-                <SkipForward className="w-4 h-4" /> Skip
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary grow py-3.5 text-base font-black shadow-md flex items-center justify-center gap-2"
-                onClick={handleCheck}
-                disabled={locked || !isAnswered(q, state)}
-              >
-                <span>Check Answer</span>
-                <CheckCircle2 className="w-5 h-5" />
-              </button>
+            <div className="mt-4 flex flex-col gap-2.5 pt-2">
+              <p className={`text-center text-xs font-extrabold ${isAnswered(q, state) ? "text-emerald-700" : "text-slate-400"}`}>
+                {isAnswered(q, state) ? "Ready — tap Check Answer." : "Choose or type your answer above."}
+              </p>
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  className="btn btn-secondary py-3.5 px-4 text-sm font-bold flex items-center justify-center gap-1.5 shrink-0"
+                  onClick={handleSkip}
+                  disabled={locked}
+                >
+                  <SkipForward className="w-4 h-4" /> Skip
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary grow py-3.5 text-base font-black shadow-md flex items-center justify-center gap-2"
+                  onClick={handleCheck}
+                  disabled={locked || !isAnswered(q, state)}
+                >
+                  <span>Check Answer</span>
+                  <CheckCircle2 className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           )}
         </motion.div>

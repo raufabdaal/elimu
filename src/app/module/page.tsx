@@ -2,7 +2,7 @@
 
 import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
 import { getTopic, getModule, getSubjects } from "@/lib/data";
@@ -11,15 +11,12 @@ import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/soun
 import AppShell from "@/components/AppShell";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
-import Hearts from "@/components/Hearts";
-import Streak from "@/components/Streak";
 import QuestionRenderer, { getInitialState, isAnswered, QuestionState } from "@/components/QuestionRenderer";
 import { SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkles, Shuffle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkles, Shuffle, Heart } from "lucide-react";
 import { Question } from "@/lib/types";
 
 function ModuleContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topic") || "p5-math-fractions";
   const moduleId = searchParams.get("moduleId") || undefined;
@@ -283,81 +280,39 @@ function ModuleContent() {
 
   return (
     <AppShell showTabBar={false} noScrollPad>
-      {/* Sticky Header (`Crisp & Clutter-Free`) */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-3 flex items-center justify-between shadow-2xs">
-        <div className="flex items-center gap-3 min-w-0">
+      {/* Minimal floating controls only: no topic bar, no steps bar, no progress bar. */}
+      <div className="sticky top-0 z-40 pointer-events-none px-4 pt-3 sm:px-8 lg:px-12">
+        <div className="mx-auto flex w-full max-w-[460px] md:max-w-2xl lg:max-w-3xl items-center justify-between">
           <Link
-            href={`/subjects/`}
-            className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-95 transition-all shrink-0 shadow-2xs"
+            href="/subjects/"
+            className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white/90 text-slate-600 shadow-sm backdrop-blur-md transition-all hover:bg-slate-100 active:scale-95"
+            aria-label="Back to subjects"
           >
-            <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
           </Link>
-          <div className="min-w-0">
-            <h1 className="text-sm font-extrabold text-slate-900 truncate">
-              {cleanTopicName}
-            </h1>
-            <p className="text-[11px] font-bold text-slate-500 truncate">
-              {cleanStepName} · {topic.name.split(" (")[0]}
-            </p>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <Streak days={appState.progress.streakDays} className="hidden sm:inline-flex" />
-          <div className={shakeHearts ? "animate-shake" : ""}>
-            <Hearts count={appState.progress.hearts} max={appState.progress.maxHearts} showCount={true} />
+          <div className="pointer-events-auto flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleReshuffleModule}
+              title="Reshuffle Questions"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white/90 text-slate-500 shadow-sm backdrop-blur-md transition-colors hover:bg-emerald-50 hover:text-emerald-700 active:scale-95"
+            >
+              <Shuffle className="h-4 w-4 stroke-[2.5]" />
+            </button>
+            <div
+              className={`flex h-10 min-w-[2.5rem] items-center justify-center gap-1 rounded-full border border-rose-200 bg-white/90 px-3 text-rose-700 shadow-sm backdrop-blur-md ${shakeHearts ? "animate-shake" : ""}`}
+              aria-label={`${appState.progress.hearts} hearts left`}
+            >
+              <Heart className="h-[18px] w-[18px] fill-rose-500 text-rose-600" />
+              <span className="font-mono text-sm font-black text-rose-950">{appState.progress.hearts}</span>
+            </div>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main Question Area */}
-      <div className="question-stage px-4 sm:px-8 lg:px-12 pt-4 pb-48 max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto w-full">
-        {/* Module Step Switcher Bar */}
-        {topic.modules && topic.modules.length > 1 && (
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 mb-3 no-scrollbar border-b border-slate-200/60">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 mr-1 shrink-0">
-              Steps:
-            </span>
-            {topic.modules.map((mod, mIdx) => {
-              const isCurrentMod = mod.id === currentModule?.id;
-              return (
-                <button
-                  key={mod.id}
-                  type="button"
-                  onClick={() => router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all shrink-0 flex items-center gap-1.5 border ${
-                    isCurrentMod
-                      ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                      : mod.completed
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
-                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                  }`}
-                >
-                  <span>Step {mIdx + 1}</span>
-                  {mod.completed && <span>✓</span>}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Progress Bar with Clean Icon Shuffle */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="progress grow">
-            <span style={{ width: `${((index + 1) / questions.length) * 100}%` }} />
-          </div>
-          <button
-            type="button"
-            onClick={handleReshuffleModule}
-            title="Reshuffle Questions"
-            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 flex items-center justify-center transition-colors shrink-0 shadow-2xs border border-slate-200/80 active:scale-95"
-          >
-            <Shuffle className="w-4 h-4 stroke-[2.5]" />
-          </button>
-          <span className="font-mono text-xs font-black text-slate-500 shrink-0">
-            {index + 1}/{questions.length}
-          </span>
-        </div>
+      <div className="question-stage px-4 sm:px-8 lg:px-12 pt-5 pb-48 max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto w-full">
 
         <motion.div
           key={`q-${index}`}
@@ -368,7 +323,7 @@ function ModuleContent() {
         >
           <div className="flex items-center justify-between">
             <span className={`text-[11px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${theme.badgeBg} ${theme.badgeText}`}>
-              Question {index + 1}
+              Question {index + 1} of {questions.length}
             </span>
           </div>
 
@@ -394,7 +349,10 @@ function ModuleContent() {
           </div>
 
           {!showExplanation && (
-            <div className="flex items-center gap-2.5 mt-4 pt-2">
+            <div className="mt-4 flex flex-col gap-2.5 pt-2">
+              <p className={`text-center text-xs font-extrabold ${isAnswered(q, state) ? "text-emerald-700" : "text-slate-400"}`}>
+                {isAnswered(q, state) ? "Ready — tap Check Answer." : "Choose or type your answer above."}
+              </p>
               <button
                 type="button"
                 className="btn btn-primary grow py-3.5 text-base font-black shadow-md flex items-center justify-center gap-2"

@@ -82,7 +82,7 @@ export default function Subjects() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900">Curriculum Topics</h1>
           <p className="text-xs font-semibold text-slate-500 mt-1">
-            Tap a topic or select a specific step pill to jump straight into bite-sized interactive drills
+            Choose a subject, then tap a topic to begin.
           </p>
         </div>
 
@@ -228,65 +228,49 @@ export default function Subjects() {
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") handleTopicClick(topic);
                           }}
-                          className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3 group cursor-pointer active:scale-[0.99] shadow-2xs ${
+                          className={`w-full text-left p-4 rounded-[24px] border-2 transition-all flex flex-col justify-between gap-3 group cursor-pointer active:scale-[0.99] shadow-2xs ${
                             isCompleted
-                              ? "bg-emerald-50/70 border-emerald-200 hover:border-emerald-500"
+                              ? "bg-emerald-50/80 border-emerald-300 hover:border-emerald-500"
                               : isInProgress
-                              ? "bg-amber-50/80 border-amber-300 hover:border-amber-500 shadow-sm"
-                              : "bg-slate-50/70 border-slate-200/90 hover:bg-white hover:border-emerald-500"
+                              ? "bg-amber-50/90 border-amber-300 hover:border-amber-500 shadow-sm"
+                              : "bg-white border-slate-200/90 hover:border-emerald-400 hover:shadow-sm"
                           }`}
                         >
-                          <div className="flex items-center justify-between gap-4 w-full">
-                            <div className="flex items-center gap-4 min-w-0">
-                              <div
-                                className={`w-11 h-11 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
-                                  isCompleted
-                                    ? "bg-emerald-600 text-white"
-                                    : isInProgress
-                                    ? "bg-amber-500 text-white"
-                                    : "bg-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
-                                }`}
-                              >
-                                {isCompleted ? (
-                                  <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
-                                ) : isInProgress ? (
-                                  <Play className="w-5 h-5 fill-white ml-0.5" />
-                                ) : (
-                                  <span>#{idx + 1}</span>
-                                )}
-                              </div>
-
-                              <div className="min-w-0 grow">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors">
-                                    Topic {idx + 1}
-                                  </span>
-                                  {isCompleted && (
-                                    <span className="text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
-                                      Done
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="font-semibold text-xs sm:text-[13px] text-slate-500 truncate mt-0.5">
-                                  {shortSubName}
-                                </p>
-                              </div>
+                          <div className="flex items-start gap-3 w-full">
+                            <div
+                              className={`w-10 h-10 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
+                                isCompleted
+                                  ? "bg-emerald-600 text-white"
+                                  : isInProgress
+                                  ? "bg-amber-500 text-white"
+                                  : "bg-slate-100 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
+                              }`}
+                            >
+                              {isCompleted ? (
+                                <CheckCircle2 className="w-5 h-5 stroke-[2.6]" />
+                              ) : isInProgress ? (
+                                <Play className="w-[18px] h-[18px] fill-white ml-0.5" />
+                              ) : (
+                                <span>{idx + 1}</span>
+                              )}
                             </div>
 
-                            <div className="flex items-center gap-3 shrink-0">
-                              <span className="text-xs font-black text-emerald-700 bg-white border border-slate-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-colors flex items-center gap-1 shadow-2xs">
-                                <span>{isCompleted ? "Review" : "Start"}</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                              </span>
+                            <div className="min-w-0 grow">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors shrink-0">
+                                  Topic {idx + 1}
+                                </span>
+                                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-600 transition-colors shrink-0" />
+                              </div>
+                              <p className="font-semibold text-xs sm:text-[13px] text-slate-500 leading-snug mt-0.5 line-clamp-2">
+                                {shortSubName}
+                              </p>
                             </div>
                           </div>
 
-                          {/* Direct Module Step Pills inside Topic Card */}
+                          {/* Small numbered step chips: same direct-entry logic, less visual noise. */}
                           {topic.modules && topic.modules.length > 1 && (
-                            <div className="flex items-center gap-1.5 pt-2.5 border-t border-slate-200/60 overflow-x-auto no-scrollbar w-full">
-                              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 mr-1 shrink-0">
-                                Steps:
-                              </span>
+                            <div className="flex items-center gap-1.5 pt-2 border-t border-slate-200/60 overflow-x-auto no-scrollbar w-full">
                               {topic.modules.map((mod, mIdx) => {
                                 const isModCompleted = mod.completed;
                                 const isModInProgress = mod.inProgress || (!isModCompleted && isInProgress && mIdx === 0);
@@ -298,16 +282,16 @@ export default function Subjects() {
                                       e.stopPropagation();
                                       router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`);
                                     }}
-                                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all shrink-0 flex items-center gap-1 border ${
+                                    aria-label={`Open step ${mIdx + 1}`}
+                                    className={`h-7 min-w-[1.75rem] rounded-full text-[11px] font-black transition-all shrink-0 border ${
                                       isModCompleted
                                         ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
                                         : isModInProgress
                                         ? "bg-amber-500 text-white border-amber-500 shadow-2xs"
-                                        : "bg-white text-slate-600 border-slate-300 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400"
+                                        : "bg-white text-slate-500 border-slate-300 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400"
                                     }`}
                                   >
-                                    <span>Step {mIdx + 1}</span>
-                                    {isModCompleted && <span>✓</span>}
+                                    {isModCompleted ? "✓" : mIdx + 1}
                                   </button>
                                 );
                               })}

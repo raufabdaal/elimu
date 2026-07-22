@@ -163,19 +163,19 @@ const TOPICS: TopicData[] = [
             items: [
               {
                 id: "i1",
-                text: "Set A = { } (Empty set -> 0 elements)",
+                text: "Set A = { }",
               },
               {
                 id: "i2",
-                text: "Set B = {Sun} (Singleton set -> 1 element)",
+                text: "Set B = {Sun}",
               },
               {
                 id: "i3",
-                text: "Set C = {Red, Yellow, Blue} (Primary colors -> 3 elements)",
+                text: "Set C = {Red, Yellow, Blue}",
               },
               {
                 id: "i4",
-                text: "Set D = {a, e, i, o, u} (Vowels -> 5 elements)",
+                text: "Set D = {a, e, i, o, u}",
               },
             ],
             correctOrder: [
@@ -362,7 +362,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "{ } (Empty set - because they share zero common elements)",
+                text: "{ }",
                 correct: true,
               },
               {
@@ -714,7 +714,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "100 times (30,000 ÷ 300 = 100)",
+                text: "100 times",
                 correct: true,
               },
               {
@@ -1090,7 +1090,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Symbols representing 5s (V = 5, L = 50, and D = 500)",
+                text: "Symbols representing 5s",
                 correct: true,
               },
               {
@@ -1197,7 +1197,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "CDXCIX (400 + 90 + 9 = CD + XC + IX)",
+                text: "CDXCIX",
                 correct: true,
               },
               {
@@ -1326,7 +1326,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "3,485 (because its last digit is 5)",
+                text: "3,485",
                 correct: true,
               },
               {
@@ -1441,7 +1441,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "432 (ends in even 2, and sum of digits 4+3+2 = 9, which divides by 3)",
+                text: "432",
                 correct: true,
               },
               {
@@ -1525,7 +1525,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "12 (because multiples of 4: 4, 8, 12, 16... and multiples of 6: 6, 12, 18... the smallest shared multiple is 12)",
+                text: "12",
                 correct: true,
               },
               {
@@ -1580,7 +1580,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "After 30 minutes (LCM of 10 and 15 is 30)",
+                text: "After 30 minutes",
                 correct: true,
               },
               {
@@ -1678,7 +1678,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "6 bags (GCF/HCF of 12 and 18 is 6)",
+                text: "6 bags",
                 correct: true,
               },
               {
@@ -1742,7 +1742,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "8,280 (345 × 4 = 1,380; and 345 × 20 = 6,900; sum = 8,280)",
+                text: "8,280",
                 correct: true,
               },
               {
@@ -1780,7 +1780,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "24 (Division first: 12 ÷ 4 = 3; then Multiplication: 3 × 3 = 9; then Addition: 20 + 9 = 29; finally Subtraction: 29 - 5 = 24)",
+                text: "24",
                 correct: true,
               },
               {
@@ -1895,7 +1895,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "5 (First bracket 45-15=30; second bracket 12-6=6; dividing 30 ÷ 6 = 5)",
+                text: "5",
                 correct: true,
               },
               {
@@ -1949,7 +1949,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "The top number 3 is the NUMERATOR (showing how many equal parts are selected or shaded); the bottom number 5 is the DENOMINATOR (showing the total number of equal parts into which the whole object or group is divided)",
+                text: "The top number 3 is the numerator, and the bottom number 5 is the denominator",
                 correct: true,
               },
               {
@@ -1978,7 +1978,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "4/7 (because the top numerator 4 is strictly smaller than the bottom denominator 7)",
+                text: "4/7",
                 correct: true,
               },
               {
@@ -2033,7 +2033,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "8 (since denominator 3 was multiplied by 4 to get 12, multiply top numerator 2 by 4: 2 × 4 = 8)",
+                text: "8",
                 correct: true,
               },
               {
@@ -2148,7 +2148,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "> (is strictly greater than, because 2/5 = 4/10, and 4/10 > 3/10)",
+                text: ">",
                 correct: true,
               },
               {
@@ -2186,7 +2186,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "6/9 which reduces to 2/3 in simplest form (add numerators 2+4=6, keep denominator 9 unchanged)",
+                text: "6/9 which reduces to 2/3 in simplest form",
                 correct: true,
               },
               {
@@ -2224,7 +2224,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "3/4 (convert 1/2 into 2/4, then add 2/4 + 1/4 = 3/4)",
+                text: "3/4",
                 correct: true,
               },
               {
@@ -2270,7 +2270,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "3 4/5 (add whole numbers 1+2=3; add fractions 1/5+3/5=4/5)",
+                text: "3 4/5",
                 correct: true,
               },
               {
@@ -2377,7 +2377,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "7/11 (work strictly from left to right: 8 - 3 = 5, then 5 + 2 = 7 over common denominator 11)",
+                text: "7/11",
                 correct: true,
               },
               {
@@ -2508,7 +2508,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "18.32 (align decimal points and attach trailing zero to 14.5 so it becomes 14.50 + 3.82 = 18.32)",
+                text: "18.32",
                 correct: true,
               },
               {
@@ -2960,7 +2960,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "6 m (since Width = Area ÷ Length = 48 ÷ 8 = 6 m)",
+                text: "6 m",
                 correct: true,
               },
               {
@@ -3006,7 +3006,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "By calculating the area of Rectangle A (6 × 3 = 18 cm^2) and the area of Rectangle B (4 × 2 = 8 cm^2) separately, and then ADDING both areas together (18 + 8 = 26 cm^2)",
+                text: "By finding the area of each rectangle separately, then adding the two areas together",
                 correct: true,
               },
               {
@@ -3104,7 +3104,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "100 cm² (10 cm × 10 cm = 100 cm^2)",
+                text: "100 cm²",
                 correct: true,
               },
               {
@@ -3150,7 +3150,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "A 2D shape is completely flat and has only two dimensions (Length and Width), possessing Area but zero thickness; a 3D solid figure has three physical dimensions (Length, Width, and Height / Thickness), occupying physical space (Volume / Capacity) and possessing solid faces, edges, and vertices (corners)",
+                text: "A 2D shape is flat with length and width, while a 3D solid has length, width, and height",
                 correct: true,
               },
               {
@@ -3340,7 +3340,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "80 cm³ (since Volume = Base Area × Height = 20 × 4 = 80 cm^3)",
+                text: "80 cm³",
                 correct: true,
               },
               {
@@ -3630,7 +3630,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "40 trees (since 4 × 10 = 40)",
+                text: "40 trees",
                 correct: true,
               },
               {
@@ -3668,7 +3668,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "10 cows (since half of 20 is 20 ÷ 2 = 10)",
+                text: "10 cows",
                 correct: true,
               },
               {
@@ -3875,7 +3875,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "4,800 UGX (since Total Cost = Unit Cost × Quantity = 1,200 × 4 = 4,800)",
+                text: "4,800 UGX",
                 correct: true,
               },
               {
@@ -3959,7 +3959,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "12,000 UGX (since 3 × 4,000 = 12,000)",
+                text: "12,000 UGX",
                 correct: true,
               },
               {
@@ -4066,7 +4066,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Quantity = Total Cost ÷ Unit Cost (Q = C_{total} ÷ C_1)",
+                text: "Quantity = Total Cost ÷ Unit Cost",
                 correct: true,
               },
               {
@@ -4196,7 +4196,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "4 hours 15 minutes (add minutes 40+35=75 min = 1 hr 15 min; add hours 2+1+1 carry = 4 hours)",
+                text: "4 hours 15 minutes",
                 correct: true,
               },
               {
@@ -4349,7 +4349,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Standard year = 365 days (divided into 52 weeks); Leap year = 366 days (occurring once every 4 years when February has 29 days instead of 28)",
+                text: "Standard year = 365 days; leap year = 366 days",
                 correct: true,
               },
               {
@@ -4387,7 +4387,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Tuesday (since a week has exactly 7 days, adding +7 days returns to the exact same day of the week: 1 + 7 = 8th May = Tuesday)",
+                text: "Tuesday",
                 correct: true,
               },
               {
@@ -4433,7 +4433,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "4 weeks and 2 days (since 30 ÷ 7 = 4 weeks with remainder 2 days)",
+                text: "4 weeks and 2 days",
                 correct: true,
               },
               {
@@ -5310,7 +5310,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Weather is the daily (or hourly) atmospheric condition of a specific place over a very short period of time (for example: 'It is raining in Kampala this morning' or 'It is sunny in Gulu this afternoon'); Climate is the average weather condition of a large district or region observed and recorded over a very long period of time (usually 30 to 35 years, say: 'Southern Uganda experiences a warm, wet equatorial climate')",
+                text: "Weather is the daily condition of the atmosphere, while climate is the average weather over a long period",
                 correct: true,
               },
               {
@@ -5547,7 +5547,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "The Wet Season (Rainy season - characterized by frequent heavy rainfalls, high humidity, and cloud cover) and the Dry Season (Sunny season - characterized by bright sunshine, high daytime heat, low humidity, and very little or no rain)",
+                text: "The Wet Season and the Dry Season",
                 correct: true,
               },
               {
@@ -5622,7 +5622,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Karamoja experiences a Unimodal (Single Maxima) rainfall regime with only ONE short, unreliable rainy season per year (between April and August, receiving under 500 mm total rain) followed by a long, scorching 7-month drought (dry season); because rain is too scarce for continuous crop farming, the local Karamojong people traditionally practice Nomadic Pastoralism (herding Zebu cattle, goats, and sheep across vast plains in search of seasonal pasture and water at valley dams)",
+                text: "Karamoja has one short rainy season and a long dry season, so many people practise pastoralism",
                 correct: true,
               },
               {
@@ -5737,7 +5737,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because Rotational Grazing allows the grazed pasture grass inside the rested paddocks enough time (6 to 8 weeks) to regrow and recover (stopping overgrazing and soil erosion), while breaking the life cycle of dangerous internal worms and external cattle ticks (since tick larvae left behind inside the rested paddock die of starvation without any cows to bite before the herd returns!)",
+                text: "Because Rotational Grazing allows the grazed pasture grass inside the rested paddocks enough time (6 to 8 weeks) to regrow and recover (stopping overgrazing and soil erosion), while breaking the life cycle of dangerous internal worms and external cattle ticks",
                 correct: true,
               },
               {
@@ -6574,7 +6574,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Kalo (or Atapa / Millet Bread - prepared by mingling composite flour containing roughly 70\\% dried cassava flour and 30\\% finger millet flour)",
+                text: "Kalo",
                 correct: true,
               },
               {
@@ -7215,7 +7215,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Tilapia (Ngege - indigenous sweet table fish), Nile Perch (Lates niloticus / Mputa - giant commercial carnivore weighing up to 100 kg exported as frozen fillets), and Silverfish (Mukene / Dagaa - tiny silvery fish caught at night using bright lamps and scoop nets)",
+                text: "Tilapia",
                 correct: true,
               },
               {
@@ -8345,7 +8345,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because live, weakened vaccine antigens (such as OPV Polio drops or Measles vaccine) are highly sensitive to heat; if exposed to hot tropical sun (>30°C), the live antigens are permanently destroyed (denatured), rendering the vaccine completely useless (meaning immunized children would remain unprotected against Polio or Measles!)",
+                text: "Because heat can destroy vaccine antigens and make vaccines ineffective",
                 correct: true,
               },
               {
@@ -9306,7 +9306,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because 'bad company corrupts good morals' (proverb); associating with undisciplined peers quickly leads to peer pressure where a good pupil is tempted to skip classes (truancy), experiment with dangerous drugs/alcohol, commit petty theft, and drop out of school (destroying their future career and ending up in police cells / juvenile remand homes)",
+                text: "Because bad company can lead pupils into truancy, drugs, theft, and poor discipline",
                 correct: true,
               },
               {
@@ -12882,8 +12882,8 @@ const TOPICS: TopicData[] = [
         options: [
           { id: "a", text: "Stomach (churns and mixes swallowed food with digestive gastric juices and hydrochloric acid)", correct: true },
           { id: "b", text: "Liver (the largest internal organ; produces bile to digest fats and detoxifies harmful chemicals)", correct: true },
-          { id: "c", text: "Small Intestine (long coiled tube where digestion is completed and digested food nutrients are absorbed into the blood)", correct: true },
-          { id: "d", text: "Kidneys (twin bean-shaped organs at the back of the abdomen that filter urea waste and excess water out of blood to produce urine)", correct: true },
+          { id: "c", text: "Small Intestine", correct: true },
+          { id: "d", text: "Kidneys", correct: true },
           { id: "e", text: "The Brain (command center located inside the abdominal belly)", correct: false }
         ],
         explanation: "The abdominal cavity is the metabolic powerhouse of the human body, housing the gastrointestinal tract and excretory filters.",
@@ -13032,7 +13032,7 @@ const TOPICS: TopicData[] = [
         question: "Which of the following practices ensure proper oral hygiene and prevent painful tooth decay (dental caries) and gum bleeding (gingivitis)? (Select all that apply)",
         hint: "Select all positive dental hygiene rules and exclude cracking bottles with teeth.",
         options: [
-          { id: "a", text: "Brushing teeth thoroughly at least twice daily (morning and bedtime) using fluoride toothpaste and a clean brush or chewed stick (mswaki)", correct: true },
+          { id: "a", text: "Brushing teeth thoroughly at least twice daily", correct: true },
           { id: "b", text: "Rinsing the mouth vigorously with clean water immediately after eating every meal or sugary snack", correct: true },
           { id: "c", text: "Eating crunchy, fibrous vegetables and fruits such as raw carrots, sugar cane, apples, and dodo greens to clean tooth surfaces naturally", correct: true },
           { id: "d", text: "Visiting a qualified dental clinic at least twice a year for professional dental check-ups and tartar scaling", correct: true },
@@ -13800,8 +13800,8 @@ const TOPICS: TopicData[] = [
         options: [
           { id: "a", text: "Mr. -> Mister (title used before a man's name)", correct: true },
           { id: "b", text: "P.O. -> Post Office (used in postal box addresses like P.O. Box 123)", correct: true },
-          { id: "c", text: "a.m. -> ante meridiem (meaning morning hours before 12:00 noon)", correct: true },
-          { id: "d", text: "p.m. -> post meridiem (meaning afternoon and evening hours after 12:00 noon)", correct: true },
+          { id: "c", text: "a.m. -> ante meridiem", correct: true },
+          { id: "d", text: "p.m. -> post meridiem", correct: true },
           { id: "e", text: "Dr. -> Driver (title used before a taxi driver's name)", correct: false }
         ],
         explanation: "In English titles, 'Dr.' strictly stands for 'Doctor' (a medical doctor or university PhD holder), NEVER 'Driver'!",
@@ -13874,7 +13874,7 @@ const TOPICS: TopicData[] = [
         question: "Why does the root verb 'Write' drop its final silent letter 'e' when adding the suffix '-ing' to form 'Writing'?",
         hint: "Look for dropping silent 'e' before adding a vowel suffix like '-ing'.",
         options: [
-          { id: "a", text: "In English spelling, when a root word ends in a silent (unpronounced) letter 'e', that final 'e' is dropped before adding any suffix that begins with a vowel sound (such as -ing, -er, or -ed)", correct: true },
+          { id: "a", text: "Drop the final silent e before adding a suffix that begins with a vowel, such as ing", correct: true },
           { id: "b", text: "Because the letter 'e' is afraid of the letter 'i' and runs away", correct: false },
           { id: "c", text: "Because all English words must have exactly seven letters", correct: false },
           { id: "d", text: "Because adding '-ing' makes the word turn into a proper noun", correct: false }
@@ -15166,15 +15166,15 @@ const TOPICS: TopicData[] = [
         id: "p4-egw-m1-4",
         type: "multiple_choice",
         question: "Read these four jumbled sentences from a story about a school clean-up day:\n1. Finally, we dumped all the collected rubbish into the covered compost pit and washed our hands.\n2. When we arrived at school on Saturday morning, our class teacher gave each of us a broom and a slasher.\n3. Next, we swept the classroom verandas clean and scrubbed the drainage channels.\n4. First, we slashed all the tall grass growing near the school football pitch.\nWhich sequence of numbers represents the correct logical and chronological order of the story?",
-        hint: "Look for the sequence starting with arrival (2), then First (4), Next (3), and Finally (1).",
+        hint: "Look for time words like First, Next, and Finally, and identify the sentence that introduces the setting.",
         options: [
-          { id: "a", text: "2 -> 4 -> 3 -> 1 (Arrived & got tools -> First slashed grass -> Next swept verandas -> Finally dumped rubbish & washed hands)", correct: true },
-          { id: "b", text: "1 -> 2 -> 3 -> 4", correct: false },
-          { id: "c", text: "4 -> 3 -> 2 -> 1", correct: false },
-          { id: "d", text: "3 -> 1 -> 4 -> 2", correct: false }
+          { id: "a", text: "2, 4, 3, 1", correct: true },
+          { id: "b", text: "1, 2, 3, 4", correct: false },
+          { id: "c", text: "4, 3, 2, 1", correct: false },
+          { id: "d", text: "3, 1, 4, 2", correct: false }
         ],
         explanation: "To re-arrange jumbled sentences, look for logical triggers: Sentence 2 introduces the setting ('When we arrived... gave us tools'); Sentence 4 uses the connector 'First... slashed grass'; Sentence 3 uses 'Next... swept'; and Sentence 1 uses 'Finally... dumped rubbish'.",
-        deepDive: "This 2 -> 4 -> 3 -> 1 flow creates a coherent, satisfying narrative."
+        deepDive: "This 2, 4, 3, 1 flow creates a coherent, satisfying narrative."
       },
       {
         id: "p4-egw-m1-5",
@@ -15884,19 +15884,19 @@ const TOPICS: TopicData[] = [
             items: [
               {
                 id: "i1",
-                text: "Set W = { } (Empty set, 0 elements)",
+                text: "Set W = { }",
               },
               {
                 id: "i2",
-                text: "Set X = {Sun} (Singleton set, 1 element)",
+                text: "Set X = {Sun}",
               },
               {
                 id: "i3",
-                text: "Set Y = {Nakasero, Owino, Kikuubo} (3 elements)",
+                text: "Set Y = {Nakasero, Owino, Kikuubo}",
               },
               {
                 id: "i4",
-                text: "Set Z = {vowels of the English alphabet: a, e, i, o, u} (5 elements)",
+                text: "Set Z = {a, e, i, o, u}",
               },
             ],
             correctOrder: [
@@ -16120,19 +16120,19 @@ const TOPICS: TopicData[] = [
             items: [
               {
                 id: "i1",
-                text: "Set A = { } (0 elements -> 2⁰ = 1 subset)",
+                text: "Set A = { }",
               },
               {
                 id: "i2",
-                text: "Set B = {x} (1 element -> 2¹ = 2 subsets)",
+                text: "Set B = {x}",
               },
               {
                 id: "i3",
-                text: "Set C = {1, 2, 3} (3 elements -> 2³ = 8 subsets)",
+                text: "Set C = {1, 2, 3}",
               },
               {
                 id: "i4",
-                text: "Set D = {a, b, c, d, e} (5 elements -> 2⁵ = 32 subsets)",
+                text: "Set D = {a, b, c, d, e}",
               },
             ],
             correctOrder: [
@@ -17218,7 +17218,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "The sum of all its digits is a multiple of 3 (divisible by 3)",
+                text: "The sum of all its digits is a multiple of 3",
                 correct: true,
               },
               {
@@ -17302,7 +17302,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "If it is an even number AND the sum of its digits is divisible by 3 (divisible by both 2 and 3)",
+                text: "If it is an even number AND the sum of its digits is divisible by 3",
                 correct: true,
               },
               {
@@ -20664,19 +20664,19 @@ const TOPICS: TopicData[] = [
             items: [
               {
                 id: "i1",
-                text: "Triangle (3 sides -> 180°)",
+                text: "Triangle",
               },
               {
                 id: "i2",
-                text: "Quadrilateral / Rectangle (4 sides -> 360°)",
+                text: "Quadrilateral / Rectangle",
               },
               {
                 id: "i3",
-                text: "Pentagon (5 sides -> 540°)",
+                text: "Pentagon",
               },
               {
                 id: "i4",
-                text: "Hexagon (6 sides -> 720°)",
+                text: "Hexagon",
               },
             ],
             correctOrder: [
@@ -21322,7 +21322,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "We find the average (mean) of the two middle numbers (8 and 10 -> (8+10)/2 = 9)",
+                text: "We find the average of the two middle numbers",
                 correct: true,
               },
               {
@@ -21546,7 +21546,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "c",
-                text: "Certain (Probability = 1 or 100%)",
+                text: "Certain",
                 correct: true,
               },
               {
@@ -21637,19 +21637,19 @@ const TOPICS: TopicData[] = [
             items: [
               {
                 id: "i1",
-                text: "Event A: A dog speaking fluent English (Impossible -> Probability = 0)",
+                text: "Event A: A dog speaking fluent English",
               },
               {
                 id: "i2",
-                text: "Event B: Picking a yellow ball from a bag with 1 yellow and 9 red balls (Unlikely -> 1/10 = 0.1)",
+                text: "Event B: Picking a yellow ball from a bag with 1 yellow and 9 red balls",
               },
               {
                 id: "i3",
-                text: "Event C: Getting a Tail when tossing a fair coin (Even chance -> 1/2 = 0.5)",
+                text: "Event C: Getting a Tail when tossing a fair coin",
               },
               {
                 id: "i4",
-                text: "Event D: A triangle having three interior angles summing to 180° (Certain -> Probability = 1)",
+                text: "Event D: A triangle having three interior angles summing to 180°",
               },
             ],
             correctOrder: [
@@ -22310,7 +22310,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Distance = Speed × Time (D = S × T)",
+                text: "Distance = Speed × Time",
                 correct: true,
               },
               {
@@ -25148,7 +25148,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Barter Trade (the direct exchange of one physical commodity or good for another without using money, such as trading Bunyoro iron hoes/salt for Buganda bark-cloth or millet)",
+                text: "Barter Trade",
                 correct: true,
               },
               {
@@ -25665,7 +25665,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Mapeera (derived from his French title 'Mon Père' meaning 'My Father')",
+                text: "Mapeera",
                 correct: true,
               },
               {
@@ -28410,7 +28410,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because Uganda is a diverse, multi-faith society (composed of Roman Catholics, Anglicans/Church of Uganda, Muslims, Pentecostals, Orthodox, Seventh-Day Adventists, Bahai, and traditionalists); guaranteeing religious freedom prevents sectarian religious wars (like the 19th-century religious civil wars) and promotes peaceful coexistence, mutual respect, and national unity (Inter-Religious Council of Uganda IRCU)",
+                text: "Because Uganda is a diverse, multi-faith society",
                 correct: true,
               },
               {
@@ -28899,7 +28899,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "A fertile egg (produced when a hen mates with a rooster/cock) contains a fertilized blastodisc that will develop into a baby chick when incubated at 37.5°C; an infertile egg (produced by a hen kept strictly without any roosters) cannot hatch into a chick under any amount of incubation, and is sold for human consumption (table egg)",
+                text: "A fertile egg can develop into a chick, while an infertile egg cannot hatch",
                 correct: true,
               },
               {
@@ -28950,7 +28950,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "Apiculture (from the Latin word 'apis' meaning bee)",
+                text: "Apiculture",
                 correct: true,
               },
               {
@@ -29135,7 +29135,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because the old hive has become overcrowded (overpopulated with too many bees and no empty cells left for laying eggs or storing honey), or because the old queen is being replaced by a newly hatched virgin queen (prompting the old queen to divide the colony and migrate with half the workers to establish a new colony)",
+                text: "Because the old hive has become overcrowded",
                 correct: true,
               },
               {
@@ -29464,7 +29464,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "By placing the irregular leaf over a transparent squared grid paper (with 1 cm × 1 cm squares), tracing its outline, counting all the FULL squares strictly inside the outline, and then counting every half square or more-than-half square as ONE full square (while completely ignoring any tiny fragment less than half a square)",
+                text: "By placing the irregular leaf over a transparent squared grid paper",
                 correct: true,
               },
               {
@@ -29617,7 +29617,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because folding or reshaping an object changes its external dimensions (and volume), but does not add or remove any actual cotton matter (atoms/particles), so its mass (0.5 kg) remains strictly conserved and identical (Conservation of Mass)",
+                text: "Because folding or reshaping an object changes its external dimensions",
                 correct: true,
               },
               {
@@ -29738,7 +29738,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "By the Water Displacement Method (using a measuring cylinder partially filled with a known initial volume of water V_1, gently lowering the tied stone inside by a thread so it submerges completely, reading the new higher water level V_2, and subtracting: Volume of stone = V_2 - V_1)",
+                text: "By the Water Displacement Method",
                 correct: true,
               },
               {
@@ -29853,7 +29853,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because a thick, bulky rope occupies significant physical volume of its own (when submerged alongside the stone), causing extra water displacement and resulting in an inaccurate, falsely high volume measurement (whereas a thin thread has negligible volume)",
+                text: "Because a thick, bulky rope occupies significant physical volume of its own",
                 correct: true,
               },
               {
@@ -29899,7 +29899,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "The mass of a substance packed per unit volume (Density = Mass/Volume = M/V), measured in units such as grams per cubic centimetre (g/cm^3) or kilograms per cubic metre (kg/m^3)",
+                text: "The mass of a substance packed per unit volume",
                 correct: true,
               },
               {
@@ -29974,7 +29974,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because a solid iron nail is completely solid metal with density (7.8 g/cm^3) far higher than water (1.0 g/cm^3), so it sinks; but a giant ship is built with a hollow hull (shell) filled with thousands of cubic metres of AIR (density 0.001 g/cm^3), making the AVERAGE total density of the ship (steel + enclosed air) less than 1.0 g/cm^3, so it floats (and displaces a volume of water whose weight equals the total weight of the ship - Archimedes' Principle)",
+                text: "Because a solid iron nail is completely solid metal with density",
                 correct: true,
               },
               {
@@ -30644,7 +30644,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Health education (hygiene promotion), provision of safe drinking water and basic sanitation (VIP latrines), maternal and child healthcare (including family planning and immunization UNEPI), promotion of proper food supply and balanced nutrition (stopping Kwashiorkor), prevention/control of locally endemic diseases (malaria, cholera, TB), appropriate first aid/treatment of common ailments, and provision of essential drugs (ORS, Coartem, Panadol)",
+                text: "Health education",
                 correct: true,
               },
               {
@@ -30805,7 +30805,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because most diseases that kill children and adults in Uganda (such as malaria, cholera, typhoid, diarrhea, measles, and malnutrition Kwashiorkor) are completely PREVENTABLE through simple, low-cost changes in personal hygiene, clean water habits, proper nutrition, and timely immunization (empowering families with knowledge so they never fall sick in the first place)",
+                text: "Because most diseases that kill children and adults in Uganda",
                 correct: true,
               },
               {
@@ -31529,7 +31529,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because washing vegetables AFTER slicing washes all the water-soluble vitamins (Vitamin B and Vitamin C) and mineral salts straight down the sink drain, while boiling for an hour in open saucepans completely destroys heat-sensitive Vitamin C by thermal oxidation (leaving tasteless, nutrient-dead green rag paste that does not protect the family against Scurvy or anemia)",
+                text: "Because washing vegetables AFTER slicing washes all the water-soluble vitamins",
                 correct: true,
               },
               {
@@ -31849,7 +31849,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Inorganic Rock Particles = 45\\%; Organic Matter (Humus) = 5\\% (while Soil Water makes up 25\\% and Soil Air makes up 25\\%)",
+                text: "Inorganic Rock Particles = 45\\%; Organic Matter",
                 correct: true,
               },
               {
@@ -32131,7 +32131,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Sand Soil (Funnel A - because its large, coarse particles and wide air spaces offer minimum resistance to flowing water, draining almost 80 ml rapidly while retaining very little water)",
+                text: "Sand Soil",
                 correct: true,
               },
               {
@@ -32540,7 +32540,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Anything that occupies physical space (has Volume) and possesses Weight (or Mass)",
+                text: "Anything that occupies physical space",
                 correct: true,
               },
               {
@@ -33331,7 +33331,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Irish Potato (Solanum tuberosum) and White Yam (Dioscorea rotundata)",
+                text: "Irish Potato",
                 correct: true,
               },
               {
@@ -33682,7 +33682,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Because the terminal growing tips (apical cuttings) are young, vigorous, rich in active growth hormones (auxins), root rapidly within days, and most importantly, are practically FREE from Sweet Potato Weevils and viral infections (since weevil eggs and larvae concentrate strictly in the older, woody lower stems near the ground surface)",
+                text: "Because the terminal growing tips (apical cuttings) are young, vigorous, rich in active growth hormones (auxins), root rapidly within days, and most importantly, are practically FREE from Sweet Potato Weevils and viral infections",
                 correct: true,
               },
               {
@@ -34246,7 +34246,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "The fungus is Penicillium (Penicillium notatum), and the antibiotic drug produced is PENICILLIN (the world's first true antibiotic, which has saved hundreds of millions of lives from pneumonia, syphilis, and wound infections)",
+                text: "The fungus is Penicillium",
                 correct: true,
               },
               {
@@ -34972,7 +34972,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "c",
-                text: "too (meaning 'also' or 'as well')",
+                text: "too",
                 correct: true,
               },
               {
@@ -35199,7 +35199,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "To do the action again or anew (a second time)",
+                text: "To do the action again or anew",
                 correct: true,
               },
               {
@@ -35357,7 +35357,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "prepaid (pre- + paid = paid before using)",
+                text: "prepaid",
                 correct: true,
               },
               {
@@ -35932,7 +35932,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "an (because honest begins with a silent h, producing the vowel sound /ɒ/)",
+                text: "an",
                 correct: true,
               },
               {
@@ -35978,7 +35978,7 @@ const TOPICS: TopicData[] = [
               },
               {
                 id: "b",
-                text: "hers (meaning 'her dictionary' without needing a noun after it)",
+                text: "hers",
                 correct: true,
               },
               {
@@ -37596,7 +37596,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "An informal letter has only ONE address (the Writer's/Sender's address written at the top right-hand corner with the date directly below it), whereas a formal letter has TWO addresses (the Writer's address at the top right, and the Receiver's/Addressee's address written below on the left-hand margin)",
+                text: "An informal letter has only ONE address",
                 correct: true,
               },
               {
@@ -37832,7 +37832,7 @@ const TOPICS: TopicData[] = [
             options: [
               {
                 id: "a",
-                text: "Who (who is organizing/invited), What (what event is happening), Where (exact venue/location), When (exact date, day, and clock time), and Why (purpose/agenda of the event)",
+                text: "Who",
                 correct: true,
               },
               {
@@ -38634,7 +38634,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If Set X = {p, q, r, s} and Set Y = {r, s, t, u}, what is n(X ∪ Y)?",
             options: [
-              { id: "a", text: "6 (X ∪ Y = {p, q, r, s, t, u})", correct: true },
+              { id: "a", text: "6", correct: true },
               { id: "b", text: "8", correct: false },
               { id: "c", text: "2", correct: false },
               { id: "d", text: "4", correct: false },
@@ -38704,7 +38704,7 @@ const TOPICS: TopicData[] = [
             question: "If n(A) = 15, n(B) = 20, and n(A ∩ B) = 6, what is the value of n(A ∪ B)?",
             options: [
               { id: "a", text: "35", correct: false },
-              { id: "b", text: "29 (15 + 20 - 6 = 35 - 6 = 29)", correct: true },
+              { id: "b", text: "29", correct: true },
               { id: "c", text: "41", correct: false },
               { id: "d", text: "25", correct: false },
             ],
@@ -38813,7 +38813,7 @@ const TOPICS: TopicData[] = [
             question: "Based on the class data in Question 1 above (45 pupils total, 12 like both Math and Science, 28 total like Math, 25 total like Science), how many pupils like ONLY Mathematics (Only M)?",
             options: [
               { id: "a", text: "28 pupils", correct: false },
-              { id: "b", text: "16 pupils (28 total Math minus 12 who like both = 16)", correct: true },
+              { id: "b", text: "16 pupils", correct: true },
               { id: "c", text: "13 pupils", correct: false },
               { id: "d", text: "12 pupils", correct: false },
             ],
@@ -38841,7 +38841,7 @@ const TOPICS: TopicData[] = [
             options: [
               { id: "a", text: "x = 10", correct: false },
               { id: "b", text: "x = 12 (Total = (Only Luo) + Both + (Only Luganda) + Neither => 40 = (2x - 5) + 5 + (x) + 5 => 3x + 5 = 40 => 3x = 35 -> check: if 2x speak Luo total and x+5 Luganda total: (2x-5) + 5 + (x) + 5 = 40 => 3x + 5 = 40)", correct: false },
-              { id: "c", text: "x = 11 (specifically if Only Luo = 2x and Only Luganda = x+5: 2x + 5 + x + 5 + 5 = 40 => 3x + 15 = 40; but if total Luo = 2x and total Luganda = x+5: (2x - 5) + 5 + (x + 5 - 5) + 5 = 40 => 3x + 5 = 40 => let us pick x = 10 where Total Luo = 20, Total Luganda = 20: 15 + 5 + 15 + 5 = 40 => 2x = 20 => x = 10)", correct: true },
+              { id: "c", text: "x = 11", correct: true },
               { id: "d", text: "x = 8", correct: false },
             ],
             explanation: "If Total Luo = 2(10) = 20 (Only Luo = 15) and Total Luganda = 10 + 5 = 15 (Only Luganda = 10), plus Both (5) plus Neither (10 total or 5): check exact balancing: 15 + 5 + 10 + 10 = 40.",
@@ -38887,7 +38887,7 @@ const TOPICS: TopicData[] = [
             question: "In a class of 60 pupils, 35 like English and 40 like Science. If 5 pupils like NEITHER subject, what percentage of the class likes BOTH English and Science?",
             options: [
               { id: "a", text: "20%", correct: false },
-              { id: "b", text: "33.3% (20 pupils out of 60 = 20/60 x 100% = 33.3%)", correct: true },
+              { id: "b", text: "33.3%", correct: true },
               { id: "c", text: "25%", correct: false },
               { id: "d", text: "50%", correct: false },
             ],
@@ -38901,7 +38901,7 @@ const TOPICS: TopicData[] = [
               { id: "i1", text: "Step 1: Write the equation for total class population: (30 - x) + x + (32 - x) + 3 = 50" },
               { id: "i2", text: "Step 2: Collect all constant numbers together: 30 + 32 + 3 = 65, and combine terms: 65 - x = 50" },
               { id: "i3", text: "Step 3: Rearrange to isolate x: x = 65 - 50" },
-              { id: "i4", text: "Step 4: Conclude that intersection x = 15 (Check: Only A=15, Both=15, Only B=17, Neither=3 -> 15+15+17+3 = 50)" },
+              { id: "i4", text: "Step 4: Conclude that the intersection x = 15" },
             ],
             correctOrder: ["i1", "i2", "i3", "i4"],
             explanation: "Algebraic solution sequence for intersection x.",
@@ -38984,7 +38984,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the sum of the value of digit 5 and the value of digit 3 in the number 54,382?",
             options: [
-              { id: "a", text: "50,300 (50,000 + 300 = 50,300)", correct: true },
+              { id: "a", text: "50,300", correct: true },
               { id: "b", text: "53,000", correct: false },
               { id: "c", text: "5,300", correct: false },
               { id: "d", text: "8 (5 + 3 = 8)", correct: false },
@@ -39023,7 +39023,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the exact difference between the value of 8 and the value of 2 in the number 85,240?",
             options: [
-              { id: "a", text: "79,800 (80,000 - 200 = 79,800)", correct: true },
+              { id: "a", text: "79,800", correct: true },
               { id: "b", text: "80,200", correct: false },
               { id: "c", text: "7,800", correct: false },
               { id: "d", text: "6 (8 - 2 = 6)", correct: false },
@@ -39075,7 +39075,7 @@ const TOPICS: TopicData[] = [
             question: "Convert the Hindu-Arabic year 1984 into Roman Numerals correctly:",
             options: [
               { id: "a", text: "MDCCCCLXXXIV", correct: false },
-              { id: "b", text: "MCMLXXXIV (M = 1000, CM = 900, LXXX = 80, IV = 4)", correct: true },
+              { id: "b", text: "MCMLXXXIV", correct: true },
               { id: "c", text: "MMLXXXIV", correct: false },
               { id: "d", text: "MCMLXXXVI", correct: false },
             ],
@@ -39101,7 +39101,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What Hindu-Arabic number corresponds to the Roman numeral CDLXXIX?",
             options: [
-              { id: "a", text: "479 (CD = 400, LXX = 70, IX = 9)", correct: true },
+              { id: "a", text: "479", correct: true },
               { id: "b", text: "679", correct: false },
               { id: "c", text: "469", correct: false },
               { id: "d", text: "579", correct: false },
@@ -39149,7 +39149,7 @@ const TOPICS: TopicData[] = [
             question: "A factory produced 480,000 exercise books and packed them neatly into cartons containing 120 books each. How many total cartons were filled?",
             options: [
               { id: "a", text: "400 cartons", correct: false },
-              { id: "b", text: "4,000 cartons (480,000 ÷ 120 = 4,000)", correct: true },
+              { id: "b", text: "4,000 cartons", correct: true },
               { id: "c", text: "40,000 cartons", correct: false },
               { id: "d", text: "2,400 cartons", correct: false },
             ],
@@ -39198,7 +39198,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Convert the decimal number 25 ten into Base Two (binary):",
             options: [
-              { id: "a", text: "11001 two (Divide 25 repeatedly by 2 and read remainders from bottom to top: 25/2=12 r 1; 12/2=6 r 0; 6/2=3 r 0; 3/2=1 r 1; 1/2=0 r 1 -> 11001 two)", correct: true },
+              { id: "a", text: "11001 two", correct: true },
               { id: "b", text: "10110 two", correct: false },
               { id: "c", text: "11100 two", correct: false },
               { id: "d", text: "10011 two", correct: false },
@@ -39225,7 +39225,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Evaluate addition in Base Two: 101 two + 11 two",
             options: [
-              { id: "a", text: "1000 two (1+1=10 two -> write 0 carry 1; 0+1+1=10 two -> write 0 carry 1; 1+1=10 two -> write 10 -> 1000 two)", correct: true },
+              { id: "a", text: "1000 two", correct: true },
               { id: "b", text: "112 two", correct: false },
               { id: "c", text: "110 two", correct: false },
               { id: "d", text: "1011 two", correct: false },
@@ -39272,7 +39272,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If k is a number base such that 24 k = 20 ten, what is the value of base k?",
             options: [
-              { id: "a", text: "k = 8 (Since (2 x k) + 4 = 20 => 2k = 16 => k = 8)", correct: true },
+              { id: "a", text: "k = 8", correct: true },
               { id: "b", text: "k = 6", correct: false },
               { id: "c", text: "k = 5", correct: false },
               { id: "d", text: "k = 7", correct: false },
@@ -39305,7 +39305,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If 13 x = 12 ten, what is the unknown base x?",
             options: [
-              { id: "a", text: "x = 9 ((1 x x) + 3 = 12 => x = 9)", correct: true },
+              { id: "a", text: "x = 9", correct: true },
               { id: "b", text: "x = 8", correct: false },
               { id: "c", text: "x = 7", correct: false },
               { id: "d", text: "x = 6", correct: false },
@@ -39335,7 +39335,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following numbers is classified as a Prime Number (having exactly two distinct factors: 1 and itself)?",
             options: [
               { id: "a", text: "1 (only one factor: 1)", correct: false },
-              { id: "b", text: "2 (factors: 1 and 2 - the only even prime number)", correct: true },
+              { id: "b", text: "2", correct: true },
               { id: "c", text: "9 (factors: 1, 3, 9)", correct: false },
               { id: "d", text: "15 (factors: 1, 3, 5, 15)", correct: false },
             ],
@@ -39363,7 +39363,7 @@ const TOPICS: TopicData[] = [
             question: "Find the square root of 324 using prime factorization:",
             options: [
               { id: "a", text: "16", correct: false },
-              { id: "b", text: "18 (324 = 2 x 2 x 3 x 3 x 3 x 3 -> group in pairs (2 x 3 x 3) = 18)", correct: true },
+              { id: "b", text: "18", correct: true },
               { id: "c", text: "22", correct: false },
               { id: "d", text: "24", correct: false },
             ],
@@ -39383,7 +39383,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following numbers is divisible by BOTH 4 and 6?",
             options: [
               { id: "a", text: "30", correct: false },
-              { id: "b", text: "36 (Divisible by 4: 36/4=9; divisible by 6: 36/6=6)", correct: true },
+              { id: "b", text: "36", correct: true },
               { id: "c", text: "42", correct: false },
               { id: "d", text: "50", correct: false },
             ],
@@ -39422,7 +39422,7 @@ const TOPICS: TopicData[] = [
             question: "If 2^y x 5 = 80, find the value of exponent y.",
             options: [
               { id: "a", text: "y = 3", correct: false },
-              { id: "b", text: "y = 4 (Divide both sides by 5: 2^y = 16. Since 2⁴ = 16, y = 4)", correct: true },
+              { id: "b", text: "y = 4", correct: true },
               { id: "c", text: "y = 5", correct: false },
               { id: "d", text: "y = 6", correct: false },
             ],
@@ -39464,7 +39464,7 @@ const TOPICS: TopicData[] = [
             question: "Find the Greatest Common Factor (GCF or HCF) of 36 and 48:",
             options: [
               { id: "a", text: "6", correct: false },
-              { id: "b", text: "12 (36 = 12 x 3 and 48 = 12 x 4)", correct: true },
+              { id: "b", text: "12", correct: true },
               { id: "c", text: "18", correct: false },
               { id: "d", text: "24", correct: false },
             ],
@@ -39492,7 +39492,7 @@ const TOPICS: TopicData[] = [
             question: "Two school bells at Soroti Primary School ring at intervals of 40 minutes and 50 minutes respectively. If they both ring together at 8:00 AM, at what exact time will they next ring together?",
             options: [
               { id: "a", text: "9:30 AM", correct: false },
-              { id: "b", text: "11:20 AM (LCM of 40 and 50 is 200 minutes = 3 hours and 20 minutes. 8:00 AM + 3h 20m = 11:20 AM)", correct: true },
+              { id: "b", text: "11:20 AM", correct: true },
               { id: "c", text: "10:00 AM", correct: false },
               { id: "d", text: "12:00 PM", correct: false },
             ],
@@ -39512,7 +39512,7 @@ const TOPICS: TopicData[] = [
             question: "Find the smallest number of oranges that can be divided equally among either 15 boys, 20 boys, or 25 boys without leaving any orange over (remainder zero):",
             options: [
               { id: "a", text: "150 oranges", correct: false },
-              { id: "b", text: "300 oranges (LCM of 15, 20, and 25: 15=3x5; 20=2²x5; 25=5² -> LCM = 2² x 3 x 5² = 4 x 3 x 25 = 300)", correct: true },
+              { id: "b", text: "300 oranges", correct: true },
               { id: "c", text: "450 oranges", correct: false },
               { id: "d", text: "600 oranges", correct: false },
             ],
@@ -39551,7 +39551,7 @@ const TOPICS: TopicData[] = [
             question: "A rectangular room floor in Gulu measures 360 cm by 240 cm. What is the side length of the largest square tiles that can cover the floor without cutting any tile?",
             options: [
               { id: "a", text: "60 cm", correct: false },
-              { id: "b", text: "120 cm (GCF of 360 and 240: 360 = 120 x 3, 240 = 120 x 2)", correct: true },
+              { id: "b", text: "120 cm", correct: true },
               { id: "c", text: "180 cm", correct: false },
               { id: "d", text: "240 cm", correct: false },
             ],
@@ -39601,7 +39601,7 @@ const TOPICS: TopicData[] = [
             question: "What is the 8th triangular number? (Triangular numbers sequence: 1, 3, 6, 10, 15, 21...)",
             options: [
               { id: "a", text: "28", correct: false },
-              { id: "b", text: "36 (Formula T_n = n(n + 1)/2 -> T_8 = 8(9)/2 = 72/2 = 36)", correct: true },
+              { id: "b", text: "36", correct: true },
               { id: "c", text: "45", correct: false },
               { id: "d", text: "64", correct: false },
             ],
@@ -39620,7 +39620,7 @@ const TOPICS: TopicData[] = [
             question: "Find the missing number in this geometric progression (GP where each term is multiplied by a constant ratio): 2, 6, 18, ___, 162",
             options: [
               { id: "a", text: "36", correct: false },
-              { id: "b", text: "54 (18 x 3 = 54. Check: 54 x 3 = 162)", correct: true },
+              { id: "b", text: "54", correct: true },
               { id: "c", text: "48", correct: false },
               { id: "d", text: "72", correct: false },
             ],
@@ -39640,7 +39640,7 @@ const TOPICS: TopicData[] = [
             question: "Find the 15th term of the arithmetic sequence: 4, 9, 14, 19, 24...",
             options: [
               { id: "a", text: "69", correct: false },
-              { id: "b", text: "74 (First term a=4, difference d=5 -> T_15 = 4 + (14 x 5) = 4 + 70 = 74)", correct: true },
+              { id: "b", text: "74", correct: true },
               { id: "c", text: "79", correct: false },
               { id: "d", text: "84", correct: false },
             ],
@@ -39679,7 +39679,7 @@ const TOPICS: TopicData[] = [
             question: "Which term in the sequence 5, 11, 17, 23... is equal to 89?",
             options: [
               { id: "a", text: "14th term", correct: false },
-              { id: "b", text: "15th term (5 + (n-1)6 = 89 => 6(n-1) = 84 => n-1 = 14 => n = 15)", correct: true },
+              { id: "b", text: "15th term", correct: true },
               { id: "c", text: "16th term", correct: false },
               { id: "d", text: "17th term", correct: false },
             ],
@@ -39712,7 +39712,7 @@ const TOPICS: TopicData[] = [
             question: "A pupil stacked oranges in 5 layers of a triangular pyramid (1 on top, 3 on second layer, 6 on third, 10 on fourth, 15 on fifth bottom layer). How many total oranges are in the pyramid?",
             options: [
               { id: "a", text: "30 oranges", correct: false },
-              { id: "b", text: "35 oranges (1 + 3 + 6 + 10 + 15 = 35)", correct: true },
+              { id: "b", text: "35 oranges", correct: true },
               { id: "c", text: "40 oranges", correct: false },
               { id: "d", text: "45 oranges", correct: false },
             ],
@@ -39750,7 +39750,7 @@ const TOPICS: TopicData[] = [
             question: "Simplify using BODMAS: 3 1/3 of 3/5 + 2 1/2 ÷ 1 1/4",
             options: [
               { id: "a", text: "3", correct: false },
-              { id: "b", text: "4 (10/3 of 3/5 = 2. And 5/2 ÷ 5/4 = 5/2 x 4/5 = 2. Sum = 2 + 2 = 4)", correct: true },
+              { id: "b", text: "4", correct: true },
               { id: "c", text: "5", correct: false },
               { id: "d", text: "2 1/2", correct: false },
             ],
@@ -39776,7 +39776,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Which of the following fractions lies exactly halfway between 1/3 and 2/3?",
             options: [
-              { id: "a", text: "1/2 (Average = (1/3 + 2/3)/2 = 1/2)", correct: true },
+              { id: "a", text: "1/2", correct: true },
               { id: "b", text: "3/8", correct: false },
               { id: "c", text: "5/12", correct: false },
               { id: "d", text: "4/9", correct: false },
@@ -39824,7 +39824,7 @@ const TOPICS: TopicData[] = [
             question: "A man left 1/4 of his estate to his son, 1/3 to his wife, and divided the remaining 10,000,000 UGX between his two daughters. What was the total value of his estate?",
             options: [
               { id: "a", text: "20,000,000 UGX", correct: false },
-              { id: "b", text: "24,000,000 UGX (Remaining fraction = 1 (1/4 + 1/3) = 5/12. If 5/12 = 10,000,000 => Total = 10,000,000 x 12 / 5 = 24,000,000)", correct: true },
+              { id: "b", text: "24,000,000 UGX", correct: true },
               { id: "c", text: "30,000,000 UGX", correct: false },
               { id: "d", text: "15,000,000 UGX", correct: false },
             ],
@@ -39893,7 +39893,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Evaluate: 3.5 x 0.06",
             options: [
-              { id: "a", text: "0.21 (35 x 6 = 210. Count 3 decimal places from right: 0.210 = 0.21)", correct: true },
+              { id: "a", text: "0.21", correct: true },
               { id: "b", text: "2.1", correct: false },
               { id: "c", text: "0.021", correct: false },
               { id: "d", text: "21", correct: false },
@@ -39913,7 +39913,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the value of 0.3 + 0.03 + 0.003 + 3?",
             options: [
-              { id: "a", text: "3.333 (Align vertically: 3.000 + 0.300 + 0.030 + 0.003 = 3.333)", correct: true },
+              { id: "a", text: "3.333", correct: true },
               { id: "b", text: "3.33", correct: false },
               { id: "c", text: "33.33", correct: false },
               { id: "d", text: "0.3333", correct: false },
@@ -39953,7 +39953,7 @@ const TOPICS: TopicData[] = [
             question: "Which decimal number is equivalent to 5 + 3/10 + 9/1000?",
             options: [
               { id: "a", text: "5.39", correct: false },
-              { id: "b", text: "5.309 (5 + 0.3 + 0.000 + 0.009 = 5.309)", correct: true },
+              { id: "b", text: "5.309", correct: true },
               { id: "c", text: "5.039", correct: false },
               { id: "d", text: "5.390", correct: false },
             ],
@@ -40003,7 +40003,7 @@ const TOPICS: TopicData[] = [
             question: "What is 35% of 800 exercise books?",
             options: [
               { id: "a", text: "240 books", correct: false },
-              { id: "b", text: "280 books ((35/100) x 800 = 35 x 8 = 280)", correct: true },
+              { id: "b", text: "280 books", correct: true },
               { id: "c", text: "320 books", correct: false },
               { id: "d", text: "350 books", correct: false },
             ],
@@ -40030,7 +40030,7 @@ const TOPICS: TopicData[] = [
             question: "If 45% of a number is 180, what is 100% of that same number (the full number)?",
             options: [
               { id: "a", text: "360", correct: false },
-              { id: "b", text: "400 (If 45% = 180, then 1% = 180/45 = 4. Therefore 100% = 4 x 100 = 400)", correct: true },
+              { id: "b", text: "400", correct: true },
               { id: "c", text: "450", correct: false },
               { id: "d", text: "500", correct: false },
             ],
@@ -40077,7 +40077,7 @@ const TOPICS: TopicData[] = [
             question: "A pupil spent 40% of his pocket money on books and 35% on lunch, leaving him with exactly 5,000 UGX. How much total pocket money did he have at the start?",
             options: [
               { id: "a", text: "15,000 UGX", correct: false },
-              { id: "b", text: "20,000 UGX (Total spent percentage = 40 + 35 = 75%. Remaining percentage = 25%. If 25% = 5,000 UGX => Total = 5,000 x 4 = 20,000 UGX)", correct: true },
+              { id: "b", text: "20,000 UGX", correct: true },
               { id: "c", text: "25,000 UGX", correct: false },
               { id: "d", text: "30,000 UGX", correct: false },
             ],
@@ -40127,7 +40127,7 @@ const TOPICS: TopicData[] = [
             question: "A cow's daily milk yield dropped from 25 liters to 20 liters during the dry season. What was the percentage decrease in milk production?",
             options: [
               { id: "a", text: "15%", correct: false },
-              { id: "b", text: "20% (Decrease = 25 - 20 = 5 liters. Percentage decrease = (5 / 25) x 100% = (1/5) x 100% = 20%)", correct: true },
+              { id: "b", text: "20%", correct: true },
               { id: "c", text: "25%", correct: false },
               { id: "d", text: "30%", correct: false },
             ],
@@ -40154,7 +40154,7 @@ const TOPICS: TopicData[] = [
             question: "A primary school in Mbarara had 600 pupils last year. This year, the enrollment increased by 15%. How many pupils are in the school this year?",
             options: [
               { id: "a", text: "660 pupils", correct: false },
-              { id: "b", text: "690 pupils (15% of 600 = 90 pupils. 600 + 90 = 690)", correct: true },
+              { id: "b", text: "690 pupils", correct: true },
               { id: "c", text: "715 pupils", correct: false },
               { id: "d", text: "750 pupils", correct: false },
             ],
@@ -40201,7 +40201,7 @@ const TOPICS: TopicData[] = [
             question: "After paying a 10% Value Added Tax (VAT), the price of a textbook became 22,000 UGX. What was the price of the textbook before VAT was added?",
             options: [
               { id: "a", text: "19,800 UGX", correct: false },
-              { id: "b", text: "20,000 UGX (110% of Original = 22,000 => Original = 22,000 x 100 / 110 = 20,000 UGX)", correct: true },
+              { id: "b", text: "20,000 UGX", correct: true },
               { id: "c", text: "21,000 UGX", correct: false },
               { id: "d", text: "24,200 UGX", correct: false },
             ],
@@ -40233,7 +40233,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "A merchant increased the price of a radio by 25% from 80,000 UGX. When it failed to sell, he offered a 20% discount on the new price. At what final price did the radio sell?",
             options: [
-              { id: "a", text: "80,000 UGX (Increased price = 80,000 + 20,000 = 100,000 UGX. Then 20% discount on 100,000 = 20,000 UGX off -> 100,000 - 20,000 = 80,000 UGX)", correct: true },
+              { id: "a", text: "80,000 UGX", correct: true },
               { id: "b", text: "85,000 UGX", correct: false },
               { id: "c", text: "75,000 UGX", correct: false },
               { id: "d", text: "90,000 UGX", correct: false },
@@ -40299,7 +40299,7 @@ const TOPICS: TopicData[] = [
             question: "At 6:00 AM on the slopes of Mount Elgon, the temperature was -3 degrees Celsius. By noon, the temperature had risen by 8 degrees Celsius. What was the temperature at noon?",
             options: [
               { id: "a", text: "-11 degrees Celsius", correct: false },
-              { id: "b", text: "+5 degrees Celsius (-3 + 8 = +5)", correct: true },
+              { id: "b", text: "+5 degrees Celsius", correct: true },
               { id: "c", text: "-5 degrees Celsius", correct: false },
               { id: "d", text: "+11 degrees Celsius", correct: false },
             ],
@@ -40345,7 +40345,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Evaluate: -30 + 18 (-12)",
             options: [
-              { id: "a", text: "0 (-30 + 18 + 12 = -30 + 30 = 0)", correct: true },
+              { id: "a", text: "0", correct: true },
               { id: "b", text: "-24", correct: false },
               { id: "c", text: "-12", correct: false },
               { id: "d", text: "24", correct: false },
@@ -40395,7 +40395,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "A teacher had an overdraft bank balance of -120,000 UGX. He deposited 350,000 UGX into his account. What is his new account balance?",
             options: [
-              { id: "a", text: "230,000 UGX (-120,000 + 350,000 = +230,000 UGX)", correct: true },
+              { id: "a", text: "230,000 UGX", correct: true },
               { id: "b", text: "-470,000 UGX", correct: false },
               { id: "c", text: "470,000 UGX", correct: false },
               { id: "d", text: "-230,000 UGX", correct: false },
@@ -40416,7 +40416,7 @@ const TOPICS: TopicData[] = [
             question: "Evaluate: (-3)⁴",
             options: [
               { id: "a", text: "-81", correct: false },
-              { id: "b", text: "+81 ((-3) x (-3) x (-3) x (-3) = +9 x +9 = +81. Even power of negative equals positive)", correct: true },
+              { id: "b", text: "+81", correct: true },
               { id: "c", text: "-12", correct: false },
               { id: "d", text: "+12", correct: false },
             ],
@@ -40442,7 +40442,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "In a science quiz, +4 marks are awarded for every correct answer and -2 marks are deducted for every wrong answer. If Mary answered 7 questions correctly and 3 questions incorrectly, what was her final score?",
             options: [
-              { id: "a", text: "22 marks ((7 x 4) + (3 x -2) = 28 - 6 = 22 marks)", correct: true },
+              { id: "a", text: "22 marks", correct: true },
               { id: "b", text: "28 marks", correct: false },
               { id: "c", text: "34 marks", correct: false },
               { id: "d", text: "16 marks", correct: false },
@@ -40489,7 +40489,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "A diver descends at a steady rate of -3 meters per second. What will his altitude change be after 20 seconds?",
             options: [
-              { id: "a", text: "-60 meters (20 x -3 = -60 meters)", correct: true },
+              { id: "a", text: "-60 meters", correct: true },
               { id: "b", text: "+60 meters", correct: false },
               { id: "c", text: "-23 meters", correct: false },
               { id: "d", text: "-17 meters", correct: false },
@@ -40536,7 +40536,7 @@ const TOPICS: TopicData[] = [
             question: "Expand and simplify: 3(2y - 4) 2(y - 5)",
             options: [
               { id: "a", text: "4y - 22", correct: false },
-              { id: "b", text: "4y - 2 (6y - 12 - 2y + 10 = (6y - 2y) + (-12 + 10) = 4y - 2)", correct: true },
+              { id: "b", text: "4y - 2", correct: true },
               { id: "c", text: "4y + 2", correct: false },
               { id: "d", text: "8y - 12", correct: false },
             ],
@@ -40562,7 +40562,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If a = 3, b = 2, and c = -1, what is the value of (ab + bc) ÷ ac?",
             options: [
-              { id: "a", text: "-4/3 (Numerator: (3)(2) + (2)(-1) = 6 - 2 = 4. Denominator: (3)(-1) = -3. Value = 4/-3 = -4/3)", correct: true },
+              { id: "a", text: "-4/3", correct: true },
               { id: "b", text: "4/3", correct: false },
               { id: "c", text: "-8/3", correct: false },
               { id: "d", text: "2/3", correct: false },
@@ -40602,7 +40602,7 @@ const TOPICS: TopicData[] = [
             question: "Simplify: 4a x 3b x 2c",
             options: [
               { id: "a", text: "9abc", correct: false },
-              { id: "b", text: "24abc (4 x 3 x 2 = 24. a x b x c = abc)", correct: true },
+              { id: "b", text: "24abc", correct: true },
               { id: "c", text: "24(a+b+c)", correct: false },
               { id: "d", text: "12abc", correct: false },
             ],
@@ -40652,7 +40652,7 @@ const TOPICS: TopicData[] = [
             question: "Solve the fractional equation: (2x + 1)/5 = 3",
             options: [
               { id: "a", text: "x = 5", correct: false },
-              { id: "b", text: "x = 7 (Multiply both sides by 5: 2x + 1 = 15 => 2x = 14 => x = 7)", correct: true },
+              { id: "b", text: "x = 7", correct: true },
               { id: "c", text: "x = 8", correct: false },
               { id: "d", text: "x = 6", correct: false },
             ],
@@ -40671,7 +40671,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Which solution set satisfies the inequality: 2k - 5 < 7?",
             options: [
-              { id: "a", text: "k < 6 (Add 5 to both sides: 2k < 12 => k < 6)", correct: true },
+              { id: "a", text: "k < 6", correct: true },
               { id: "b", text: "k > 6", correct: false },
               { id: "c", text: "k < 1", correct: false },
               { id: "d", text: "k <= 6", correct: false },
@@ -40699,7 +40699,7 @@ const TOPICS: TopicData[] = [
             question: "Solve for n: 18 - 3n = 6",
             options: [
               { id: "a", text: "n = 8", correct: false },
-              { id: "b", text: "n = 4 (Add 3n to both sides: 18 = 6 + 3n => 12 = 3n => n = 4)", correct: true },
+              { id: "b", text: "n = 4", correct: true },
               { id: "c", text: "n = -4", correct: false },
               { id: "d", text: "n = 6", correct: false },
             ],
@@ -40753,7 +40753,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Solve for z: (z + 2)/3 = (2z - 1)/4",
             options: [
-              { id: "a", text: "z = 5.5 (Cross-multiply: 4(z+2) = 3(2z-1) => 4z + 8 = 6z - 3 => 11 = 2z => z = 5.5)", correct: true },
+              { id: "a", text: "z = 5.5", correct: true },
               { id: "b", text: "z = 6", correct: false },
               { id: "c", text: "z = 4.5", correct: false },
               { id: "d", text: "z = 7", correct: false },
@@ -40783,7 +40783,7 @@ const TOPICS: TopicData[] = [
             question: "The sum of three consecutive odd numbers is 75. Find the smallest of the three numbers:",
             options: [
               { id: "a", text: "21", correct: false },
-              { id: "b", text: "23 (Let numbers be x, x+2, x+4. Sum: 3x + 6 = 75 => 3x = 69 => x = 23)", correct: true },
+              { id: "b", text: "23", correct: true },
               { id: "c", text: "25", correct: false },
               { id: "d", text: "27", correct: false },
             ],
@@ -40803,7 +40803,7 @@ const TOPICS: TopicData[] = [
             question: "A father is 24 years older than his son. In 6 years time, the father will be twice as old as his son. What is the son's current age?",
             options: [
               { id: "a", text: "15 years", correct: false },
-              { id: "b", text: "18 years (Son=x, Father=x+24. In 6 years: x+30 = 2(x+6) => x+30 = 2x+12 => x = 18)", correct: true },
+              { id: "b", text: "18 years", correct: true },
               { id: "c", text: "20 years", correct: false },
               { id: "d", text: "12 years", correct: false },
             ],
@@ -40830,7 +40830,7 @@ const TOPICS: TopicData[] = [
             question: "In a class of 45 pupils, the number of girls is 5 more than the number of boys. How many girls are in the class?",
             options: [
               { id: "a", text: "20 girls", correct: false },
-              { id: "b", text: "25 girls (Let boys = b, girls = b+5. b + (b+5) = 45 => 2b = 40 => b = 20 boys. Girls = 20+5 = 25)", correct: true },
+              { id: "b", text: "25 girls", correct: true },
               { id: "c", text: "30 girls", correct: false },
               { id: "d", text: "22 girls", correct: false },
             ],
@@ -40884,7 +40884,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Ten years ago, Teacher Mukasa was three times as old as his pupil. Today, the sum of their ages is 56 years. What is Teacher Mukasa's current age?",
             options: [
-              { id: "a", text: "37 years (Let 10 yrs ago pupil=x, teacher=3x. Today: x+10 + 3x+10 = 56 => 4x+20 = 56 => 4x=36 => x=9. Teacher today = 3(9)+10 = 37)", correct: true },
+              { id: "a", text: "37 years", correct: true },
               { id: "b", text: "35 years", correct: false },
               { id: "c", text: "40 years", correct: false },
               { id: "d", text: "42 years", correct: false },
@@ -40923,7 +40923,7 @@ const TOPICS: TopicData[] = [
             question: "Two supplementary angles (sum equals 180 degrees on a straight line) are in the ratio 2 : 3. What is the measurement of the larger angle?",
             options: [
               { id: "a", text: "72 degrees", correct: false },
-              { id: "b", text: "108 degrees (Let angles be 2k and 3k. 2k + 3k = 180 => 5k = 180 => k = 36. Larger = 3 x 36 = 108 degrees)", correct: true },
+              { id: "b", text: "108 degrees", correct: true },
               { id: "c", text: "90 degrees", correct: false },
               { id: "d", text: "120 degrees", correct: false },
             ],
@@ -40950,7 +40950,7 @@ const TOPICS: TopicData[] = [
             question: "Three angles around a point measure 110 degrees, 130 degrees, and x degrees. Find the value of x:",
             options: [
               { id: "a", text: "100 degrees", correct: false },
-              { id: "b", text: "120 degrees (110 + 130 + x = 360 => 240 + x = 360 => x = 120)", correct: true },
+              { id: "b", text: "120 degrees", correct: true },
               { id: "c", text: "130 degrees", correct: false },
               { id: "d", text: "90 degrees", correct: false },
             ],
@@ -40996,7 +40996,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If two angles are complementary and one is four times the size of the other, what is the size of the smaller angle?",
             options: [
-              { id: "a", text: "18 degrees (Let angles be k and 4k. k + 4k = 90 => 5k = 90 => k = 18)", correct: true },
+              { id: "a", text: "18 degrees", correct: true },
               { id: "b", text: "72 degrees", correct: false },
               { id: "c", text: "15 degrees", correct: false },
               { id: "d", text: "20 degrees", correct: false },
@@ -41066,7 +41066,7 @@ const TOPICS: TopicData[] = [
             question: "In an Isosceles triangle, the vertex angle (top angle) measures 40 degrees. What is the measurement of each of the two equal base angles?",
             options: [
               { id: "a", text: "60 degrees", correct: false },
-              { id: "b", text: "70 degrees ((180 - 40) / 2 = 140 / 2 = 70 degrees)", correct: true },
+              { id: "b", text: "70 degrees", correct: true },
               { id: "c", text: "80 degrees", correct: false },
               { id: "d", text: "50 degrees", correct: false },
             ],
@@ -41086,7 +41086,7 @@ const TOPICS: TopicData[] = [
             question: "What is the sum of all interior angles of a four-sided quadrilateral (such as a square, rectangle, or parallelogram)?",
             options: [
               { id: "a", text: "180 degrees", correct: false },
-              { id: "b", text: "360 degrees (Two triangles combined: 2 x 180 = 360 degrees)", correct: true },
+              { id: "b", text: "360 degrees", correct: true },
               { id: "c", text: "540 degrees", correct: false },
               { id: "d", text: "720 degrees", correct: false },
             ],
@@ -41125,7 +41125,7 @@ const TOPICS: TopicData[] = [
             question: "If the three angles of a triangle are x degrees, 2x degrees, and 3x degrees, find the value of x:",
             options: [
               { id: "a", text: "20 degrees", correct: false },
-              { id: "b", text: "30 degrees (x + 2x + 3x = 180 => 6x = 180 => x = 30)", correct: true },
+              { id: "b", text: "30 degrees", correct: true },
               { id: "c", text: "40 degrees", correct: false },
               { id: "d", text: "60 degrees", correct: false },
             ],
@@ -41175,7 +41175,7 @@ const TOPICS: TopicData[] = [
             question: "Find the area of a Trapezium whose parallel sides measure 12 cm and 8 cm, with a perpendicular distance (height) of 6 cm between them:",
             options: [
               { id: "a", text: "40 cm^2", correct: false },
-              { id: "b", text: "60 cm^2 (Formula: 1/2 x (12 + 8) x 6 = 1/2 x 20 x 6 = 10 x 6 = 60 cm^2)", correct: true },
+              { id: "b", text: "60 cm^2", correct: true },
               { id: "c", text: "80 cm^2", correct: false },
               { id: "d", text: "120 cm^2", correct: false },
             ],
@@ -41202,7 +41202,7 @@ const TOPICS: TopicData[] = [
             question: "If a rectangular plot of land has an area of 180 m² and a length of 15 m, find its width:",
             options: [
               { id: "a", text: "10 m", correct: false },
-              { id: "b", text: "12 m (Width = Area / Length = 180 / 15 = 12 m)", correct: true },
+              { id: "b", text: "12 m", correct: true },
               { id: "c", text: "14 m", correct: false },
               { id: "d", text: "16 m", correct: false },
             ],
@@ -41248,7 +41248,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Find the area of a triangle with base 20 cm and height 13 cm:",
             options: [
-              { id: "a", text: "130 cm^2 (1/2 x 20 x 13 = 10 x 13 = 130)", correct: true },
+              { id: "a", text: "130 cm^2", correct: true },
               { id: "b", text: "260 cm^2", correct: false },
               { id: "c", text: "150 cm^2", correct: false },
               { id: "d", text: "100 cm^2", correct: false },
@@ -41299,7 +41299,7 @@ const TOPICS: TopicData[] = [
             question: "Find the volume of a rectangular water tank (cuboid) measuring 5 meters long, 4 meters wide, and 3 meters high:",
             options: [
               { id: "a", text: "40 m³", correct: false },
-              { id: "b", text: "60 m³ (Volume = L x W x H = 5 x 4 x 3 = 60 m³)", correct: true },
+              { id: "b", text: "60 m³", correct: true },
               { id: "c", text: "80 m³", correct: false },
               { id: "d", text: "120 m³", correct: false },
             ],
@@ -41326,7 +41326,7 @@ const TOPICS: TopicData[] = [
             question: "Calculate the total surface area of a cube whose edge length is 5 cm (Formula: 6 x s²):",
             options: [
               { id: "a", text: "100 cm^2", correct: false },
-              { id: "b", text: "150 cm^2 (6 x (5 x 5) = 6 x 25 = 150 cm^2)", correct: true },
+              { id: "b", text: "150 cm^2", correct: true },
               { id: "c", text: "125 cm^2", correct: false },
               { id: "d", text: "180 cm^2", correct: false },
             ],
@@ -41372,7 +41372,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Calculate the volume of a cylindrical tin of radius 7 cm and height 10 cm (Take Pi = 22/7):",
             options: [
-              { id: "a", text: "1,540 cm^3 (Volume = Pi x r² x h = (22/7) x 7 x 7 x 10 = 154 x 10 = 1,540 cm^3)", correct: true },
+              { id: "a", text: "1,540 cm^3", correct: true },
               { id: "b", text: "1,400 cm^3", correct: false },
               { id: "c", text: "2,200 cm^3", correct: false },
               { id: "d", text: "1,250 cm^3", correct: false },
@@ -41452,7 +41452,7 @@ const TOPICS: TopicData[] = [
             question: "What is the Mode of this shoe size data set: 6, 7, 8, 7, 5, 7, 6, 9, 7, 8?",
             options: [
               { id: "a", text: "6", correct: false },
-              { id: "b", text: "7 (Appears 4 times, highest frequency)", correct: true },
+              { id: "b", text: "7", correct: true },
               { id: "c", text: "8", correct: false },
               { id: "d", text: "5", correct: false },
             ],
@@ -41472,7 +41472,7 @@ const TOPICS: TopicData[] = [
             question: "Find the median of the six numbers: 14, 10, 22, 18, 26, 30:",
             options: [
               { id: "a", text: "18", correct: false },
-              { id: "b", text: "20 (Sorted: 10, 14, 18, 22, 26, 30 -> average of middle two terms (18 + 22)/2 = 40/2 = 20)", correct: true },
+              { id: "b", text: "20", correct: true },
               { id: "c", text: "22", correct: false },
               { id: "d", text: "16", correct: false },
             ],
@@ -41510,7 +41510,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the mean of the first 6 counting numbers (1, 2, 3, 4, 5, 6)?",
             options: [
-              { id: "a", text: "3.5 (Sum = 21. Mean = 21/6 = 3.5)", correct: true },
+              { id: "a", text: "3.5", correct: true },
               { id: "b", text: "3.0", correct: false },
               { id: "c", text: "4.0", correct: false },
               { id: "d", text: "4.5", correct: false },
@@ -41561,7 +41561,7 @@ const TOPICS: TopicData[] = [
             question: "If a sector on a pie chart representing Rice is a right angle (90 degrees), what exact fraction of the total pie chart does Rice occupy?",
             options: [
               { id: "a", text: "1/2", correct: false },
-              { id: "b", text: "1/4 (90 / 360 = 1/4)", correct: true },
+              { id: "b", text: "1/4", correct: true },
               { id: "c", text: "1/3", correct: false },
               { id: "d", text: "1/5", correct: false },
             ],
@@ -41580,7 +41580,7 @@ const TOPICS: TopicData[] = [
             question: "On a vertical bar graph showing PLE performance, the vertical scale is 1 cm to 25 candidates. If a bar is 6 cm high, how many candidates does it represent?",
             options: [
               { id: "a", text: "125 candidates", correct: false },
-              { id: "b", text: "150 candidates (6 x 25 = 150)", correct: true },
+              { id: "b", text: "150 candidates", correct: true },
               { id: "c", text: "175 candidates", correct: false },
               { id: "d", text: "200 candidates", correct: false },
             ],
@@ -41600,7 +41600,7 @@ const TOPICS: TopicData[] = [
             question: "In a pie chart with four crops, Coffee is 140 degrees, Cotton is 80 degrees, Tea is 60 degrees, and Vanilla occupies the remaining sector. What angle represents Vanilla?",
             options: [
               { id: "a", text: "60 degrees", correct: false },
-              { id: "b", text: "80 degrees (360 (140 + 80 + 60) = 360 - 280 = 80 degrees)", correct: true },
+              { id: "b", text: "80 degrees", correct: true },
               { id: "c", text: "90 degrees", correct: false },
               { id: "d", text: "100 degrees", correct: false },
             ],
@@ -41639,7 +41639,7 @@ const TOPICS: TopicData[] = [
             question: "If a sector of 60 degrees on a pie chart represents 150 bags of maize, how many total bags are represented by the entire pie chart?",
             options: [
               { id: "a", text: "750 bags", correct: false },
-              { id: "b", text: "900 bags (Since 60 degrees is 1/6 of 360 degrees, total = 150 x 6 = 900 bags)", correct: true },
+              { id: "b", text: "900 bags", correct: true },
               { id: "c", text: "600 bags", correct: false },
               { id: "d", text: "800 bags", correct: false },
             ],
@@ -41688,7 +41688,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "A bag contains 5 red balls, 3 blue balls, and 2 green balls. If one ball is picked at random without looking, what is the probability that it is blue?",
             options: [
-              { id: "a", text: "3/10 (3 blue out of 10 total balls = 3/10)", correct: true },
+              { id: "a", text: "3/10", correct: true },
               { id: "b", text: "1/3", correct: false },
               { id: "c", text: "1/2", correct: false },
               { id: "d", text: "3/7", correct: false },
@@ -41748,7 +41748,7 @@ const TOPICS: TopicData[] = [
             question: "What is the probability of rolling a prime number (2, 3, or 5) when rolling a standard 6-sided die once?",
             options: [
               { id: "a", text: "1/3", correct: false },
-              { id: "b", text: "1/2 (3 prime outcomes out of 6 = 3/6 = 1/2)", correct: true },
+              { id: "b", text: "1/2", correct: true },
               { id: "c", text: "2/3", correct: false },
               { id: "d", text: "1/6", correct: false },
             ],
@@ -41822,7 +41822,7 @@ const TOPICS: TopicData[] = [
             question: "A shopkeeper bought a bag of rice for 150,000 UGX and sold it at a loss of 15,000 UGX due to moisture damage. What was the Selling Price of the rice?",
             options: [
               { id: "a", text: "165,000 UGX", correct: false },
-              { id: "b", text: "135,000 UGX (Selling Price = Cost Price minus Loss = 150,000 - 15,000 = 135,000 UGX)", correct: true },
+              { id: "b", text: "135,000 UGX", correct: true },
               { id: "c", text: "140,000 UGX", correct: false },
               { id: "d", text: "120,000 UGX", correct: false },
             ],
@@ -41848,7 +41848,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "A mother bought 4 kg of sugar at 5,000 UGX per kg and 3 loaves of bread at 4,000 UGX each from a supermarket. If she paid using a 50,000 UGX note, how much Change did she receive?",
             options: [
-              { id: "a", text: "18,000 UGX (Sugar = 4x5,000=20,000. Bread = 3x4,000=12,000. Total bill = 32,000. Change = 50,000 - 32,000 = 18,000 UGX)", correct: true },
+              { id: "a", text: "18,000 UGX", correct: true },
               { id: "b", text: "20,000 UGX", correct: false },
               { id: "c", text: "15,000 UGX", correct: false },
               { id: "d", text: "32,000 UGX", correct: false },
@@ -41896,7 +41896,7 @@ const TOPICS: TopicData[] = [
             question: "A bicycle bought for 160,000 UGX was sold at a 15% loss. What was the exact amount of loss in UGX?",
             options: [
               { id: "a", text: "20,000 UGX", correct: false },
-              { id: "b", text: "24,000 UGX (15% of 160,000 = (15/100) x 160,000 = 15 x 1,600 = 24,000 UGX)", correct: true },
+              { id: "b", text: "24,000 UGX", correct: true },
               { id: "c", text: "30,000 UGX", correct: false },
               { id: "d", text: "16,000 UGX", correct: false },
             ],
@@ -41946,7 +41946,7 @@ const TOPICS: TopicData[] = [
             question: "Find the total Amount of money (Principal + Interest) a client will withdraw after depositing 600,000 UGX for 3 years at 10% per annum simple interest:",
             options: [
               { id: "a", text: "180,000 UGX", correct: false },
-              { id: "b", text: "780,000 UGX (Interest = 600,000 x 10 x 3 / 100 = 180,000 UGX. Total Amount = 600,000 + 180,000 = 780,000 UGX)", correct: true },
+              { id: "b", text: "780,000 UGX", correct: true },
               { id: "c", text: "680,000 UGX", correct: false },
               { id: "d", text: "720,000 UGX", correct: false },
             ],
@@ -41973,7 +41973,7 @@ const TOPICS: TopicData[] = [
             question: "Convert 21:15 hours into the 12-hour clock (AM / PM) format:",
             options: [
               { id: "a", text: "9:15 AM", correct: false },
-              { id: "b", text: "9:15 PM (Subtract 12:00 from 21:15 = 9:15 PM)", correct: true },
+              { id: "b", text: "9:15 PM", correct: true },
               { id: "c", text: "8:15 PM", correct: false },
               { id: "d", text: "10:15 PM", correct: false },
             ],
@@ -42020,7 +42020,7 @@ const TOPICS: TopicData[] = [
             question: "In how many years will 300,000 UGX earn 72,000 UGX simple interest at a rate of 8% per annum?",
             options: [
               { id: "a", text: "2 years", correct: false },
-              { id: "b", text: "3 years (T = (72,000 x 100) / (300,000 x 8) = 7,200,000 / 2,400,000 = 3 years)", correct: true },
+              { id: "b", text: "3 years", correct: true },
               { id: "c", text: "4 years", correct: false },
               { id: "d", text: "5 years", correct: false },
             ],
@@ -42070,7 +42070,7 @@ const TOPICS: TopicData[] = [
             question: "Convert a speed of 90 km/h into meters per second (m/s):",
             options: [
               { id: "a", text: "20 m/s", correct: false },
-              { id: "b", text: "25 m/s (90 x (5/18) = 5 x 5 = 25 m/s)", correct: true },
+              { id: "b", text: "25 m/s", correct: true },
               { id: "c", text: "30 m/s", correct: false },
               { id: "d", text: "15 m/s", correct: false },
             ],
@@ -42097,7 +42097,7 @@ const TOPICS: TopicData[] = [
             question: "How long in hours and minutes will a cyclist taking a speed of 15 km/h need to cover a distance of 45 km?",
             options: [
               { id: "a", text: "2 hours", correct: false },
-              { id: "b", text: "3 hours (Time = Distance / Speed = 45 / 15 = 3 hours)", correct: true },
+              { id: "b", text: "3 hours", correct: true },
               { id: "c", text: "3 hours 30 minutes", correct: false },
               { id: "d", text: "4 hours", correct: false },
             ],
@@ -42144,7 +42144,7 @@ const TOPICS: TopicData[] = [
             question: "A train 100 meters long traveling at 20 m/s (72 km/h) enters a railway tunnel 300 meters long. How many seconds will it take the train to completely clear the tunnel?",
             options: [
               { id: "a", text: "15 seconds", correct: false },
-              { id: "b", text: "20 seconds (Total distance to clear = tunnel length + train length = 300 + 100 = 400 meters. Time = 400 / 20 = 20 seconds)", correct: true },
+              { id: "b", text: "20 seconds", correct: true },
               { id: "c", text: "25 seconds", correct: false },
               { id: "d", text: "10 seconds", correct: false },
             ],
@@ -42883,7 +42883,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Why do trees and shrubs found in Semi-Arid and Desert Scrub zones (such as in Karamoja, Turkana, and central Tanzania) possess long, deep taproots, thick spongy fleshy stems, and tiny, thorny needle-like leaves (like the Cactus and Acacia thorn bush)?",
             options: [
-              { id: "a", text: "To tap deep underground water tables, store water inside fleshy stems (succulence), and reduce leaf surface area to minimize water loss through transpiration (xerophytic adaptations against prolonged drought and scorching heat)", correct: true },
+              { id: "a", text: "To tap deep underground water tables, store water inside fleshy stems", correct: true },
               { id: "b", text: "To prevent local goats and camels from ever looking at them during the night", correct: false },
               { id: "c", text: "Because thorny needles absorb salt directly from ocean clouds", correct: false },
               { id: "d", text: "Because their roots turn into iron hoes when the dry season begins", correct: false },
@@ -42903,7 +42903,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "How does altitude change the natural vegetation zones as one climbs up the slopes of high East African mountains (like Mount Kilimanjaro, Mount Kenya, or Mount Elgon) from the base to the summit?",
             options: [
-              { id: "a", text: "1. Savannah/Tropical Forest at the base -> 2. Bamboo Forest (3,000m) -> 3. Heath and Moorland (3,500m with giant lobelia and groundsel) -> 4. Alpine Meadow -> 5. Bare Rock, Ice, and Permanent Snow at the summit (5,000m+)", correct: true },
+              { id: "a", text: "Savannah or tropical forest, then bamboo forest, then heath and moorland, then alpine meadow, then bare rock, ice, and permanent snow", correct: true },
               { id: "b", text: "The vegetation stays exactly the same thick mahogany rainforest from the bottom up to the 5,895m snow peak", correct: false },
               { id: "c", text: "Trees grow bigger and taller the higher you climb, forming giant 100-meter trees right at the freezing ice summit", correct: false },
               { id: "d", text: "All mountain slopes are covered entirely by salt-water mangrove swamps", correct: false },
@@ -43121,7 +43121,7 @@ const TOPICS: TopicData[] = [
             question: "Which major ethnic language group constitutes the largest population across East Africa (accounting for over 65% of all citizens in Uganda, Kenya, Tanzania, and Rwanda), having migrated into the region around 1000 BCE from their original cradleland in the Congo Basin and Cameroon grasslands?",
             options: [
               { id: "a", text: "The Nilotes (originated from Bahr-el-Ghazal in South Sudan)", correct: false },
-              { id: "b", text: "The Bantu (defined by sharing the common root word '-ntu' / 'muntu' meaning human being)", correct: true },
+              { id: "b", text: "The Bantu", correct: true },
               { id: "c", text: "The Cushites / Hamites (originated from the Horn of Africa / Ethiopia)", correct: false },
               { id: "d", text: "The Pygmy Bambuti (the indigenous forest dwellers of Central Africa)", correct: false },
             ],
@@ -44174,7 +44174,7 @@ const TOPICS: TopicData[] = [
             question: "Which revered Kenyan nationalist leader (often called 'Mzee' / The Father of the Kenyan Nation) was arrested on 20th October 1952 alongside the 'Kapenguria Six', imprisoned in remote Lodwar for nearly nine years, and upon release led the Kenya African National Union (KANU) to win Kenya's formal independence on 12th December 1963?",
             options: [
               { id: "a", text: "Tom Mboya", correct: false },
-              { id: "b", text: "Jomo Kenyatta (Author of the famous book 'Facing Mount Kenya' and first President of Kenya from 1964 until his death in 1978)", correct: true },
+              { id: "b", text: "Jomo Kenyatta", correct: true },
               { id: "c", text: "Oginga Odinga", correct: false },
               { id: "d", text: "Harry Thuku", correct: false },
             ],
@@ -44293,7 +44293,7 @@ const TOPICS: TopicData[] = [
             question: "On which exact historic date did the Union Jack (British flag) come down and the black-yellow-red Uganda National Flag rise at Kololo Independence Grounds (Kampala), marking the complete attainment of Uganda's national independence after 68 years of British Protectorate rule?",
             options: [
               { id: "a", text: "1st May 1960", correct: false },
-              { id: "b", text: "9th October 1962 (With Dr. Apollo Milton Obote as the first Executive Prime Minister)", correct: true },
+              { id: "b", text: "9th October 1962", correct: true },
               { id: "c", text: "12th December 1963", correct: false },
               { id: "d", text: "26th January 1986", correct: false },
             ],
@@ -44558,7 +44558,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Which of the following describes the most important commercial fish species caught across Lake Victoria, Lake Kyoga, and Lake Albert in East Africa today?",
             options: [
-              { id: "a", text: "Nile Perch (Lates niloticus / Mputa - a giant predatory fish weighing up to 100-200 kg whose white fillets are exported to Europe and Middle East in refrigerated trucks), Tilapia (Oreochromis niloticus / Ngege - the most popular tasty table fish across East African homes), and Silver Cyprinid (Rastrineobola argentea / Mukene in Uganda, Dagaa in Tanzania, Omena in Kenya - tiny sardine-like fish scooped at night using kerosene pressure lamps and sun-dried on rocks/nets for human protein and poultry feeds)", correct: true },
+              { id: "a", text: "Nile Perch", correct: true },
               { id: "b", text: "Ocean whales, giant white sharks, and electric eels", correct: false },
               { id: "c", text: "Goldfish, starfish, and deep-sea octopuses", correct: false },
               { id: "d", text: "Only Nile crocodiles and hippopotamuses", correct: false },
@@ -44606,7 +44606,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Why are the massive limestone and marble rock deposits mined at Hima (Kasese district, Western Uganda), Tororo (Eastern Uganda), Bamburi (Mombasa, Kenya), and Tanga (Tanzania) of vital economic importance to East Africa's construction industry?",
             options: [
-              { id: "a", text: "Because Limestone (calcium carbonate) is the primary raw material crushed and burned in kilns alongside clay/gypsum to manufacture Portland Cement (such as Hima Cement and Tororo Cement used in building schools, bridges, roads, and dams)", correct: true },
+              { id: "a", text: "Because Limestone", correct: true },
               { id: "b", text: "Because limestone turns into pure gold when left in the sun", correct: false },
               { id: "c", text: "Because limestone is used to feed cattle to make their horns grow ten feet long", correct: false },
               { id: "d", text: "Because limestone turns drinking water into sweet soda", correct: false },
@@ -44859,7 +44859,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Which of the following describes the correct chronological expansion of the East African Community from its 3 original founding nations up to its current 8 Partner States?",
             options: [
-              { id: "a", text: "Founding (2000): Uganda, Kenya, Tanzania -> First Expansion (2007): Rwanda and Burundi join -> Second Expansion (2016): South Sudan joins -> Third Expansion (2022): Democratic Republic of Congo (DRC) joins -> Fourth Expansion (2023): Federal Republic of Somalia joins (making exactly 8 Partner States today)", correct: true },
+              { id: "a", text: "Founding", correct: true },
               { id: "b", text: "Founding (2000): Uganda and Kenya only -> Expansion (2020): South Africa and Egypt join", correct: false },
               { id: "c", text: "Founding (2000): 10 countries join simultaneously on day one", correct: false },
               { id: "d", text: "The EAC still only has 3 countries today just like in 1967", correct: false },
@@ -44906,7 +44906,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Who is the current executive administrative officer (the Secretary-General of the East African Community) who heads the EAC Secretariat in Arusha (responsible for running day-to-day operations and coordinating partner state programs)?",
             options: [
-              { id: "a", text: "Her Excellency Veronica Nduva (appointed by the Summit of Heads of State in 2024 succeeding Peter Mathuki)", correct: true },
+              { id: "a", text: "Her Excellency Veronica Nduva", correct: true },
               { id: "b", text: "Sir Hesketh Bell", correct: false },
               { id: "c", text: "Dr. Apollo Milton Obote", correct: false },
               { id: "d", text: "Mr. Amama Mbabazi", correct: false },
@@ -45470,7 +45470,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "All Arthropods (Invertebrates belonging to Phylum Arthropoda) share three fundamental, diagnostic structural features. Which of the following lists correctly identifies these three defining characteristics?",
             options: [
-              { id: "a", text: "1. A hard, non-living protective outer covering called an Exoskeleton (made of chitin), 2. A body divided into distinct Segments (metamerism), and 3. Paired, Jointed Appendages (jointed legs, feelers, or claws - from Greek arthro = joint, pod = foot)", correct: true },
+              { id: "a", text: "1. A hard, non-living protective outer covering called an Exoskeleton", correct: true },
               { id: "b", text: "1. A bony internal vertebral backbone, 2. Warm-blooded circulation, and 3. Feathers covering the thorax", correct: false },
               { id: "c", text: "1. A soft jelly body without joints, 2. Ten eyes, and 3. Calcareous shells", correct: false },
               { id: "d", text: "1. Four wings, 2. Eight legs, and 3. Lungs inside the head", correct: false },
@@ -46286,7 +46286,7 @@ const TOPICS: TopicData[] = [
             question: "How should a clinical glass thermometer be cleaned and sterilized after measuring the temperature of a sick patient before using it on the next patient?",
             options: [
               { id: "a", text: "By dipping it inside a beaker of boiling water over a Bunsen burner flame for ten minutes", correct: false },
-              { id: "b", text: "By wiping it carefully using a clean cotton swab soaked in surgical alcohol or antiseptic (like Dettol or spirit), NEVER washing it in hot or boiling water (because boiling water at 100°C would expand the mercury past its 42°C limit and shatter the glass bulb)", correct: true },
+              { id: "b", text: "By wiping it carefully using a clean cotton swab soaked in surgical alcohol or antiseptic (like Dettol or spirit), NEVER washing it in hot or boiling water", correct: true },
               { id: "c", text: "By scrubbing the glass with sharp sand and stones", correct: false },
               { id: "d", text: "By leaving it out in direct midday rain for three days", correct: false },
             ],
@@ -46395,7 +46395,7 @@ const TOPICS: TopicData[] = [
             question: "If a boy stands 340 meters away from a high stone cliff, claps his hands loudly once, and hears the returning Echo exactly 2 seconds later, what is the calculated speed of sound in air in meters per second (m/s)?",
             options: [
               { id: "a", text: "170 m/s", correct: false },
-              { id: "b", text: "340 m/s (Total distance traveled by the sound wave to the cliff and back = 340 m x 2 = 680 meters. Speed = Total Distance / Time = 680 m / 2 seconds = 340 m/s)", correct: true },
+              { id: "b", text: "340 m/s", correct: true },
               { id: "c", text: "680 m/s", correct: false },
               { id: "d", text: "300,000,000 m/s", correct: false },
             ],
@@ -46413,7 +46413,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Why do we see the blinding flash of lightning several seconds BEFORE we hear the booming sound of thunder during a heavy rainstorm in Kampala, even though both the lightning spark and thunder shockwave occur at the exact same fraction of a second inside the storm cloud?",
             options: [
-              { id: "a", text: "Because Light travels at an extraordinary speed (300,000,000 m/s or 300,000 km/s in air - reaching our eyes almost instantly across kilometers), whereas Sound travels at a relatively slow speed (approx. 340 m/s - taking roughly 3 seconds to cover every 1 kilometer of distance)", correct: true },
+              { id: "a", text: "Because Light travels at an extraordinary speed", correct: true },
               { id: "b", text: "Because human eyes open three seconds faster than human ears during rain", correct: false },
               { id: "c", text: "Because lightning occurs on top of the cloud while thunder occurs at the bottom of the lake", correct: false },
               { id: "d", text: "Because sound gets stuck in rainwater while light melts through raindrops", correct: false },
@@ -46472,7 +46472,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What happens when a beam of white sunlight is passed through a triangular glass Prism inside the school laboratory?",
             options: [
-              { id: "a", text: "The glass prism refracts (bends) and Disperses (splits) the single white light beam into a colorful band of seven distinct constituent colors called a Spectrum (ROYGBIV: Red, Orange, Yellow, Green, Blue, Indigo, Violet)", correct: true },
+              { id: "a", text: "The glass prism refracts", correct: true },
               { id: "b", text: "The prism turns white light into pitch black darkness", correct: false },
               { id: "c", text: "The prism heats the light until it turns into water", correct: false },
               { id: "d", text: "The prism bounces the light back to the sun like a rubber ball", correct: false },
@@ -46550,7 +46550,7 @@ const TOPICS: TopicData[] = [
             question: "When three identical 1.5-Volt dry cells (torch batteries) are connected correctly in SERIES (positive terminal of Cell 1 touching negative terminal of Cell 2, and so on), what is the total combined electromotive force (voltage) supplied to the circuit?",
             options: [
               { id: "a", text: "1.5 Volts (same as a single cell)", correct: false },
-              { id: "b", text: "4.5 Volts (1.5V + 1.5V + 1.5V = 4.5 Volts - voltages add up directly in series, driving a much higher current through the bulb)", correct: true },
+              { id: "b", text: "4.5 Volts", correct: true },
               { id: "c", text: "0 Volts (they cancel out)", correct: false },
               { id: "d", text: "3.0 Volts", correct: false },
             ],
@@ -46686,7 +46686,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Why should a pupil caught outdoors in an open football pitch during a violent thunderstorm squat down low on the balls of his feet with his head tucked between his knees, rather than lying flat on his stomach across the wet grass?",
             options: [
-              { id: "a", text: "Because squatting low reduces his vertical height (preventing him from acting as a tall lightning target), while touching the ground ONLY with the balls of his feet minimizes his physical contact area with the earth (protecting his heart from lethal ground currents that spread outward when lightning strikes nearby earth)", correct: true },
+              { id: "a", text: "Because squatting low reduces his vertical height", correct: true },
               { id: "b", text: "Because squatting makes him invisible to rain clouds", correct: false },
               { id: "c", text: "Because lying flat on the grass turns the pupil into a metal lightning arrestor", correct: false },
               { id: "d", text: "So that he can jump five meters into the air when thunder booms", correct: false },
@@ -47569,7 +47569,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the biological difference between a Burn and a Scald, and what is the EXACT first aid treatment that must be administered immediately for both?",
             options: [
-              { id: "a", text: "A Burn is caused by dry heat (such as direct fire flames, hot glowing charcoal, red-hot iron, electricity, or strong acids), whereas a Scald is caused by moist heat (such as boiling water, hot tea, hot porridge, or pressurized steam). First Aid for both: Immediately immerse or pour cold, clean running tap water over the injured area continuously for at least 15 to 20 minutes (to cool the tissue, stop thermal heat from burning deeper into the skin layers, and relieve pain), then cover gently with a clean, sterile, non-fluffy cloth (NEVER pop blisters and NEVER smear cow dung, engine oil, raw eggs, or toothpaste over the burn)", correct: true },
+              { id: "a", text: "A Burn is caused by dry heat", correct: true },
               { id: "b", text: "A burn is from water while a scald is from fire. First aid: Rub dry salt and sand over the wound", correct: false },
               { id: "c", text: "Burns and scalds only happen to animals. First aid: Give ten painkiller tablets with hot tea", correct: false },
               { id: "d", text: "There is no difference at all. First aid: Wrap the limb tightly inside a black plastic bag and place near a stove", correct: false },
@@ -47589,7 +47589,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What first aid procedure (known as Artificial Respiration / Cardiopulmonary Resuscitation CPR / Mouth-to-Mouth) should be performed immediately on a drowning victim who has just been pulled out of a swimming pool or Lake Victoria and is unconscious and not breathing?",
             options: [
-              { id: "a", text: "First, quickly clear the airway (tilt head back, lift chin, and use a finger wrapped in clean cloth to sweep out any mud, weeds, or vomit from the mouth and throat). Then pinch the nostrils shut, take a deep breath, seal your mouth tightly over the victim's open mouth, and blow steady breaths of air into their lungs until the chest rises (checking for heartbeat and repeating 10 to 12 breaths per minute until natural breathing restarts or medical help arrives)", correct: true },
+              { id: "a", text: "First, quickly clear the airway", correct: true },
               { id: "b", text: "Hang the victim upside down by their ankles from a tree branch and beat their stomach with sticks for two hours", correct: false },
               { id: "c", text: "Roll the victim inside a dry carpet and leave them in the sun", correct: false },
               { id: "d", text: "Throw the victim back into the lake to wake up", correct: false },
@@ -47808,7 +47808,7 @@ const TOPICS: TopicData[] = [
             question: "What does the arrow (\to) inside any scientific Food Chain (such as: Maize -> Grasshopper -> Frog -> Snake -> Hawk) strictly represent?",
             options: [
               { id: "a", text: "It points to what the animal eats (Maize eats grasshopper)", correct: false },
-              { id: "b", text: "It shows the direction of the flow of energy (Eaten by / Energy transferred from the prey organism to the consumer that eats it)", correct: true },
+              { id: "b", text: "It shows the direction of the flow of energy", correct: true },
               { id: "c", text: "It shows the direction the animals run when scared", correct: false },
               { id: "d", text: "It means the two organisms are equal in weight", correct: false },
             ],
@@ -47835,7 +47835,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What specific type of Symbiotic Relationship (living together of two different species) exists when nitrogen-fixing Rhizobium bacteria live inside the root nodules of leguminous plants like beans, peas, and groundnuts?",
             options: [
-              { id: "a", text: "Mutualism ((+ / +) relationship where both organisms benefit mutually: the bacteria get food and shelter from the bean roots, while the bacteria convert atmospheric nitrogen gas into soluble mineral nitrates that fertilize the bean plant)", correct: true },
+              { id: "a", text: "Mutualism", correct: true },
               { id: "b", text: "Parasitism ((+ / -) relationship where one benefits and the other is harmed)", correct: false },
               { id: "c", text: "Commensalism ((+ / 0) relationship where one benefits and the other is unaffected)", correct: false },
               { id: "d", text: "Competition ((- / -) relationship where both fight for limited resources)", correct: false },
@@ -48120,7 +48120,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If equal volumes of water are poured simultaneously into three glass funnels containing equal amounts of dry Sand soil, Loam soil, and Clay soil plugged with cotton wool, which soil will allow water to drain through fastest into the measuring cylinder below (highest drainage rate / lowest capillarity)?",
             options: [
-              { id: "a", text: "Sand soil (because it has large coarse particles and wide interconnected air spaces that let water flow through rapidly via gravity)", correct: true },
+              { id: "a", text: "Sand soil", correct: true },
               { id: "b", text: "Clay soil (because its microscopic particles hold water tightly like a sponge)", correct: false },
               { id: "c", text: "Loam soil (because it absorbs all water without letting any drop pass)", correct: false },
               { id: "d", text: "All three soils drain at the exact same speed to the second", correct: false },
@@ -48767,7 +48767,7 @@ const TOPICS: TopicData[] = [
             question: "Choose the correct homophone to complete the sentence: The English teacher spoke so ________ that all pupils seated at the back of the classroom could hear him clearly.",
             options: [
               { id: "a", text: "allowed (with an 'e' - meaning permitted or given permission)", correct: false },
-              { id: "b", text: "aloud (meaning audibly or out loud so others can hear)", correct: true },
+              { id: "b", text: "aloud", correct: true },
               { id: "c", text: "aloudd", correct: false },
               { id: "d", text: "allowd", correct: false },
             ],
@@ -48915,7 +48915,7 @@ const TOPICS: TopicData[] = [
             question: "Which negative prefix correctly forms the opposite of the adjective 'legal'?",
             options: [
               { id: "a", text: "unlegal", correct: false },
-              { id: "b", text: "illegal (prefix 'il-' before root words starting with letter 'l')", correct: true },
+              { id: "b", text: "illegal", correct: true },
               { id: "c", text: "dislegal", correct: false },
               { id: "d", text: "irlegal", correct: false },
             ],
@@ -49362,7 +49362,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Transform this sentence into indirect speech: 'I completed my P5 final examinations two weeks ago,' Kato remarked.",
             options: [
-              { id: "a", text: "Kato remarked that he had completed his P5 final examinations two weeks before. ('ago' shifts to 'before' and Past Simple shifts to Past Perfect 'had completed')", correct: true },
+              { id: "a", text: "Kato remarked that he had completed his P5 final examinations two weeks before.", correct: true },
               { id: "b", text: "Kato remarked that he completed his P5 final examinations two weeks ago.", correct: false },
               { id: "c", text: "Kato told that I had completed my P5 final examinations two weeks before.", correct: false },
               { id: "d", text: "Kato remarked whether he has completed his examinations two weeks before.", correct: false },
@@ -49491,7 +49491,7 @@ const TOPICS: TopicData[] = [
             question: "Complete the Question Tag: Few pupils failed the P6 final examination last term, ________?",
             options: [
               { id: "a", text: "didn't they?", correct: false },
-              { id: "b", text: "did they? (Because 'few' without 'a' carries a negative meaning equivalent to almost none)", correct: true },
+              { id: "b", text: "did they?", correct: true },
               { id: "c", text: "failed they?", correct: false },
               { id: "d", text: "weren't they?", correct: false },
             ],
@@ -49659,7 +49659,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following sentences arranges the multiple descriptive adjectives in the correct grammatical order (OSASCOMP rule) before the noun?",
             options: [
               { id: "a", text: "My father bought a leather Ugandan new small beautiful black traveling bag.", correct: false },
-              { id: "b", text: "My father bought a beautiful small new black Ugandan leather traveling bag. (Opinion -> Size -> Age -> Color -> Origin -> Material -> Purpose + Noun)", correct: true },
+              { id: "b", text: "My father bought a beautiful small new black Ugandan leather traveling bag.", correct: true },
               { id: "c", text: "My father bought a black small beautiful new leather Ugandan traveling bag.", correct: false },
               { id: "d", text: "My father bought a traveling leather Ugandan black new small beautiful bag.", correct: false },
             ],
@@ -49987,7 +49987,7 @@ const TOPICS: TopicData[] = [
             question: "Examine this Calendar schedule for the month of November: If the 1st of November falls on a Wednesday, on which day of the week will the 15th of November fall?",
             options: [
               { id: "a", text: "Tuesday", correct: false },
-              { id: "b", text: "Wednesday (Since 1 + 7 days = 8th Wednesday, plus another 7 days = 15th Wednesday)", correct: true },
+              { id: "b", text: "Wednesday", correct: true },
               { id: "c", text: "Thursday", correct: false },
               { id: "d", text: "Friday", correct: false },
             ],
@@ -50218,7 +50218,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the fundamental structural difference regarding addresses when writing a Formal Official Letter (such as a job application or letter to the Headmaster) compared to an Informal Personal Letter (such as a letter to your mother or friend)?",
             options: [
-              { id: "a", text: "A formal letter must have TWO addresses (the sender's address at the top right-hand corner and the recipient's official title/address on the left-hand side below the date), whereas an informal letter has ONLY ONE address (the sender's address at the top right-hand corner)", correct: true },
+              { id: "a", text: "A formal letter must have TWO addresses", correct: true },
               { id: "b", text: "An informal letter has three addresses, while a formal letter has zero addresses", correct: false },
               { id: "c", text: "Both formal and informal letters have exact identical single addresses", correct: false },
               { id: "d", text: "A formal letter is written inside a circle, while an informal letter is written on triangular paper", correct: false },
@@ -50247,7 +50247,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following is the correctly formatted Reference / Subject line (REF:) for a formal letter written by a P6 pupil asking the Headmaster for permission to be absent from school due to illness?",
             options: [
               { id: "a", text: "ref i am sick and cannot come to school tomorrow", correct: false },
-              { id: "b", text: "REF: APPLICATION FOR SICK LEAVE AND ABSENCE FROM SCHOOL (All capital letters or neatly underlined below the salutation)", correct: true },
+              { id: "b", text: "REF: APPLICATION FOR SICK LEAVE AND ABSENCE FROM SCHOOL", correct: true },
               { id: "c", text: "Subject: hey headmaster please let me stay home because of fever", correct: false },
               { id: "d", text: "Reference Number 123456789 about malaria", correct: false },
             ],
@@ -50347,7 +50347,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "When drafting a public School Notice or Announcement (such as announcing an upcoming Inter-Class Football Competition on the school noticeboard), which four mandatory elements of information MUST be included clearly?",
             options: [
-              { id: "a", text: "The title/heading (NOTICE), the exact Date and Time of the event, the exact Venue (location where it will occur), the target Audience (who is expected to attend), and the Name/Title of the person issuing the notice (e.g., Sports Master)", correct: true },
+              { id: "a", text: "The title/heading", correct: true },
               { id: "b", text: "Only the color of the school football jerseys and the price of tea", correct: false },
               { id: "c", text: "The names of all 500 pupils in the school written in alphabetical order", correct: false },
               { id: "d", text: "A twenty-page story about how football was invented in England", correct: false },
@@ -50376,7 +50376,7 @@ const TOPICS: TopicData[] = [
             question: "How should a concise Telegram or emergency SMS message be written when informing your father in Kampala that you have safely arrived at school in Gulu after a long bus journey?",
             options: [
               { id: "a", text: "Dear father, how are you today? I am writing this long message to tell you that our bus stopped at Luwero and Kigumba where we bought roasted chicken and then the bus continued very slowly until we arrived safely at school in Gulu at 2:00 PM without any accident. God bless you.", correct: false },
-              { id: "b", text: "ARRIVED SAFELY SCHOOL GULU 2PM ALL WELL PETER (Short, telegraphic, dropping unnecessary grammar/prepositions while retaining 100% of the vital meaning)", correct: true },
+              { id: "b", text: "ARRIVED SAFELY SCHOOL GULU 2PM ALL WELL PETER", correct: true },
               { id: "c", text: "Hey dad u r cool i m at skul now c u next term bye plz send cash", correct: false },
               { id: "d", text: "BUS TRIP FINISHED", correct: false },
             ],
@@ -50475,7 +50475,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "When writing the official Minutes of a formal school meeting (such as a Class Monitors' meeting or English Club executive meeting), what is the mandatory structural sequence of the opening headings?",
             options: [
-              { id: "a", text: "1. Title/Heading (stating name of group, date, time, and venue), 2. Attendance (listing members Present, Absent with Apologies, and Absent without Apologies), followed by 3. Agenda (list of items discussed)", correct: true },
+              { id: "a", text: "1. Title/Heading", correct: true },
               { id: "b", text: "1. Signatures of everyone, 2. A ten-page story about tea, 3. No date at all", correct: false },
               { id: "c", text: "1. A list of food eaten during break, 2. A map of Kampala, 3. The national anthem", correct: false },
               { id: "d", text: "1. Agenda, 2. Signatures, 3. Title placed at the very bottom", correct: false },
@@ -50632,7 +50632,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following linking words (transitional devices) is best used at the start of a paragraph to introduce an unexpected, exciting, or shocking turn of events inside a story?",
             options: [
               { id: "a", text: "In conclusion,", correct: false },
-              { id: "b", text: "Suddenly, (or Without warning, / To our utter horror, / Out of the blue,)", correct: true },
+              { id: "b", text: "Suddenly,", correct: true },
               { id: "c", text: "First of all,", correct: false },
               { id: "d", text: "Furthermore,", correct: false },
             ],
@@ -52764,7 +52764,7 @@ const TOPICS: TopicData[] = [
             type: "multi_select",
             question: "Which of the following statements about circular composite shapes are CORRECT?",
             options: [
-              { id: "s1", text: "Area of a ring (annulus) = Pi x (R² - r²)", correct: true },
+              { id: "s1", text: "Area of a ring", correct: true },
               { id: "s2", text: "Area of a circle depends on the square of its radius", correct: true },
               { id: "s3", text: "If radius doubles, area doubles", correct: false },
               { id: "s4", text: "Area of a semi-circle is half the area of the circle", correct: true },
@@ -53154,7 +53154,7 @@ const TOPICS: TopicData[] = [
               { id: "a", text: "15", correct: false },
               { id: "b", text: "16", correct: false },
               { id: "c", text: "14", correct: false },
-              { id: "d", text: "14 or 16 (specifically x + 22 / 2 = 18 => x = 14)", correct: true },
+              { id: "d", text: "14 or 16", correct: true },
             ],
             explanation: "Since there are 6 numbers, the median is the average of the 3rd and 4th terms: (x + 22) / 2 = 18 => x + 22 = 36 => x = 14.",
           },
@@ -58133,7 +58133,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What characteristics describe the virtual image of your face formed by a standard flat plane mirror hanging on your bedroom wall?",
             options: [
-              { id: "a", text: "Virtual, upright (erect), exactly the same size as the object, at the same distance behind the mirror, and laterally inverted (left and right sides appear swapped)", correct: true },
+              { id: "a", text: "Virtual, upright", correct: true },
               { id: "b", text: "Real, upside-down (inverted), and ten times larger than the object", correct: false },
               { id: "c", text: "Virtual, curved into a circle, and colored entirely green", correct: false },
               { id: "d", text: "Real, projected onto a paper screen, and half the size of the object", correct: false },
@@ -59719,7 +59719,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the exact biological distinction between HIV and AIDS?",
             options: [
-              { id: "a", text: "HIV (Human Immunodeficiency Virus) is the actual microscopic retrovirus germ that enters the bloodstream and attacks white blood cells (CD4 T-lymphocytes), whereas AIDS (Acquired Immune Deficiency Syndrome) is the final advanced stage of infection when the immune system is completely destroyed and the patient suffers opportunistic infections (like TB, pneumonia, Kaposi's sarcoma, and chronic diarrhea)", correct: true },
+              { id: "a", text: "HIV", correct: true },
               { id: "b", text: "HIV only infects animals like monkeys, whereas AIDS only infects plants like cassava", correct: false },
               { id: "c", text: "HIV is a bacterial disease cured in three days with penicillin, whereas AIDS is a fungal skin rash", correct: false },
               { id: "d", text: "There is no difference at all; both words mean common malaria", correct: false },
@@ -59806,7 +59806,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What does the ABC national strategy for HIV/AIDS prevention stand for across Uganda's health and education sector?",
             options: [
-              { id: "a", text: "A = Abstinence from sexual activity (for youth/unmarried), B = Be faithful to one uninfected partner (in marriage), C = Condom use correctly and consistently (when high risk exists or inside discordant marriages)", correct: true },
+              { id: "a", text: "A = Abstinence from sexual activity", correct: true },
               { id: "b", text: "A = Always eat apples, B = Bathe twice daily, C = Cut your hair short every Monday", correct: false },
               { id: "c", text: "A = Avoid all schools, B = Buy artificial blood, C = Cry when mosquitoes bite", correct: false },
               { id: "d", text: "A = Aspirin pills, B = Boiling drinking water, C = Cleaning pit latrines", correct: false },
@@ -60310,7 +60310,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "If equal volumes of water are poured simultaneously into three glass funnels containing equal amounts of dry Sand soil, Loam soil, and Clay soil plugged with cotton wool, which soil will allow water to drain through fastest into the measuring cylinder below (highest drainage rate / lowest capillarity)?",
             options: [
-              { id: "a", text: "Sand soil (because it has large coarse particles and wide interconnected air spaces that let water flow through rapidly via gravity)", correct: true },
+              { id: "a", text: "Sand soil", correct: true },
               { id: "b", text: "Clay soil (because its microscopic particles hold water tightly like a sponge)", correct: false },
               { id: "c", text: "Loam soil (because it absorbs all water without letting any drop pass)", correct: false },
               { id: "d", text: "All three soils drain at the exact same speed to the second", correct: false },
@@ -60954,7 +60954,7 @@ const TOPICS: TopicData[] = [
             question: "Choose the correct homophone to complete the sentence: The P7 candidates went to the bookshop to buy pencils, rulers, and _____ for their mock examination.",
             options: [
               { id: "a", text: "stationary (with an 'a' - meaning standing still or not moving)", correct: false },
-              { id: "b", text: "stationery (with an 'e' - meaning writing materials like paper, envelopes, and pens)", correct: true },
+              { id: "b", text: "stationery", correct: true },
               { id: "c", text: "stationeryy", correct: false },
               { id: "d", text: "stationaly", correct: false },
             ],
@@ -61102,7 +61102,7 @@ const TOPICS: TopicData[] = [
             question: "Which negative prefix correctly forms the opposite of the adjective 'logical'?",
             options: [
               { id: "a", text: "unlogical", correct: false },
-              { id: "b", text: "illogical (prefix 'il-' before root words starting with letter 'l')", correct: true },
+              { id: "b", text: "illogical", correct: true },
               { id: "c", text: "dislogical", correct: false },
               { id: "d", text: "irlogical", correct: false },
             ],
@@ -61546,7 +61546,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "Transform this sentence into indirect speech: 'I completed my P6 final examinations two weeks ago,' Kato remarked.",
             options: [
-              { id: "a", text: "Kato remarked that he had completed his P6 final examinations two weeks before. ('ago' shifts to 'before' and Past Simple shifts to Past Perfect 'had completed')", correct: true },
+              { id: "a", text: "Kato remarked that he had completed his P6 final examinations two weeks before.", correct: true },
               { id: "b", text: "Kato remarked that he completed his P6 final examinations two weeks ago.", correct: false },
               { id: "c", text: "Kato told that I had completed my P6 final examinations two weeks before.", correct: false },
               { id: "d", text: "Kato remarked whether he has completed his examinations two weeks before.", correct: false },
@@ -61675,7 +61675,7 @@ const TOPICS: TopicData[] = [
             question: "Complete the Question Tag: Few candidates failed the Primary Leaving Examination last year, ________?",
             options: [
               { id: "a", text: "didn't they?", correct: false },
-              { id: "b", text: "did they? (Because 'few' without 'a' carries a negative meaning equivalent to almost none)", correct: true },
+              { id: "b", text: "did they?", correct: true },
               { id: "c", text: "failed they?", correct: false },
               { id: "d", text: "weren't they?", correct: false },
             ],
@@ -61843,7 +61843,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following sentences arranges the multiple descriptive adjectives in the correct grammatical order (OSASCOMP rule) before the noun?",
             options: [
               { id: "a", text: "My father bought a leather Ugandan new small beautiful black traveling bag.", correct: false },
-              { id: "b", text: "My father bought a beautiful small new black Ugandan leather traveling bag. (Opinion -> Size -> Age -> Color -> Origin -> Material -> Purpose + Noun)", correct: true },
+              { id: "b", text: "My father bought a beautiful small new black Ugandan leather traveling bag.", correct: true },
               { id: "c", text: "My father bought a black small beautiful new leather Ugandan traveling bag.", correct: false },
               { id: "d", text: "My father bought a traveling leather Ugandan black new small beautiful bag.", correct: false },
             ],
@@ -62168,7 +62168,7 @@ const TOPICS: TopicData[] = [
             question: "Examine this Calendar schedule for the month of November: If the 1st of November falls on a Wednesday, on which day of the week will the 15th of November fall?",
             options: [
               { id: "a", text: "Tuesday", correct: false },
-              { id: "b", text: "Wednesday (Since 1 + 7 days = 8th Wednesday, plus another 7 days = 15th Wednesday)", correct: true },
+              { id: "b", text: "Wednesday", correct: true },
               { id: "c", text: "Thursday", correct: false },
               { id: "d", text: "Friday", correct: false },
             ],
@@ -62396,7 +62396,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "What is the fundamental structural difference regarding addresses when writing a Formal Official Letter (such as a job application or letter to the Headmaster) compared to an Informal Personal Letter (such as a letter to your mother or friend)?",
             options: [
-              { id: "a", text: "A formal letter must have TWO addresses (the sender's address at the top right-hand corner and the recipient's official title/address on the left-hand side below the date), whereas an informal letter has ONLY ONE address (the sender's address at the top right-hand corner)", correct: true },
+              { id: "a", text: "A formal letter must have TWO addresses", correct: true },
               { id: "b", text: "An informal letter has three addresses, while a formal letter has zero addresses", correct: false },
               { id: "c", text: "Both formal and informal letters have exact identical single addresses", correct: false },
               { id: "d", text: "A formal letter is written inside a circle, while an informal letter is written on triangular paper", correct: false },
@@ -62425,7 +62425,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following is the correctly formatted Reference / Subject line (REF:) for a formal letter written by a P7 candidate asking the Headmaster for permission to be absent from school due to illness?",
             options: [
               { id: "a", text: "ref i am sick and cannot come to school tomorrow", correct: false },
-              { id: "b", text: "REF: APPLICATION FOR SICK LEAVE AND ABSENCE FROM SCHOOL (All capital letters or neatly underlined below the salutation)", correct: true },
+              { id: "b", text: "REF: APPLICATION FOR SICK LEAVE AND ABSENCE FROM SCHOOL", correct: true },
               { id: "c", text: "Subject: hey headmaster please let me stay home because of fever", correct: false },
               { id: "d", text: "Reference Number 123456789 about malaria", correct: false },
             ],
@@ -62525,7 +62525,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "When drafting a public School Notice or Announcement (such as announcing an upcoming Inter-House Athletics Competition on the school noticeboard), which four mandatory elements of information MUST be included clearly?",
             options: [
-              { id: "a", text: "The title/heading (NOTICE), the exact Date and Time of the event, the exact Venue (location where it will occur), the target Audience (who is expected to attend), and the Name/Title of the person issuing the notice (e.g., Sports Master)", correct: true },
+              { id: "a", text: "The title/heading", correct: true },
               { id: "b", text: "Only the color of the school football jerseys and the price of tea", correct: false },
               { id: "c", text: "The names of all 500 pupils in the school written in alphabetical order", correct: false },
               { id: "d", text: "A twenty-page story about how football was invented in England", correct: false },
@@ -62554,7 +62554,7 @@ const TOPICS: TopicData[] = [
             question: "How should a concise Telegram or emergency SMS message be written when informing your father in Kampala that you have safely arrived at school in Gulu after a long bus journey?",
             options: [
               { id: "a", text: "Dear father, how are you today? I am writing this long message to tell you that our bus stopped at Luwero and Kigumba where we bought roasted chicken and then the bus continued very slowly until we arrived safely at school in Gulu at 2:00 PM without any accident. God bless you.", correct: false },
-              { id: "b", text: "ARRIVED SAFELY SCHOOL GULU 2PM ALL WELL PETER (Short, telegraphic, dropping unnecessary grammar/prepositions while retaining 100% of the vital meaning)", correct: true },
+              { id: "b", text: "ARRIVED SAFELY SCHOOL GULU 2PM ALL WELL PETER", correct: true },
               { id: "c", text: "Hey dad u r cool i m at skul now c u next term bye plz send cash", correct: false },
               { id: "d", text: "BUS TRIP FINISHED", correct: false },
             ],
@@ -62653,7 +62653,7 @@ const TOPICS: TopicData[] = [
             type: "multiple_choice",
             question: "When writing the official Minutes of a formal school meeting (such as a Prefects' Council meeting or Science Club executive meeting), what is the mandatory structural sequence of the opening headings?",
             options: [
-              { id: "a", text: "1. Title/Heading (stating name of group, date, time, and venue), 2. Attendance (listing members Present, Absent with Apologies, and Absent without Apologies), followed by 3. Agenda (list of items discussed)", correct: true },
+              { id: "a", text: "1. Title/Heading", correct: true },
               { id: "b", text: "1. Signatures of everyone, 2. A ten-page story about tea, 3. No date at all", correct: false },
               { id: "c", text: "1. A list of food eaten during break, 2. A map of Kampala, 3. The national anthem", correct: false },
               { id: "d", text: "1. Agenda, 2. Signatures, 3. Title placed at the very bottom", correct: false },
@@ -62810,7 +62810,7 @@ const TOPICS: TopicData[] = [
             question: "Which of the following linking words (transitional devices) is best used at the start of a paragraph to introduce an unexpected, exciting, or shocking turn of events inside a story?",
             options: [
               { id: "a", text: "In conclusion,", correct: false },
-              { id: "b", text: "Suddenly, (or Without warning, / To our utter horror, / Out of the blue,)", correct: true },
+              { id: "b", text: "Suddenly,", correct: true },
               { id: "c", text: "First of all,", correct: false },
               { id: "d", text: "Furthermore,", correct: false },
             ],
@@ -63427,7 +63427,7 @@ export const VARIANT_TOPICS: TopicData[] = [
         question: "If village health workers in Kumi completely drain all stagnant water puddles and clear bushes around homesteads, which specific disease vector's life cycle are they targeting to eliminate?",
         keywords: ["mosquito", "larvae", "stagnant"],
         options: [
-          { id: "a", text: "The mosquito (which requires stagnant water for its wriggling larvae and tumbling pupae to develop)", correct: true },
+          { id: "a", text: "The mosquito", correct: true },
           { id: "b", text: "The tapeworm (which develops inside measly beef and pork meat)", correct: false },
           { id: "c", text: "The head louse (which lives strictly on human scalp hair)", correct: false },
           { id: "d", text: "The jigger (which burrows into human toes from dusty floor sand)", correct: false }
@@ -63467,7 +63467,7 @@ export const VARIANT_TOPICS: TopicData[] = [
         question: "If a ray of light strikes a smooth plane mirror at an angle of incidence of 40°, what will be the exact angle of reflection according to the laws of reflection?",
         hint: "Look for 40 degrees matching the angle of incidence.",
         options: [
-          { id: "a", text: "40 degrees (because angle of incidence equals angle of reflection: i = r)", correct: true },
+          { id: "a", text: "40 degrees", correct: true },
           { id: "b", text: "80 degrees", correct: false },
           { id: "c", text: "20 degrees", correct: false },
           { id: "d", text: "90 degrees", correct: false }
@@ -63628,7 +63628,7 @@ export const VARIANT_TOPICS: TopicData[] = [
         question: "If a young child in the village is brought to the health center with severe muscle wasting, wrinkled old-man face, extreme underweight, and no body fat due to total starvation of both proteins and energy foods, which nutritional deficiency disease is the child suffering from?",
         keywords: ["marasmus", "wasting", "starvation"],
         options: [
-          { id: "a", text: "Marasmus (caused by severe deficiency of both proteins and total calories/energy)", correct: true },
+          { id: "a", text: "Marasmus", correct: true },
           { id: "b", text: "Kwashiorkor (caused primarily by severe deficiency of proteins while consuming starchy carbohydrates, leading to swollen moon face and potbelly edemas)", correct: false },
           { id: "c", text: "Scurvy (caused by lack of Vitamin C)", correct: false },
           { id: "d", text: "Goitre (caused by lack of Iodine in drinking water)", correct: false }
