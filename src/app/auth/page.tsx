@@ -19,7 +19,14 @@ import { loadState } from "@/lib/store";
 import { ClassLevel, Role } from "@/lib/types";
 
 function friendlyAuthError(error: unknown): string {
-  const message = error instanceof Error ? error.message : "Authentication failed. Please try again.";
+  const fallbackDetail = (() => {
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return String(error);
+    }
+  })();
+  const message = error instanceof Error ? error.message : fallbackDetail || "Authentication failed. Please try again.";
   const lower = message.toLowerCase();
 
   if (lower.includes("invalid login credentials")) {
@@ -33,6 +40,10 @@ function friendlyAuthError(error: unknown): string {
   }
   if (lower.includes("row-level security") || lower.includes("violates") || lower.includes("permission denied")) {
     return `Signed in, but profile setup failed: ${message}. Check that supabase/schema.sql was run successfully and Row Level Security policies exist.`;
+  }
+
+  if (message === "{}" || message === "undefined" || message === "null") {
+    return "Authentication failed, but no detailed message was returned. Check Supabase Auth logs and make sure supabase/auth-fix.sql has been run.";
   }
 
   return message;

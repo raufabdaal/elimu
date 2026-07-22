@@ -125,6 +125,32 @@ http://localhost:3000/auth/
 7. Test parent sign-up.
 8. Test Google sign-in after redirect URLs are configured.
 
+## If sign-in succeeds but profile setup fails
+
+If the app says:
+
+```text
+Could not finish account setup
+Authentication failed
+row-level security
+permission denied
+```
+
+run this repair patch in Supabase SQL Editor:
+
+```text
+supabase/auth-fix.sql
+```
+
+This patch:
+
+- creates an automatic profile/subscription trigger for new auth users
+- backfills profiles for existing auth users
+- replaces RLS policies with simpler `auth.uid()`-based policies
+- keeps parent-child security rules in place
+
+After running it, return to `/auth/` and sign in again.
+
 ## Current limitations
 
 - Parent-child pairing is still local/demo in UI. The database is ready, but the real pairing flow is the next implementation step.
