@@ -7,7 +7,7 @@ import { ClassLevel, Profile } from "@/lib/types";
 import { CLASS_LABELS } from "@/lib/data";
 import { saveState, loadState } from "@/lib/store";
 import Streak from "./Streak";
-import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X } from "lucide-react";
+import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X, LockKeyhole } from "lucide-react";
 
 interface HeaderStatsProps {
   profile: Profile;
@@ -176,6 +176,11 @@ export default function HeaderStats({
                         />
                       )}
                       <MenuAction
+                        icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}
+                        title="Account / Sync"
+                        onClick={() => closeAndGo(`/auth/?role=learner&class=${profile.classLevel || "p5"}`)}
+                      />
+                      <MenuAction
                         icon={<ShieldCheck className="w-4 h-4 text-purple-600" />}
                         title="Pair Parent / Guardian"
                         onClick={() => closeAndGo("/onboarding/?role=parent")}
@@ -188,6 +193,11 @@ export default function HeaderStats({
                       icon={<UserRound className="w-4 h-4 text-purple-600" />}
                       title="Parent Dashboard"
                       onClick={() => closeAndGo("/parent/")}
+                    />
+                    <MenuAction
+                      icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}
+                      title="Account / Sync"
+                      onClick={() => closeAndGo("/auth/?role=parent")}
                     />
                     <MenuAction
                       icon={<ShieldCheck className="w-4 h-4 text-emerald-600" />}

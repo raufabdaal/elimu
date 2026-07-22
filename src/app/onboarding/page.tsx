@@ -333,9 +333,13 @@ export default function Onboarding() {
           ) : (
             <span />
           )}
-          <span className="text-[11px] font-bold text-slate-400">
-            Uganda Primary P4–P7
-          </span>
+          <button
+            type="button"
+            onClick={() => router.push(`/auth/?role=${role}${role === "learner" ? `&class=${classLevel || "p5"}` : ""}`)}
+            className="text-[11px] font-black text-emerald-700 hover:text-emerald-900"
+          >
+            Already have an account? Sign in
+          </button>
         </div>
       </div>
     </AppShell>

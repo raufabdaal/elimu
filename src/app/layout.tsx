@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import PWAControls from "@/components/PWAControls";
+import AccountBootstrap from "@/components/AccountBootstrap";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen">
         <PWAControls />
+        <AccountBootstrap />
         {children}
       </body>
     </html>
