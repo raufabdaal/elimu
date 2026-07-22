@@ -136,16 +136,38 @@ export async function ensureCloudProfile(input?: Partial<CloudProfileInput>): Pr
   const profile = profileData as CloudProfile;
 
   if (role === "learner") {
-    const { error: studentError } = await supabase.from("students").upsert(
-      {
-        profile_id: profile.id,
-        class_level: classLevel,
-        pairing_code: local.profile.linkCode || generatePairingCode(),
-        pairing_code_expires_at: null,
-      },
-      { onConflict: "profile_id" }
-    );
-    if (studentError) throw studentError;
+    const { data: existingStudent, error: existingStudentError } = await supabase
+      .from("students")
+      .select("id, pairing_code")
+      .eq("profile_id", profile.id)
+      .maybeSingle();
+
+    if (existingStudentError) throw existingStudentError;
+
+    if (existingStudent) {
+      const { error: studentUpdateError } = await supabase
+        .from("students")
+        .update({ class_level: classLevel })
+        .eq("profile_id", profile.id);
+      if (studentUpdateError) throw studentUpdateError;
+    } else {
+      let studentError: unknown = null;
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const { error } = await supabase.from("students").insert({
+          profile_id: profile.id,
+          class_level: classLevel,
+          pairing_code: generatePairingCode(),
+          pairing_code_expires_at: null,
+        });
+        if (!error) {
+          studentError = null;
+          break;
+        }
+        studentError = error;
+        if (!error.message?.includes("students_pairing_code_key")) break;
+      }
+      if (studentError) throw studentError;
+    }
   }
 
   await ensureTrialSubscription(profile.id);
