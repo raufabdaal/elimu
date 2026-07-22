@@ -31,7 +31,10 @@ Flow:
 1. User creates account with email/password.
 2. Supabase sends verification email.
 3. User verifies email.
-4. User returns to `/auth/` and signs in.
+4. The app now requests email confirmation redirects back to `/auth/`.
+5. User signs in after verification.
+
+If an older confirmation link opens the website home page instead of `/auth/`, that is not fatal. After confirming, manually open `/auth/` and sign in.
 
 ## Supabase Google Auth redirect settings
 
@@ -51,14 +54,19 @@ Add redirect URLs:
 
 ```text
 http://localhost:3000/auth/
+http://localhost:3000/auth/**
 https://your-vercel-domain.vercel.app/auth/
+https://your-vercel-domain.vercel.app/auth/**
 ```
 
 If you use a custom domain later, add:
 
 ```text
 https://your-custom-domain.com/auth/
+https://your-custom-domain.com/auth/**
 ```
+
+The wildcard versions are useful because Google/email redirects can return with query parameters.
 
 ## Google provider setup
 
@@ -68,9 +76,22 @@ In Supabase:
 Authentication → Providers → Google
 ```
 
-Make sure Google is enabled.
+Make sure Google is enabled and saved.
 
-Google OAuth may require Google Cloud Console credentials. Supabase will show the callback URL you need to add inside Google Cloud Console.
+If Google sign-in returns:
+
+```text
+400 validation_failed unsupported provider Provider is not enabled
+```
+
+then Google is not fully enabled in Supabase yet. Usually this means one of these is missing:
+
+1. The Google provider toggle is still off.
+2. Google Client ID is missing.
+3. Google Client Secret is missing.
+4. The settings were changed but not saved.
+
+Google OAuth usually requires Google Cloud Console credentials. Supabase will show the callback URL you need to add inside Google Cloud Console.
 
 ## Local env file
 

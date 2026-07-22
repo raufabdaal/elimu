@@ -17,6 +17,7 @@ export async function signUpWithEmail(email: string, password: string, profile: 
     email,
     password,
     options: {
+      emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/` : undefined,
       data: {
         role: profile.role,
         full_name: profile.fullName,

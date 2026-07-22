@@ -18,6 +18,26 @@ import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 import { loadState } from "@/lib/store";
 import { ClassLevel, Role } from "@/lib/types";
 
+function friendlyAuthError(error: unknown): string {
+  const message = error instanceof Error ? error.message : "Authentication failed. Please try again.";
+  const lower = message.toLowerCase();
+
+  if (lower.includes("invalid login credentials")) {
+    return "Invalid email or password. If you just signed up, confirm your email first, then sign in again.";
+  }
+  if (lower.includes("email not confirmed")) {
+    return "Your email is not confirmed yet. Open the confirmation email from Supabase, then sign in again.";
+  }
+  if (lower.includes("unsupported provider")) {
+    return "Google sign-in is not fully enabled in Supabase yet. Enable the Google provider and add the Google OAuth client details.";
+  }
+  if (lower.includes("row-level security") || lower.includes("violates") || lower.includes("permission denied")) {
+    return `Signed in, but profile setup failed: ${message}. Check that supabase/schema.sql was run successfully and Row Level Security policies exist.`;
+  }
+
+  return message;
+}
+
 function AuthContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -71,7 +91,7 @@ function AuthContent() {
           await refreshAccount();
           setMessage("Account connected. Your progress can now sync when online.");
         } catch (e) {
-          setError(e instanceof Error ? e.message : "Could not finish account setup.");
+          setError(friendlyAuthError(e));
         }
       }
       setCheckingSession(false);
@@ -130,7 +150,7 @@ function AuthContent() {
         setMessage("Signed in successfully. Progress sync is ready.");
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Authentication failed. Please try again.");
+      setError(friendlyAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -158,7 +178,7 @@ function AuthContent() {
       },
     });
 
-    if (oauthError) setError(oauthError.message);
+    if (oauthError) setError(friendlyAuthError(oauthError));
   };
 
   const handleSyncNow = async () => {
@@ -171,7 +191,7 @@ function AuthContent() {
       await refreshAccount();
       setMessage(result ? "Progress synced successfully." : "Account checked. Parent accounts will sync child progress after pairing.");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not sync right now.");
+      setError(friendlyAuthError(e));
     } finally {
       setSyncing(false);
     }
