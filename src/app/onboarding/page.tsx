@@ -23,8 +23,12 @@ export default function Onboarding() {
 
   useEffect(() => {
     const init = async () => {
+      const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+      const wantsParentPairing = searchParams?.get("role") === "parent";
+      const isNewUserFlow = searchParams?.get("new") === "1";
       const account = await getAccountSummary().catch(() => null);
-      if (account?.profile) {
+
+      if (account?.profile && !wantsParentPairing && !isNewUserFlow) {
         router.replace(account.profile.role === "parent" ? "/parent/" : "/home/");
         return;
       }
@@ -34,8 +38,7 @@ export default function Onboarding() {
       if (s.profile.name) {
         setName(s.profile.name);
       }
-      const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-      if (searchParams?.get("role") === "parent") {
+      if (wantsParentPairing) {
         setRole("parent");
         setStep(2);
       }
@@ -65,7 +68,7 @@ export default function Onboarding() {
       try {
         localStorage.setItem("elimu_pending_pair_code", cleanCode);
       } catch {}
-      router.push(`/auth/?mode=signin&role=parent&name=${encodeURIComponent(name || "Parent")}`);
+      router.push(`/auth/?mode=signup&role=parent&name=${encodeURIComponent(name || "Parent")}`);
       return;
     }
 

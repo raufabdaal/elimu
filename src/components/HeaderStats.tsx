@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ClassLevel, Profile } from "@/lib/types";
 import { CLASS_LABELS } from "@/lib/data";
 import { saveState, loadState } from "@/lib/store";
+import { getAccountSummary } from "@/lib/cloud-profile";
 import Streak from "./Streak";
 import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X, LockKeyhole } from "lucide-react";
 
@@ -31,8 +32,24 @@ export default function HeaderStats({
   const router = useRouter();
   const [showDrawer, setShowDrawer] = useState(false);
   const [showClassModal, setShowClassModal] = useState(false);
+  const [pairingCode, setPairingCode] = useState<string | null>(null);
   const classes: ClassLevel[] = ["p4", "p5", "p6", "p7"];
   const isParent = profile.role === "parent";
+
+  useEffect(() => {
+    if (isParent) return;
+    let cancelled = false;
+    getAccountSummary()
+      .then((summary) => {
+        if (!cancelled) setPairingCode(summary?.student?.pairing_code || null);
+      })
+      .catch(() => {
+        if (!cancelled) setPairingCode(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isParent]);
 
   const handleSelectClass = (cls: ClassLevel) => {
     const s = loadState();
@@ -156,6 +173,18 @@ export default function HeaderStats({
                         </span>
                       </div>
                     </div>
+
+                    {pairingCode && (
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard?.writeText(pairingCode).catch(() => undefined)}
+                        className="mb-4 w-full rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-left active:scale-[0.99]"
+                      >
+                        <span className="block text-[10px] font-black uppercase tracking-wider text-emerald-700">Parent Pairing Code</span>
+                        <span className="mt-1 block font-mono text-2xl font-black tracking-[0.18em] text-emerald-950">{pairingCode}</span>
+                        <span className="mt-1 block text-[11px] font-bold text-emerald-700">Tap to copy. Share this with your parent/guardian.</span>
+                      </button>
+                    )}
 
                     <div className="flex flex-col gap-2.5 pt-2">
                       <MenuAction
