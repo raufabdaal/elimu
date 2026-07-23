@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 
-const PUBLIC_PATHS = ["/auth"];
+const PUBLIC_PATHS = ["/auth", "/onboarding"];
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));

@@ -66,7 +66,10 @@ export default function Onboarding() {
           linkedStudentId: student.linkedStudentId || "student_001",
         },
       });
-      router.push("/parent/");
+      try {
+        localStorage.setItem("elimu_pending_pair_code", code.trim());
+      } catch {}
+      router.push(`/auth/?mode=signup&role=parent&name=${encodeURIComponent(name || "Parent")}`);
     } else {
       setCodeError("Code not recognized. Make sure your child is signed in and showing a current pairing code.");
     }
@@ -87,7 +90,7 @@ export default function Onboarding() {
         classLevel: classLevel || "p5",
       },
     });
-    router.push("/home/");
+    router.push(`/auth/?mode=signup&role=learner&class=${classLevel || "p5"}&name=${encodeURIComponent(cleanName)}`);
   };
 
   return (
