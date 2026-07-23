@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, saveState, linkStudent } from "@/lib/store";
+import { getAccountSummary } from "@/lib/cloud-profile";
 import { CLASS_LABELS } from "@/lib/data";
 import { ClassLevel, Role } from "@/lib/types";
 import AppShell from "@/components/AppShell";
@@ -17,20 +18,30 @@ export default function Onboarding() {
   const [classLevel, setClassLevel] = useState<ClassLevel | null>(null);
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const s = loadState();
-    if (s.profile.name && s.profile.name !== "Amina") {
-      setName(s.profile.name);
-    }
-    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-    if (searchParams?.get("role") === "parent") {
-      setRole("parent");
-      setStep(2);
-    }
-  }, []);
+    const init = async () => {
+      const account = await getAccountSummary().catch(() => null);
+      if (account?.profile) {
+        router.replace(account.profile.role === "parent" ? "/parent/" : "/home/");
+        return;
+      }
+
+      setMounted(true);
+      const s = loadState();
+      if (s.profile.name) {
+        setName(s.profile.name);
+      }
+      const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+      if (searchParams?.get("role") === "parent") {
+        setRole("parent");
+        setStep(2);
+      }
+    };
+    init();
+  }, [router]);
 
   if (!mounted) return null;
 
@@ -46,28 +57,33 @@ export default function Onboarding() {
 
   const handleParentLink = () => {
     const student = linkStudent(code.trim());
-    if (student || code.trim() === "739104") {
+    if (student) {
       saveState({
         profile: {
           ...loadState().profile,
           role: "parent",
-          name: name || "Parent Portal",
-          linkedStudentId: "student_001",
+          name: name || "Parent",
+          linkedStudentId: student.linkedStudentId || "student_001",
         },
       });
       router.push("/parent/");
     } else {
-      setCodeError("Code not recognized. Try 739104 for the demo student.");
+      setCodeError("Code not recognized. Make sure your child is signed in and showing a current pairing code.");
     }
   };
 
   const finishLearner = () => {
+    const cleanName = name.trim();
+    if (!cleanName) {
+      setNameError("Please enter the student's name before continuing.");
+      return;
+    }
     const current = loadState();
     saveState({
       profile: {
         ...current.profile,
         role: "learner",
-        name: name.trim() || "Amina",
+        name: cleanName,
         classLevel: classLevel || "p5",
       },
     });
@@ -255,12 +271,12 @@ export default function Onboarding() {
                   />
                   {codeError && <p className="feedback bad mt-2 text-center text-xs font-bold">{codeError}</p>}
 
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200/90 mt-5 flex items-start gap-3 shadow-2xs">
-                    <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-200/90 mt-5 flex items-start gap-3 shadow-2xs">
+                    <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <span className="text-xs font-black text-amber-950 block">Testing Demo Linkage?</span>
-                      <span className="text-xs font-semibold text-amber-900/80 leading-relaxed block mt-0.5">
-                        Use demo code <strong className="font-mono text-amber-950 underline">739104</strong> to link instantly to student Amina (P5).
+                      <span className="text-xs font-black text-emerald-950 block">Real account pairing</span>
+                      <span className="text-xs font-semibold text-emerald-900/80 leading-relaxed block mt-0.5">
+                        Use the current pairing code from your child&apos;s signed-in student account.
                       </span>
                     </div>
                   </div>
@@ -297,19 +313,24 @@ export default function Onboarding() {
                 <div className="mt-7">
                   <input
                     type="text"
-                    placeholder="e.g. Amina"
+                    placeholder="Type student's name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setNameError("");
+                    }}
                     onKeyDown={(e) => e.key === "Enter" && finishLearner()}
                     autoFocus
-                    className="answer-input text-xl py-4 bg-white shadow-sm"
+                    className="answer-input text-xl py-4 bg-white shadow-sm placeholder:text-slate-300"
                   />
+                  {nameError && <p className="text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3 mt-3">{nameError}</p>}
                 </div>
 
                 <div className="mt-8">
                   <button
                     type="button"
                     className="btn btn-primary w-full py-4 text-base font-black shadow-md flex items-center justify-center gap-2"
+                    disabled={!name.trim()}
                     onClick={finishLearner}
                   >
                     <span>Start Learning Now</span> <ArrowRight className="w-5 h-5" />

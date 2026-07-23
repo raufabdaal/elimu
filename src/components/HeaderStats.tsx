@@ -177,13 +177,8 @@ export default function HeaderStats({
                       )}
                       <MenuAction
                         icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}
-                        title="Account / Sync"
+                        title="Sign in / Sign out"
                         onClick={() => closeAndGo(`/auth/?role=learner&class=${profile.classLevel || "p5"}`)}
-                      />
-                      <MenuAction
-                        icon={<ShieldCheck className="w-4 h-4 text-purple-600" />}
-                        title="Pair Parent / Guardian"
-                        onClick={() => closeAndGo("/onboarding/?role=parent")}
                       />
                     </div>
                   </>
@@ -196,7 +191,7 @@ export default function HeaderStats({
                     />
                     <MenuAction
                       icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}
-                      title="Account / Sync"
+                      title="Sign in / Sign out"
                       onClick={() => closeAndGo("/auth/?role=parent")}
                     />
                     <MenuAction

@@ -68,7 +68,7 @@ export default function Subjects() {
         hearts={progress.hearts}
         maxHearts={progress.maxHearts}
         streakDays={progress.streakDays}
-        showClassSwitcher={true}
+        showClassSwitcher={false}
         onClassChange={handleClassChange}
       />
 

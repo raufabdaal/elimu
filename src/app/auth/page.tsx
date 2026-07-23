@@ -3,7 +3,7 @@
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, Cloud, Loader2, LogOut, Mail, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, LogOut, Mail, ShieldCheck } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import { signInWithEmail, signOut, signUpWithEmail } from "@/lib/auth";
 import {
@@ -62,7 +62,6 @@ function AuthContent() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const [account, setAccount] = useState<AccountSummary | null>(null);
 
@@ -192,22 +191,6 @@ function AuthContent() {
     if (oauthError) setError(friendlyAuthError(oauthError));
   };
 
-  const handleSyncNow = async () => {
-    setError("");
-    setMessage("");
-    setSyncing(true);
-    try {
-      await ensureCloudProfile({ role, fullName: fullName || local.profile.name || "Student", classLevel });
-      const result = await syncLocalSnapshotToCloud();
-      await refreshAccount();
-      setMessage(result ? "Progress synced successfully." : "Account checked. Parent accounts will sync child progress after pairing.");
-    } catch (e) {
-      setError(friendlyAuthError(e));
-    } finally {
-      setSyncing(false);
-    }
-  };
-
   const handleSignOut = async () => {
     setLoading(true);
     setError("");
@@ -252,7 +235,7 @@ function AuthContent() {
               <ShieldCheck className="w-3.5 h-3.5" /> Elimu Account
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 mt-3 leading-tight">
-              {account?.profile ? "Account & Sync" : mode === "signup" ? "Create your account" : "Sign in to Elimu"}
+              {account?.profile ? "Account Settings" : mode === "signup" ? "Create your account" : "Sign in to Elimu"}
             </h1>
             <p className="text-sm font-semibold text-slate-500 mt-1 leading-relaxed">
               Save progress online, connect parent dashboards, and keep streaks safe across devices.
@@ -290,11 +273,7 @@ function AuthContent() {
               {error && <p className="text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3">{error}</p>}
 
               <div className="grid grid-cols-1 gap-2.5">
-                <button type="button" onClick={handleSyncNow} disabled={syncing} className="btn btn-primary w-full py-3.5 font-black">
-                  {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Cloud className="w-4 h-4" />}
-                  Sync Progress Now
-                </button>
-                <button type="button" onClick={goAfterAuth} className="btn btn-secondary w-full py-3.5 font-black bg-white">
+                <button type="button" onClick={goAfterAuth} className="btn btn-primary w-full py-3.5 font-black">
                   Continue to App <ArrowRight className="w-4 h-4" />
                 </button>
                 <button type="button" onClick={handleSignOut} disabled={loading} className="btn w-full py-3.5 font-black bg-rose-50 text-rose-800 border border-rose-200">

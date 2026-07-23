@@ -37,7 +37,37 @@ export function resetState(): void {
 export function hasCompletedOnboarding(): boolean {
   if (typeof window === "undefined") return false;
   const s = loadState();
-  return s.profile.role === "parent" ? !!s.profile.linkedStudentId : !!s.profile.classLevel;
+  return s.profile.role === "parent"
+    ? !!s.profile.linkedStudentId || !!s.profile.name
+    : !!s.profile.name && !!s.profile.classLevel;
+}
+
+export function freshLearningState(profile: Partial<Profile> = {}): AppState {
+  return {
+    ...DEFAULT_STATE,
+    profile: {
+      ...DEFAULT_STATE.profile,
+      ...profile,
+      role: profile.role || DEFAULT_STATE.profile.role,
+      classLevel: profile.classLevel || DEFAULT_STATE.profile.classLevel,
+      name: profile.name || "",
+    },
+    progress: {
+      ...DEFAULT_STATE.progress,
+      lastStudyDate: new Date().toISOString().split("T")[0],
+    },
+    continue: {},
+    session: {
+      todayMinutes: 0,
+      weeklyMinutes: [0, 0, 0, 0, 0, 0, 0],
+    },
+    topicProgress: {},
+  };
+}
+
+export function resetLearningForProfile(profile: Partial<Profile>): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(freshLearningState(profile)));
 }
 
 export function updateStudyTime(minutes: number): void {

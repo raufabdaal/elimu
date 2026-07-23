@@ -1,5 +1,5 @@
 import { getSupabaseClient } from "@/lib/supabase";
-import { loadState, saveState } from "@/lib/store";
+import { freshLearningState, loadState, resetLearningForProfile, saveState } from "@/lib/store";
 import { ClassLevel, Role } from "@/lib/types";
 
 export interface CloudProfileInput {
@@ -208,24 +208,45 @@ export async function syncLocalSnapshotToCloud() {
   const profile = await ensureCloudProfile();
   if (!profile || profile.role !== "learner") return null;
 
-  const local = loadState();
+  const { data: existingSnapshot, error: snapshotReadError } = await supabase
+    .from("progress_snapshots")
+    .select("id, progress_json, session_json, topic_progress_json, continue_json")
+    .eq("student_profile_id", profile.id)
+    .maybeSingle();
+
+  if (snapshotReadError) throw snapshotReadError;
+
+  if (existingSnapshot) {
+    saveState({
+      progress: existingSnapshot.progress_json || {},
+      session: existingSnapshot.session_json || {},
+      topicProgress: existingSnapshot.topic_progress_json || {},
+      continue: existingSnapshot.continue_json || {},
+    });
+    return { id: existingSnapshot.id, mode: "downloaded" };
+  }
+
+  const fresh = freshLearningState({
+    role: "learner",
+    name: profile.full_name,
+    classLevel: profile.class_level || "p5",
+  });
+  resetLearningForProfile(fresh.profile);
+
   const { data, error } = await supabase
     .from("progress_snapshots")
-    .upsert(
-      {
-        student_profile_id: profile.id,
-        progress_json: local.progress,
-        session_json: local.session,
-        topic_progress_json: local.topicProgress,
-        continue_json: local.continue,
-        local_updated_at: new Date().toISOString(),
-        synced_at: new Date().toISOString(),
-      },
-      { onConflict: "student_profile_id" }
-    )
+    .insert({
+      student_profile_id: profile.id,
+      progress_json: fresh.progress,
+      session_json: fresh.session,
+      topic_progress_json: fresh.topicProgress,
+      continue_json: fresh.continue,
+      local_updated_at: new Date().toISOString(),
+      synced_at: new Date().toISOString(),
+    })
     .select("id")
     .single();
 
   if (error) throw error;
-  return data;
+  return { ...data, mode: "initialized" };
 }

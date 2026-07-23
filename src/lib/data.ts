@@ -62971,16 +62971,20 @@ export function getSubjects(classLevel: ClassLevel = "p5"): Subject[] {
     
     if (matched.length > 0) {
       return matched.map((t) => {
-        const modules: ModuleData[] = t.modules || [
+        const rawModules: ModuleData[] = t.modules || [
           {
             id: `${t.id}-m1`,
             name: "Module 1: Core Curriculum Drill",
             order: 1,
             questions: t.questions || [],
-            completed: t.id === "p5-sci-humanbody",
-            inProgress: t.id === "p5-math-fractions",
           },
         ];
+        const modules: ModuleData[] = rawModules.map((module) => ({
+          ...module,
+          completed: false,
+          inProgress: false,
+          accuracy: 0,
+        }));
 
         const totalQuestions = modules.reduce((sum, m) => sum + (m.questions?.length || 0), 0) || (t.questions?.length || 0);
 
@@ -62989,9 +62993,9 @@ export function getSubjects(classLevel: ClassLevel = "p5"): Subject[] {
           name: t.name,
           subtopicCount: modules.length,
           totalQuestions,
-          completed: modules.every((m) => m.completed) || t.id === "p5-sci-humanbody",
-          inProgress: modules.some((m) => m.inProgress || m.completed) && !modules.every((m) => m.completed),
-          accuracy: t.id === "p5-math-fractions" ? 82 : t.id === "p7-sst-uganda" ? 88 : 75,
+          completed: false,
+          inProgress: false,
+          accuracy: 0,
           modules,
         };
       });
@@ -63159,13 +63163,13 @@ function getStarterTopicsForClassAndSubject(classLevel: ClassLevel, subId: Subje
   };
 
   const list = map[classLevel]?.[subId] || [];
-  return list.map((item, index) => {
+  return list.map((item) => {
     const modules: ModuleData[] = Array.from({ length: item.count }).map((_, i) => ({
       id: `${item.id}-m${i + 1}`,
       name: `Module ${i + 1}: Phase ${i + 1} Drill`,
       order: i + 1,
-      completed: index === 0 && i === 0,
-      inProgress: index === 0 && i === 1,
+      completed: false,
+      inProgress: false,
       questions: [],
     }));
 
@@ -63174,9 +63178,9 @@ function getStarterTopicsForClassAndSubject(classLevel: ClassLevel, subId: Subje
       name: item.name,
       subtopicCount: item.count,
       totalQuestions: item.qCount,
-      completed: index === 0 && classLevel === "p5",
-      inProgress: index === 1,
-      accuracy: index === 0 ? 85 : undefined,
+      completed: false,
+      inProgress: false,
+      accuracy: 0,
       modules,
     };
   });

@@ -96,7 +96,7 @@ export default function Home() {
         hearts={progress.hearts}
         maxHearts={progress.maxHearts}
         streakDays={progress.streakDays}
-        showClassSwitcher={true}
+        showClassSwitcher={false}
         onClassChange={handleClassChange}
       />
 

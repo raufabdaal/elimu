@@ -101,7 +101,7 @@ export default function Parent() {
 
   const handleShareReport = () => {
     const weakLine = weakestSubject ? `Needs Support: ${weakestSubject.name}` : "Needs Support: Keep practising steadily";
-    const text = `ELIMU UGANDA WEEKLY REPORT\n\nStudent: ${studentName} (${classLabel})\nStudy Time: ${weeklyTotal} minutes across ${activeDays} active day(s)\nAccuracy: ${progress.practiceAccuracy}%\nStreak: ${progress.streakDays} day(s)\nLessons Completed: ${progress.modulesDone}\nLatest Mock Exam: ${progress.lastMockScore || 85}%\n${weakLine}\n\nSuggested Parent Action: ${parentAction}\n\nElimu Uganda`;
+    const text = `ELIMU UGANDA WEEKLY REPORT\n\nStudent: ${studentName} (${classLabel})\nStudy Time: ${weeklyTotal} minutes across ${activeDays} active day(s)\nAccuracy: ${progress.practiceAccuracy}%\nStreak: ${progress.streakDays} day(s)\nLessons Completed: ${progress.modulesDone}\nLatest Mock Exam: ${progress.lastMockScore ? `${progress.lastMockScore}%` : "Not taken yet"}\n${weakLine}\n\nSuggested Parent Action: ${parentAction}\n\nElimu Uganda`;
     if (navigator.share) {
       navigator.share({ title: "Elimu Uganda Weekly Report", text }).catch(() => {});
     } else {
@@ -186,7 +186,7 @@ export default function Parent() {
             <MetricCard label="Study Time" value={`${weeklyTotal}m`} tone="cyan" icon={<Clock className="w-4 h-4" />} />
             <MetricCard label="Accuracy" value={`${progress.practiceAccuracy}%`} tone="emerald" icon={<Target className="w-4 h-4" />} />
             <MetricCard label="Streak" value={`${progress.streakDays}d`} tone="amber" icon={<Flame className="w-4 h-4 fill-amber-400" />} />
-            <MetricCard label="Mock" value={`${progress.lastMockScore || 85}%`} tone="purple" icon={<Award className="w-4 h-4" />} />
+            <MetricCard label="Mock" value={progress.lastMockScore ? `${progress.lastMockScore}%` : "—"} tone="purple" icon={<Award className="w-4 h-4" />} />
           </div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -338,7 +338,7 @@ export default function Parent() {
             <ReportRow label="Study Time" value={`${weeklyTotal} minutes across ${activeDays} active day(s)`} />
             <ReportRow label="Accuracy" value={`${progress.practiceAccuracy}%`} />
             <ReportRow label="Needs Support" value={weakestSubject?.name || "Keep practising steadily"} />
-            <ReportRow label="Latest Mock" value={`${progress.lastMockScore || 85}%`} />
+            <ReportRow label="Latest Mock" value={progress.lastMockScore ? `${progress.lastMockScore}%` : "Not taken yet"} />
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
