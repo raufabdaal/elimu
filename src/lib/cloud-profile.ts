@@ -1,6 +1,6 @@
 import { getSupabaseClient } from "@/lib/supabase";
 import { freshLearningState, loadState, resetLearningForProfile, saveState } from "@/lib/store";
-import { ClassLevel, Role } from "@/lib/types";
+import { AppState, ClassLevel, Role } from "@/lib/types";
 
 export interface CloudProfileInput {
   role: Role;
@@ -16,6 +16,13 @@ export interface CloudProfile {
   class_level: ClassLevel | null;
 }
 
+export interface CloudStudent {
+  id: string;
+  profile_id: string;
+  class_level: ClassLevel;
+  pairing_code: string | null;
+}
+
 export interface CloudSubscription {
   id: string;
   profile_id: string;
@@ -28,8 +35,20 @@ export interface CloudSubscription {
 
 export interface AccountSummary {
   profile: CloudProfile | null;
+  student: CloudStudent | null;
   subscription: CloudSubscription | null;
   email: string | null;
+}
+
+export interface LinkedStudentSummary {
+  profile: CloudProfile;
+  student: CloudStudent | null;
+  snapshot: {
+    progress_json?: AppState["progress"];
+    session_json?: AppState["session"];
+    topic_progress_json?: AppState["topicProgress"];
+    continue_json?: AppState["continue"];
+  } | null;
 }
 
 function generatePairingCode(): string {
@@ -60,6 +79,23 @@ export async function getCloudProfile(): Promise<CloudProfile | null> {
   return data as CloudProfile | null;
 }
 
+export async function getCloudStudent(profileId?: string): Promise<CloudStudent | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+
+  const profile = profileId ? ({ id: profileId } as CloudProfile) : await getCloudProfile();
+  if (!profile?.id) return null;
+
+  const { data, error } = await supabase
+    .from("students")
+    .select("id, profile_id, class_level, pairing_code")
+    .eq("profile_id", profile.id)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data as CloudStudent | null;
+}
+
 export async function getCloudSubscription(profileId?: string): Promise<CloudSubscription | null> {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
@@ -78,19 +114,15 @@ export async function getCloudSubscription(profileId?: string): Promise<CloudSub
 }
 
 async function ensureTrialSubscription(profileId: string): Promise<CloudSubscription | null> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return null;
-
   const existing = await getCloudSubscription(profileId);
   if (existing) return existing;
 
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+
   const { data, error } = await supabase
     .from("subscriptions")
-    .insert({
-      profile_id: profileId,
-      plan: "trial",
-      status: "trialing",
-    })
+    .insert({ profile_id: profileId, plan: "trial", status: "trialing" })
     .select("id, profile_id, plan, status, trial_started_at, trial_ends_at, current_period_ends_at")
     .single();
 
@@ -136,14 +168,7 @@ export async function ensureCloudProfile(input?: Partial<CloudProfileInput>): Pr
   const profile = profileData as CloudProfile;
 
   if (role === "learner") {
-    const { data: existingStudent, error: existingStudentError } = await supabase
-      .from("students")
-      .select("id, pairing_code")
-      .eq("profile_id", profile.id)
-      .maybeSingle();
-
-    if (existingStudentError) throw existingStudentError;
-
+    const existingStudent = await getCloudStudent(profile.id);
     if (existingStudent) {
       const { error: studentUpdateError } = await supabase
         .from("students")
@@ -193,9 +218,11 @@ export async function getAccountSummary(): Promise<AccountSummary | null> {
 
   const profile = await getCloudProfile();
   const subscription = profile ? await getCloudSubscription(profile.id) : null;
+  const student = profile?.role === "learner" ? await getCloudStudent(profile.id) : null;
 
   return {
     profile,
+    student,
     subscription,
     email: userData.user.email || null,
   };
@@ -249,4 +276,73 @@ export async function syncLocalSnapshotToCloud() {
 
   if (error) throw error;
   return { ...data, mode: "initialized" };
+}
+
+export async function linkParentToStudentByCode(code: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+
+  const parentProfile = await ensureCloudProfile({ role: "parent", fullName: loadState().profile.name || "Parent" });
+  if (!parentProfile) throw new Error("Please sign in as a parent first.");
+
+  const { data, error } = await supabase.rpc("link_parent_to_student_by_code", {
+    code_input: code.trim(),
+  });
+
+  if (error) throw error;
+  return Array.isArray(data) ? data[0] : data;
+}
+
+export async function consumePendingPairCodeIfAny(): Promise<string | null> {
+  if (typeof window === "undefined") return null;
+  const pendingCode = localStorage.getItem("elimu_pending_pair_code");
+  if (!pendingCode) return null;
+
+  const profile = await getCloudProfile();
+  if (!profile || profile.role !== "parent") return null;
+
+  const linked = await linkParentToStudentByCode(pendingCode);
+  localStorage.removeItem("elimu_pending_pair_code");
+  return linked?.student_name || null;
+}
+
+export async function getFirstLinkedStudentSummary(): Promise<LinkedStudentSummary | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+
+  const parentProfile = await getCloudProfile();
+  if (!parentProfile || parentProfile.role !== "parent") return null;
+
+  const { data: links, error: linksError } = await supabase
+    .from("parent_student_links")
+    .select("student_profile_id")
+    .eq("parent_profile_id", parentProfile.id)
+    .eq("status", "active")
+    .limit(1);
+
+  if (linksError) throw linksError;
+  const studentProfileId = links?.[0]?.student_profile_id;
+  if (!studentProfileId) return null;
+
+  const { data: studentProfile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, auth_user_id, role, full_name, class_level")
+    .eq("id", studentProfileId)
+    .single();
+  if (profileError) throw profileError;
+
+  const student = await getCloudStudent(studentProfileId);
+
+  const { data: snapshot, error: snapshotError } = await supabase
+    .from("progress_snapshots")
+    .select("progress_json, session_json, topic_progress_json, continue_json")
+    .eq("student_profile_id", studentProfileId)
+    .maybeSingle();
+  if (snapshotError) throw snapshotError;
+
+  return {
+    profile: studentProfile as CloudProfile,
+    student,
+    snapshot,
+  };
 }

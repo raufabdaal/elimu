@@ -39,7 +39,7 @@ function ModuleContent() {
   const [state, setState] = useState<QuestionState | null>(null);
   const [locked, setLocked] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [feedbackType, setFeedbackType] = useState<"ok" | "bad" | "">("");
+  const [feedbackType, setFeedbackType] = useState<"ok" | "partial" | "bad" | "">("");
   const [showExplanation, setShowExplanation] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [encourage, setEncourage] = useState(0);
@@ -116,7 +116,9 @@ function ModuleContent() {
       return;
     }
 
-    const { correct, partial, keywordMatch } = checkAnswer(q, state);
+    const result = checkAnswer(q, state);
+    const { correct, partial, keywordMatch } = result;
+    const isPartialMultiSelect = q.type === "multi_select" && !correct && partial > 0;
 
     setLocked(true);
     recordAnswer(`${topic.subjectId}-${topic.id}-${currentModule?.id || "m1"}`, correct, partial);
@@ -130,6 +132,16 @@ function ModuleContent() {
       setFeedbackType("ok");
       setCelebrate(true);
       setEncourage((n) => n + 1);
+      playCorrectSound();
+    } else if (isPartialMultiSelect) {
+      const missing = result.missingOptions?.length
+        ? ` Missing: ${result.missingOptions.join(", ")}.`
+        : "";
+      const wrong = result.wrongSelections?.length
+        ? ` Check again: ${result.wrongSelections.join(", ")} ${result.wrongSelections.length === 1 ? "is" : "are"} not correct.`
+        : "";
+      setFeedback(`Good start — you selected ${result.selectedCorrectCount || 0} of ${result.totalCorrectCount || 0} correct options.${missing}${wrong} ${q.explanation}`);
+      setFeedbackType("partial");
       playCorrectSound();
     } else {
       loseHeart();
@@ -376,18 +388,24 @@ function ModuleContent() {
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 450, damping: 30 }}
             className={`feedback-sheet ${feedbackType} fixed sm:absolute bottom-0 left-0 right-0 z-50 p-5 sm:rounded-t-[32px] border-t-4 shadow-[0_-12px_40px_rgba(0,0,0,0.18)] ${
-              feedbackType === "ok" ? "bg-emerald-50 border-emerald-500" : "bg-rose-50 border-rose-500"
+              feedbackType === "ok"
+                ? "bg-emerald-50 border-emerald-500"
+                : feedbackType === "partial"
+                ? "bg-amber-50 border-amber-500"
+                : "bg-rose-50 border-rose-500"
             }`}
           >
             <div className="max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto">
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${
-                  feedbackType === "ok" ? "bg-emerald-600" : "bg-rose-600"
+                  feedbackType === "ok" ? "bg-emerald-600" : feedbackType === "partial" ? "bg-amber-600" : "bg-rose-600"
                 }`}>
-                  {feedbackType === "ok" ? <CheckCircle2 className="w-5 h-5 stroke-[2.8]" /> : <XCircle className="w-5 h-5 stroke-[2.8]" />}
+                  {feedbackType === "bad" ? <XCircle className="w-5 h-5 stroke-[2.8]" /> : <CheckCircle2 className="w-5 h-5 stroke-[2.8]" />}
                 </div>
-                <h3 className={`text-lg font-black ${feedbackType === "ok" ? "text-emerald-950" : "text-rose-950"}`}>
-                  {feedbackType === "ok" ? "🎉 Excellent! +15 XP" : "❌ Let's Review"}
+                <h3 className={`text-lg font-black ${
+                  feedbackType === "ok" ? "text-emerald-950" : feedbackType === "partial" ? "text-amber-950" : "text-rose-950"
+                }`}>
+                  {feedbackType === "ok" ? "🎉 Excellent! +15 XP" : feedbackType === "partial" ? "👍 Good Start" : "❌ Let's Review"}
                 </h3>
               </div>
 
@@ -406,6 +424,8 @@ function ModuleContent() {
                 className={`btn w-full py-4 text-base font-black shadow-md flex items-center justify-center gap-2 ${
                   feedbackType === "ok"
                     ? "bg-emerald-600 hover:bg-emerald-700 text-white border-b-4 border-emerald-800 active:border-b-0"
+                    : feedbackType === "partial"
+                    ? "bg-amber-600 hover:bg-amber-700 text-white border-b-4 border-amber-800 active:border-b-0"
                     : "bg-slate-900 hover:bg-slate-800 text-white border-b-4 border-black active:border-b-0"
                 }`}
                 onClick={nextQuestion}

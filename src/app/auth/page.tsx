@@ -12,6 +12,7 @@ import {
   getAccountSummary,
   getCloudProfile,
   getTrialDaysLeft,
+  consumePendingPairCodeIfAny,
   syncLocalSnapshotToCloud,
 } from "@/lib/cloud-profile";
 import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
@@ -100,8 +101,9 @@ function AuthContent() {
             });
           }
           await syncLocalSnapshotToCloud().catch(() => null);
+          const linkedName = await consumePendingPairCodeIfAny().catch(() => null);
           await refreshAccount();
-          setMessage("Account connected.");
+          setMessage(linkedName ? `Account connected and linked to ${linkedName}.` : "Account connected.");
         } catch (e) {
           setError(friendlyAuthError(e));
         }
@@ -116,8 +118,9 @@ function AuthContent() {
       try {
         await ensureCloudProfile({ role, fullName: fullName || local.profile.name || "Student", classLevel });
         await syncLocalSnapshotToCloud().catch(() => null);
+        const linkedName = await consumePendingPairCodeIfAny().catch(() => null);
         await refreshAccount();
-        setMessage("Account connected.");
+        setMessage(linkedName ? `Account connected and linked to ${linkedName}.` : "Account connected.");
         setError("");
       } catch (e) {
         setError(friendlyAuthError(e));
@@ -183,8 +186,9 @@ function AuthContent() {
         await signInWithEmail(email.trim(), password);
         await ensureCloudProfile({ role, fullName: fullName.trim() || local.profile.name || "Student", classLevel });
         await syncLocalSnapshotToCloud().catch(() => null);
+        const linkedName = await consumePendingPairCodeIfAny().catch(() => null);
         await refreshAccount();
-        setMessage("Signed in successfully.");
+        setMessage(linkedName ? `Signed in and linked to ${linkedName}.` : "Signed in successfully.");
       }
     } catch (e) {
       setError(friendlyAuthError(e));
@@ -290,6 +294,7 @@ function AuthContent() {
                 <AccountRow label="Name" value={account.profile.full_name || "Not set"} />
                 <AccountRow label="Role" value={account.profile.role === "parent" ? "Parent / Guardian" : "Student"} />
                 {account.profile.role === "learner" && <AccountRow label="Class" value={(account.profile.class_level || classLevel).toUpperCase()} />}
+                {account.profile.role === "learner" && <AccountRow label="Parent Code" value={account.student?.pairing_code || "Generating..."} />}
                 <AccountRow label="Plan" value={subscriptionLabel} />
               </div>
 

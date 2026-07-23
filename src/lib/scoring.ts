@@ -147,6 +147,10 @@ export interface CheckAnswerResult {
   keywordMatch?: boolean;
   standardAnswer?: string;
   scoredKeywords?: string[];
+  selectedCorrectCount?: number;
+  totalCorrectCount?: number;
+  missingOptions?: string[];
+  wrongSelections?: string[];
 }
 
 export function checkAnswer(question: Question, state: QuestionState): CheckAnswerResult {
@@ -276,12 +280,23 @@ export function checkAnswer(question: Question, state: QuestionState): CheckAnsw
     }
     case "multi_select": {
       const selected = (state as Extract<QuestionState, { type: "multi_select" }>).selected;
-      const correctIds = question.options.filter((o) => o.correct).map((o) => o.id);
+      const correctOptions = question.options.filter((o) => o.correct);
+      const correctIds = correctOptions.map((o) => o.id);
+      const selectedCorrectOptions = correctOptions.filter((o) => selected.includes(o.id));
+      const wrongSelectedOptions = question.options.filter((o) => selected.includes(o.id) && !o.correct);
+      const missingOptions = correctOptions.filter((o) => !selected.includes(o.id));
       const allCorrectSelected = correctIds.every((id) => selected.includes(id));
       const noWrongSelected = selected.every((id) => correctIds.includes(id));
       const correct = allCorrectSelected && noWrongSelected;
-      const partial = correctIds.length > 0 ? selected.filter((id) => correctIds.includes(id)).length / correctIds.length : 0;
-      return { correct, partial };
+      const partial = correctIds.length > 0 ? selectedCorrectOptions.length / correctIds.length : 0;
+      return {
+        correct,
+        partial,
+        selectedCorrectCount: selectedCorrectOptions.length,
+        totalCorrectCount: correctOptions.length,
+        missingOptions: missingOptions.map((o) => o.text),
+        wrongSelections: wrongSelectedOptions.map((o) => o.text),
+      };
     }
     case "ordering": {
       const order = (state as Extract<QuestionState, { type: "ordering" }>).order;

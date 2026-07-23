@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState } from "@/lib/store";
+import { freshLearningState, loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, Subject } from "@/lib/types";
+import { getFirstLinkedStudentSummary } from "@/lib/cloud-profile";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
@@ -16,11 +17,44 @@ export default function Parent() {
   const [state, setState] = useState<AppState | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [sentToast, setSentToast] = useState<string | null>(null);
+  const [hasLinkedCloudStudent, setHasLinkedCloudStudent] = useState(false);
 
   useEffect(() => {
-    const s = loadState();
-    setState(s);
-    setSubjects(getSubjects(s.profile.classLevel || "p5"));
+    const loadParentDashboard = async () => {
+      const local = loadState();
+      setState(local);
+      setSubjects(getSubjects(local.profile.classLevel || "p5"));
+
+      const linked = await getFirstLinkedStudentSummary().catch(() => null);
+      if (!linked) return;
+      setHasLinkedCloudStudent(true);
+
+      const classLevel = linked.profile.class_level || linked.student?.class_level || "p5";
+      const fresh = freshLearningState({
+        role: "learner",
+        name: linked.profile.full_name,
+        classLevel,
+      });
+
+      const childState: AppState = {
+        ...fresh,
+        progress: {
+          ...fresh.progress,
+          ...(linked.snapshot?.progress_json || {}),
+        },
+        session: {
+          ...fresh.session,
+          ...(linked.snapshot?.session_json || {}),
+        },
+        topicProgress: linked.snapshot?.topic_progress_json || {},
+        continue: linked.snapshot?.continue_json || {},
+      };
+
+      setState(childState);
+      setSubjects(getSubjects(classLevel));
+    };
+
+    loadParentDashboard();
   }, []);
 
   const handleSendCheers = (cheer: string) => {
@@ -86,7 +120,7 @@ export default function Parent() {
   const { profile, progress, session } = state;
   const studentName = profile.name || "Student";
   const classLabel = (profile.classLevel || "p5").toUpperCase();
-  const isLinked = !!profile.linkedStudentId || profile.role === "parent";
+  const isLinked = hasLinkedCloudStudent || !!profile.linkedStudentId || profile.role === "parent";
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const weeklyTotal = session.weeklyMinutes.reduce((a, b) => a + b, 0);
   const activeDays = session.weeklyMinutes.filter((mins) => mins > 0).length;

@@ -33,7 +33,7 @@ function PracticeContent() {
   const [state, setState] = useState<QuestionState | null>(null);
   const [locked, setLocked] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [feedbackType, setFeedbackType] = useState<"ok" | "bad" | "">("");
+  const [feedbackType, setFeedbackType] = useState<"ok" | "partial" | "bad" | "">("");
   const [showExplanation, setShowExplanation] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [encourage, setEncourage] = useState(0);
@@ -96,7 +96,9 @@ function PracticeContent() {
 
   const handleCheck = () => {
     if (locked || !q || !isAnswered(q, state)) return;
-    const { correct, partial, keywordMatch } = checkAnswer(q, state);
+    const result = checkAnswer(q, state);
+    const { correct, partial, keywordMatch } = result;
+    const isPartialMultiSelect = q.type === "multi_select" && !correct && partial > 0;
 
     setLocked(true);
     recordAnswer(q.topicId || "general-practice", correct, partial);
@@ -111,6 +113,17 @@ function PracticeContent() {
       setFeedbackType("ok");
       setCelebrate(true);
       setEncourage((n) => n + 1);
+      playCorrectSound();
+    } else if (isPartialMultiSelect) {
+      setScore((s) => s + partial);
+      const missing = result.missingOptions?.length
+        ? ` Missing: ${result.missingOptions.join(", ")}.`
+        : "";
+      const wrong = result.wrongSelections?.length
+        ? ` Check again: ${result.wrongSelections.join(", ")} ${result.wrongSelections.length === 1 ? "is" : "are"} not correct.`
+        : "";
+      setFeedback(`Good start — you selected ${result.selectedCorrectCount || 0} of ${result.totalCorrectCount || 0} correct options.${missing}${wrong} ${q.explanation}`);
+      setFeedbackType("partial");
       playCorrectSound();
     } else {
       const prefix = q.type === "short_answer"
@@ -141,11 +154,12 @@ function PracticeContent() {
     if (index >= questions.length - 1) {
       const s = loadState();
       const accuracy = Math.round((score / questions.length) * 100);
+      const earnedXp = Math.round(score * 15 + (isMockMode ? 100 : 50));
       saveState({
         progress: {
           ...s.progress,
           streakDays: s.progress.streakDays + 1,
-          xp: s.progress.xp + score * 15 + (isMockMode ? 100 : 50),
+          xp: s.progress.xp + earnedXp,
           pendingMockExam: isMockMode ? false : s.progress.pendingMockExam,
           lastMockScore: isMockMode ? accuracy : s.progress.lastMockScore,
           mockExamsPassed: isMockMode ? (s.progress.mockExamsPassed || 0) + 1 : s.progress.mockExamsPassed,
@@ -189,7 +203,7 @@ function PracticeContent() {
   const rawTopicName = q.topicId?.split("-").slice(2).join(" ").toUpperCase() || "CORE DRILL";
 
   if (finished) {
-    const totalXP = score * 15 + (isMockMode ? 100 : 50);
+    const totalXP = Math.round(score * 15 + (isMockMode ? 100 : 50));
     const accuracy = Math.round((score / questions.length) * 100);
 
     return (
@@ -230,7 +244,7 @@ function PracticeContent() {
               {isMockMode ? "Checkpoint Passed!" : "Unstoppable Effort!"}
             </h1>
             <p className="text-xs font-semibold text-slate-500 mt-1">
-              You correctly solved {score} out of {questions.length} {isMockMode ? "weekly mock exam" : "curriculum"} drills!
+              You earned {score % 1 === 0 ? score : score.toFixed(1)} out of {questions.length} marks in this {isMockMode ? "weekly mock exam" : "curriculum"} drill!
             </p>
 
             <div className="grid grid-cols-2 gap-3 my-6">
@@ -431,18 +445,24 @@ function PracticeContent() {
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 450, damping: 30 }}
             className={`feedback-sheet ${feedbackType} fixed sm:absolute bottom-0 left-0 right-0 z-50 p-5 sm:rounded-t-[32px] border-t-4 shadow-[0_-12px_40px_rgba(0,0,0,0.18)] ${
-              feedbackType === "ok" ? "bg-emerald-50 border-emerald-500" : "bg-rose-50 border-rose-500"
+              feedbackType === "ok"
+                ? "bg-emerald-50 border-emerald-500"
+                : feedbackType === "partial"
+                ? "bg-amber-50 border-amber-500"
+                : "bg-rose-50 border-rose-500"
             }`}
           >
             <div className="max-w-[460px] md:max-w-2xl lg:max-w-3xl mx-auto">
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-white shadow-sm shrink-0 ${
-                  feedbackType === "ok" ? "bg-emerald-600" : "bg-rose-600"
+                  feedbackType === "ok" ? "bg-emerald-600" : feedbackType === "partial" ? "bg-amber-600" : "bg-rose-600"
                 }`}>
-                  {feedbackType === "ok" ? <CheckCircle2 className="w-5 h-5 stroke-[2.8]" /> : <XCircle className="w-5 h-5 stroke-[2.8]" />}
+                  {feedbackType === "bad" ? <XCircle className="w-5 h-5 stroke-[2.8]" /> : <CheckCircle2 className="w-5 h-5 stroke-[2.8]" />}
                 </div>
-                <h3 className={`text-lg font-black ${feedbackType === "ok" ? "text-emerald-950" : "text-rose-950"}`}>
-                  {feedbackType === "ok" ? "🎉 Correct! +15 XP" : "❌ Reviewing why"}
+                <h3 className={`text-lg font-black ${
+                  feedbackType === "ok" ? "text-emerald-950" : feedbackType === "partial" ? "text-amber-950" : "text-rose-950"
+                }`}>
+                  {feedbackType === "ok" ? "🎉 Correct! +15 XP" : feedbackType === "partial" ? "👍 Good Start" : "❌ Reviewing why"}
                 </h3>
               </div>
 
@@ -461,6 +481,8 @@ function PracticeContent() {
                 className={`btn w-full py-4 text-base font-black shadow-md flex items-center justify-center gap-2 ${
                   feedbackType === "ok"
                     ? "bg-emerald-600 hover:bg-emerald-700 text-white border-b-4 border-emerald-800 active:border-b-0"
+                    : feedbackType === "partial"
+                    ? "bg-amber-600 hover:bg-amber-700 text-white border-b-4 border-amber-800 active:border-b-0"
                     : "bg-slate-900 hover:bg-slate-800 text-white border-b-4 border-black active:border-b-0"
                 }`}
                 onClick={nextQuestion}

@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, linkStudent } from "@/lib/store";
-import { getAccountSummary } from "@/lib/cloud-profile";
+import { loadState, saveState } from "@/lib/store";
+import { getAccountSummary, linkParentToStudentByCode } from "@/lib/cloud-profile";
 import { CLASS_LABELS } from "@/lib/data";
 import { ClassLevel, Role } from "@/lib/types";
 import AppShell from "@/components/AppShell";
@@ -55,23 +55,38 @@ export default function Onboarding() {
     setStep(3);
   };
 
-  const handleParentLink = () => {
-    const student = linkStudent(code.trim());
-    if (student) {
+  const handleParentLink = async () => {
+    setCodeError("");
+    const cleanCode = code.trim();
+    if (cleanCode.length !== 6) return;
+
+    const account = await getAccountSummary().catch(() => null);
+    if (!account?.profile) {
+      try {
+        localStorage.setItem("elimu_pending_pair_code", cleanCode);
+      } catch {}
+      router.push(`/auth/?mode=signin&role=parent&name=${encodeURIComponent(name || "Parent")}`);
+      return;
+    }
+
+    if (account.profile.role !== "parent") {
+      setCodeError("Please sign in with a parent account to pair a child.");
+      return;
+    }
+
+    try {
+      const linked = await linkParentToStudentByCode(cleanCode);
       saveState({
         profile: {
           ...loadState().profile,
           role: "parent",
-          name: name || "Parent",
-          linkedStudentId: student.linkedStudentId || "student_001",
+          name: account.profile.full_name || name || "Parent",
+          linkedStudentId: linked?.student_profile_id || "linked_student",
         },
       });
-      try {
-        localStorage.setItem("elimu_pending_pair_code", code.trim());
-      } catch {}
-      router.push(`/auth/?mode=signup&role=parent&name=${encodeURIComponent(name || "Parent")}`);
-    } else {
-      setCodeError("Code not recognized. Make sure your child is signed in and showing a current pairing code.");
+      router.push("/parent/");
+    } catch (e) {
+      setCodeError(e instanceof Error ? e.message : "Code not recognized. Make sure your child is signed in and showing a current pairing code.");
     }
   };
 
