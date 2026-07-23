@@ -1,6 +1,28 @@
 import { getSupabaseClient } from "@/lib/supabase";
 import { ClassLevel, Role } from "@/lib/types";
 
+const SIGNED_OUT_KEY = "elimu_auth_signed_out";
+
+function rememberSignedOut(value: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SIGNED_OUT_KEY, value ? "true" : "false");
+  } catch {}
+}
+
+export function hasExplicitlySignedOut(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem(SIGNED_OUT_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function markSignedInLocally() {
+  rememberSignedOut(false);
+}
+
 export interface AuthProfilePayload {
   role: Role;
   fullName: string;
@@ -27,6 +49,7 @@ export async function signUpWithEmail(email: string, password: string, profile: 
   });
 
   if (error) throw error;
+  if (data.session) rememberSignedOut(false);
   return data;
 }
 
@@ -38,6 +61,7 @@ export async function signInWithEmail(email: string, password: string) {
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
+  rememberSignedOut(false);
   return data;
 }
 
@@ -47,6 +71,7 @@ export async function signOut() {
 
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
+  rememberSignedOut(true);
 }
 
 export async function getCurrentSession() {

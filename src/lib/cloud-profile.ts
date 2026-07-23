@@ -163,6 +163,52 @@ export async function ensureCloudProfile(input?: Partial<CloudProfileInput>): Pr
     (role === "parent" ? "Parent" : "Student");
   const classLevel = (input?.classLevel || metadata.class_level || local.profile.classLevel || "p5") as ClassLevel;
 
+  const existingProfile = await getCloudProfile();
+  if (existingProfile) {
+    const resolvedClassLevel = (existingProfile.class_level || classLevel) as ClassLevel;
+
+    if (existingProfile.role === "learner") {
+      const existingStudent = await getCloudStudent(existingProfile.id);
+      if (existingStudent) {
+        const { error: studentUpdateError } = await supabase
+          .from("students")
+          .update({ class_level: resolvedClassLevel })
+          .eq("profile_id", existingProfile.id);
+        if (studentUpdateError) throw studentUpdateError;
+      } else {
+        let studentError: unknown = null;
+        for (let attempt = 0; attempt < 5; attempt += 1) {
+          const { error } = await supabase.from("students").insert({
+            profile_id: existingProfile.id,
+            class_level: resolvedClassLevel,
+            pairing_code: generatePairingCode(),
+            pairing_code_expires_at: null,
+          });
+          if (!error) {
+            studentError = null;
+            break;
+          }
+          studentError = error;
+          if (!error.message?.includes("students_pairing_code_key")) break;
+        }
+        if (studentError) throw studentError;
+      }
+    }
+
+    await ensureTrialSubscription(existingProfile.id);
+
+    saveState({
+      profile: {
+        ...local.profile,
+        role: existingProfile.role,
+        name: existingProfile.full_name,
+        classLevel: resolvedClassLevel,
+      },
+    });
+
+    return { ...existingProfile, class_level: resolvedClassLevel };
+  }
+
   const { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .upsert(

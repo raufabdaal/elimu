@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { hasExplicitlySignedOut } from "@/lib/auth";
 import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 
 const PUBLIC_PATHS = ["/auth", "/onboarding"];
@@ -22,6 +23,16 @@ export default function AuthGate({ children }: { children: ReactNode }) {
 
     const check = async () => {
       if (publicPath || !hasSupabaseConfig()) {
+        if (!cancelled) setChecking(false);
+        return;
+      }
+
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        if (hasExplicitlySignedOut()) {
+          const next = encodeURIComponent(pathname);
+          router.replace(`/auth/?next=${next}`);
+          return;
+        }
         if (!cancelled) setChecking(false);
         return;
       }

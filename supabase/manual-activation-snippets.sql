@@ -1,8 +1,15 @@
--- Elimu manual activation workflow snippets
--- These are NOT app migrations. Use them manually in Supabase SQL Editor during pilot operations.
--- Replace the IDs/placeholders before running.
+-- Elimu Manual Activation Helper
+-- IMPORTANT: Do NOT run this entire file from top to bottom.
+-- This file is a guide with copy/paste sections.
+-- Only Section 1 is safe to run immediately.
+-- Sections 2–5 require replacing PAYMENT_ID_HERE or PROFILE_ID_HERE first.
 
--- 1. See latest pending activation requests
+-- ============================================================
+-- SECTION 1: VIEW PENDING ACTIVATION REQUESTS
+-- Safe to run as-is.
+-- Run this first to find the real payment_id.
+-- ============================================================
+
 select
   pt.id as payment_id,
   pt.created_at,
@@ -28,8 +35,13 @@ left join public.subscriptions s on s.profile_id = p.id
 where pt.status = 'pending'
 order by pt.created_at desc;
 
--- 2. Activate one pending FAMILY MONTHLY request after confirming mobile money manually
--- Replace PAYMENT_ID_HERE with the payment_transactions.id value.
+-- ============================================================
+-- SECTION 2: ACTIVATE FAMILY MONTHLY
+-- DO NOT run until you replace PAYMENT_ID_HERE with a real payment_id.
+-- Copy only the block below into a new SQL query after replacing the ID.
+-- ============================================================
+
+/*
 with selected_payment as (
   select *
   from public.payment_transactions
@@ -47,9 +59,15 @@ where s.profile_id = pt.profile_id;
 update public.payment_transactions
 set status = 'successful', updated_at = now()
 where id = 'PAYMENT_ID_HERE';
+*/
 
--- 3. Activate one pending FAMILY TERM request after confirming mobile money manually
--- Replace PAYMENT_ID_HERE with the payment_transactions.id value.
+-- ============================================================
+-- SECTION 3: ACTIVATE FAMILY TERM
+-- DO NOT run until you replace PAYMENT_ID_HERE with a real payment_id.
+-- Copy only the block below into a new SQL query after replacing the ID.
+-- ============================================================
+
+/*
 with selected_payment as (
   select *
   from public.payment_transactions
@@ -67,9 +85,15 @@ where s.profile_id = pt.profile_id;
 update public.payment_transactions
 set status = 'successful', updated_at = now()
 where id = 'PAYMENT_ID_HERE';
+*/
 
--- 4. Give manual complimentary access to a profile
--- Replace PROFILE_ID_HERE with profiles.id.
+-- ============================================================
+-- SECTION 4: GIVE FREE / MANUAL COMPLIMENTARY ACCESS
+-- DO NOT run until you replace PROFILE_ID_HERE with a real profile_id.
+-- Use this for pilot testers, scholarships, staff, or temporary free access.
+-- ============================================================
+
+/*
 update public.subscriptions
 set
   status = 'manual_comp',
@@ -77,13 +101,24 @@ set
   current_period_ends_at = null,
   updated_at = now()
 where profile_id = 'PROFILE_ID_HERE';
+*/
 
--- 5. Mark a pending payment as failed/cancelled
+-- ============================================================
+-- SECTION 5: MARK A PAYMENT AS FAILED
+-- DO NOT run until you replace PAYMENT_ID_HERE with a real payment_id.
+-- ============================================================
+
+/*
 update public.payment_transactions
 set status = 'failed', updated_at = now()
 where id = 'PAYMENT_ID_HERE';
+*/
 
--- 6. See active subscriptions
+-- ============================================================
+-- SECTION 6: VIEW ACTIVE SUBSCRIPTIONS
+-- Safe to run as-is.
+-- ============================================================
+
 select
   p.full_name,
   p.role,
