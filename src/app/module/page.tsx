@@ -8,6 +8,7 @@ import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/
 import { getTopic, getModule, getSubjects } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
+import { queueAnswerEvent, syncNow } from "@/lib/sync";
 import AppShell from "@/components/AppShell";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
@@ -122,6 +123,17 @@ function ModuleContent() {
 
     setLocked(true);
     recordAnswer(`${topic.subjectId}-${topic.id}-${currentModule?.id || "m1"}`, correct, partial);
+    queueAnswerEvent({
+      questionId: q.id,
+      topicId: `${topic.subjectId}-${topic.id}`,
+      subjectId: topic.subjectId,
+      classLevel: appState.profile.classLevel,
+      isCorrect: correct,
+      partialScore: partial,
+    });
+    if (typeof navigator !== "undefined" && navigator.onLine) {
+      void syncNow().catch(() => null);
+    }
     setAppState(loadState());
 
     if (correct) {
@@ -185,6 +197,9 @@ function ModuleContent() {
           progress: Math.min(100, (s.continue?.progress || 0) + 25),
         },
       });
+      if (typeof navigator !== "undefined" && navigator.onLine) {
+        void syncNow().catch(() => null);
+      }
       setCelebrate(false);
       setEncourage(0);
       setAppState(loadState());

@@ -40,6 +40,17 @@ export interface AccountSummary {
   email: string | null;
 }
 
+export interface CloudAnswerEvent {
+  id: string;
+  question_id: string;
+  topic_id: string | null;
+  subject_id: string | null;
+  class_level: ClassLevel | null;
+  is_correct: boolean;
+  partial_score: number;
+  answered_at: string;
+}
+
 export interface LinkedStudentSummary {
   profile: CloudProfile;
   student: CloudStudent | null;
@@ -48,7 +59,9 @@ export interface LinkedStudentSummary {
     session_json?: AppState["session"];
     topic_progress_json?: AppState["topicProgress"];
     continue_json?: AppState["continue"];
+    synced_at?: string;
   } | null;
+  recentEvents: CloudAnswerEvent[];
 }
 
 function generatePairingCode(): string {
@@ -335,14 +348,23 @@ export async function getFirstLinkedStudentSummary(): Promise<LinkedStudentSumma
 
   const { data: snapshot, error: snapshotError } = await supabase
     .from("progress_snapshots")
-    .select("progress_json, session_json, topic_progress_json, continue_json")
+    .select("progress_json, session_json, topic_progress_json, continue_json, synced_at")
     .eq("student_profile_id", studentProfileId)
     .maybeSingle();
   if (snapshotError) throw snapshotError;
+
+  const { data: recentEvents, error: eventsError } = await supabase
+    .from("answer_events")
+    .select("id, question_id, topic_id, subject_id, class_level, is_correct, partial_score, answered_at")
+    .eq("student_profile_id", studentProfileId)
+    .order("answered_at", { ascending: false })
+    .limit(250);
+  if (eventsError) throw eventsError;
 
   return {
     profile: studentProfile as CloudProfile,
     student,
     snapshot,
+    recentEvents: (recentEvents || []) as CloudAnswerEvent[],
   };
 }

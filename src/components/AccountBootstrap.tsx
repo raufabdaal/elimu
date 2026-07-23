@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { ensureCloudProfile, syncLocalSnapshotToCloud } from "@/lib/cloud-profile";
+import { ensureCloudProfile } from "@/lib/cloud-profile";
 import { getSupabaseClient } from "@/lib/supabase";
+import { syncNow } from "@/lib/sync";
 
 export default function AccountBootstrap() {
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function AccountBootstrap() {
         if (!data.session || cancelled) return;
         await ensureCloudProfile();
         if (navigator.onLine) {
-          await syncLocalSnapshotToCloud().catch(() => null);
+          await syncNow().catch(() => null);
         }
       } catch {
         // Keep the app offline-first. Auth/sync errors must never block local learning.

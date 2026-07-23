@@ -15,7 +15,6 @@ The app now has:
 - Signed-in account status card
 - Trial/subscription status display
 - Sign out on this device
-- Manual “Sync Progress Now” action
 - Supabase profile creation
 - Trial subscription row creation
 - Student row creation for learner accounts
@@ -150,6 +149,38 @@ This patch:
 - keeps parent-child security rules in place
 
 After running it, return to `/auth/` and sign in again.
+
+### Infinite recursion error
+
+If sign-in shows this exact database error:
+
+```text
+{"code":"42P17","message":"infinite recursion detected in policy for relation \"profiles\""}
+```
+
+run this additional repair patch in Supabase SQL Editor:
+
+```text
+supabase/rls-recursion-fix.sql
+```
+
+This replaces the profile policies with recursion-safe helper-function policies.
+
+### Duplicate pairing code error
+
+If sign-in shows this exact database error:
+
+```text
+duplicate key value violates unique constraint "students_pairing_code_key"
+```
+
+run this additional patch in Supabase SQL Editor:
+
+```text
+supabase/pairing-code-fix.sql
+```
+
+This makes pairing-code generation unique and backfills missing student rows safely.
 
 ## Current limitations
 

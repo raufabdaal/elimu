@@ -13,12 +13,13 @@ Stripe can remain optional later for card/international payments, but it should 
 
 ## Free-first reality
 
-There is no fully free production mobile money processing layer. Usually:
+There is no guaranteed fully free production mobile money processing layer. Usually:
 
-- Sandbox/testing is free.
+- Sandbox/testing is usually free.
 - Production requires merchant approval.
 - Providers charge transaction fees.
 - Some aggregators may charge setup, monthly, or transaction fees.
+- Direct MTN/Airtel setup may avoid monthly software fees, but it still requires approval and live transaction charges.
 
 So we should build the app payment logic now in a provider-agnostic way, then connect a real provider later.
 
@@ -127,7 +128,7 @@ Start with:
 
 1. Supabase auth and profiles
 2. Trial/subscription state
-3. Manual payment activation for early pilot parents
+3. Manual payment activation for early pilot parents using `docs/MANUAL_ACTIVATION_WORKFLOW.md`
 4. MTN MoMo sandbox
 5. Airtel Money sandbox or provider application
 6. Production mobile money approval

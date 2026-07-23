@@ -8,6 +8,7 @@ import { CLASS_LABELS } from "@/lib/data";
 import { saveState, loadState } from "@/lib/store";
 import { getAccountSummary } from "@/lib/cloud-profile";
 import Streak from "./Streak";
+import SyncStatus from "./SyncStatus";
 import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X, LockKeyhole } from "lucide-react";
 
 interface HeaderStatsProps {
@@ -96,6 +97,7 @@ export default function HeaderStats({
             {!isParent && (
               <>
                 <Streak days={streakDays} />
+                <SyncStatus />
                 <div
                   className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1.5 text-rose-700 shadow-sm ${shakeHearts ? "animate-shake" : ""}`}
                   aria-label={`${hearts} of ${maxHearts} hearts`}

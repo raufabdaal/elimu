@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { freshLearningState, loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, Subject } from "@/lib/types";
-import { getFirstLinkedStudentSummary } from "@/lib/cloud-profile";
+import { CloudAnswerEvent, getFirstLinkedStudentSummary } from "@/lib/cloud-profile";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
+import SubscriptionNotice from "@/components/SubscriptionNotice";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
 import { Flame, Send, CheckCircle2, BarChart2, Share2, Award, Sparkles, Target, Clock, BookOpen, MessageSquareHeart } from "lucide-react";
 
@@ -18,6 +19,8 @@ export default function Parent() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [sentToast, setSentToast] = useState<string | null>(null);
   const [hasLinkedCloudStudent, setHasLinkedCloudStudent] = useState(false);
+  const [recentEvents, setRecentEvents] = useState<CloudAnswerEvent[]>([]);
+  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
 
   useEffect(() => {
     const loadParentDashboard = async () => {
@@ -28,6 +31,8 @@ export default function Parent() {
       const linked = await getFirstLinkedStudentSummary().catch(() => null);
       if (!linked) return;
       setHasLinkedCloudStudent(true);
+      setRecentEvents(linked.recentEvents || []);
+      setLastSyncedAt(linked.snapshot?.synced_at || null);
 
       const classLevel = linked.profile.class_level || linked.student?.class_level || "p5";
       const fresh = freshLearningState({
@@ -81,25 +86,30 @@ export default function Parent() {
       const completedTopics = sub.topics.filter((t) => t.completed).length;
       const totalTopics = sub.topics.length;
       const coverage = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+      const subjectEvents = recentEvents.filter((event) => event.subject_id === sub.id || event.topic_id?.startsWith(`${sub.id}-`));
+      const eventAttempts = subjectEvents.length;
+      const eventScore = subjectEvents.reduce((sum, event) => sum + Number(event.partial_score || 0), 0);
       const relatedProgress = Object.entries(topicProgressForStats).filter(([key]) =>
         key.includes(`${sub.id}-`) || key.includes(`-${sub.id}-`) || key.startsWith(sub.id)
       );
-      const attempts = relatedProgress.reduce((sum, [, value]) => sum + (value.attempts || 0), 0);
-      const weightedAccuracy = attempts
+      const progressAttempts = relatedProgress.reduce((sum, [, value]) => sum + (value.attempts || 0), 0);
+      const progressAccuracy = progressAttempts
         ? Math.round(
-            relatedProgress.reduce((sum, [, value]) => sum + (value.accuracy || 0) * (value.attempts || 0), 0) / attempts * 100
+            relatedProgress.reduce((sum, [, value]) => sum + (value.accuracy || 0) * (value.attempts || 0), 0) / progressAttempts * 100
           )
         : Math.max(coverage, 0);
+      const attempts = eventAttempts || progressAttempts;
+      const accuracy = eventAttempts ? Math.round((eventScore / eventAttempts) * 100) : progressAccuracy;
       return {
         ...sub,
         completedTopics,
         totalTopics,
         coverage,
         attempts,
-        accuracy: weightedAccuracy,
+        accuracy,
       };
     });
-  }, [subjects, state?.topicProgress]);
+  }, [subjects, state?.topicProgress, recentEvents]);
 
   const weakestSubject = useMemo(() => {
     if (!subjectStats.length) return null;
@@ -125,6 +135,13 @@ export default function Parent() {
   const weeklyTotal = session.weeklyMinutes.reduce((a, b) => a + b, 0);
   const activeDays = session.weeklyMinutes.filter((mins) => mins > 0).length;
   const maxWeeklyMin = Math.max(...session.weeklyMinutes, 40);
+  const recentAttempts = recentEvents.length;
+  const recentAccuracy = recentAttempts
+    ? Math.round((recentEvents.reduce((sum, event) => sum + Number(event.partial_score || 0), 0) / recentAttempts) * 100)
+    : progress.practiceAccuracy;
+  const lastSyncedText = lastSyncedAt
+    ? new Date(lastSyncedAt).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+    : "Waiting for first sync";
 
   const needsSupportText = weakestSubject
     ? `${studentName} needs the most support in ${weakestSubject.name}. A short focused practice today will help.`
@@ -135,7 +152,7 @@ export default function Parent() {
 
   const handleShareReport = () => {
     const weakLine = weakestSubject ? `Needs Support: ${weakestSubject.name}` : "Needs Support: Keep practising steadily";
-    const text = `ELIMU UGANDA WEEKLY REPORT\n\nStudent: ${studentName} (${classLabel})\nStudy Time: ${weeklyTotal} minutes across ${activeDays} active day(s)\nAccuracy: ${progress.practiceAccuracy}%\nStreak: ${progress.streakDays} day(s)\nLessons Completed: ${progress.modulesDone}\nLatest Mock Exam: ${progress.lastMockScore ? `${progress.lastMockScore}%` : "Not taken yet"}\n${weakLine}\n\nSuggested Parent Action: ${parentAction}\n\nElimu Uganda`;
+    const text = `ELIMU UGANDA WEEKLY REPORT\n\nStudent: ${studentName} (${classLabel})\nStudy Time: ${weeklyTotal} minutes across ${activeDays} active day(s)\nRecent Accuracy: ${recentAccuracy}%\nRecent Questions: ${recentAttempts}\nStreak: ${progress.streakDays} day(s)\nLessons Completed: ${progress.modulesDone}\nLatest Mock Exam: ${progress.lastMockScore ? `${progress.lastMockScore}%` : "Not taken yet"}\nLast Updated: ${lastSyncedText}\n${weakLine}\n\nSuggested Parent Action: ${parentAction}\n\nElimu Uganda`;
     if (navigator.share) {
       navigator.share({ title: "Elimu Uganda Weekly Report", text }).catch(() => {});
     } else {
@@ -161,6 +178,8 @@ export default function Parent() {
         transition={{ duration: 0.4 }}
         className="flex flex-col gap-5 pt-3"
       >
+        <SubscriptionNotice />
+
         <AnimatePresence>
           {sentToast && (
             <motion.div
@@ -218,9 +237,13 @@ export default function Parent() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
             <MetricCard label="Study Time" value={`${weeklyTotal}m`} tone="cyan" icon={<Clock className="w-4 h-4" />} />
-            <MetricCard label="Accuracy" value={`${progress.practiceAccuracy}%`} tone="emerald" icon={<Target className="w-4 h-4" />} />
+            <MetricCard label="Recent Accuracy" value={`${recentAccuracy}%`} tone="emerald" icon={<Target className="w-4 h-4" />} />
+            <MetricCard label="Recent Qs" value={`${recentAttempts}`} tone="purple" icon={<Award className="w-4 h-4" />} />
             <MetricCard label="Streak" value={`${progress.streakDays}d`} tone="amber" icon={<Flame className="w-4 h-4 fill-amber-400" />} />
-            <MetricCard label="Mock" value={progress.lastMockScore ? `${progress.lastMockScore}%` : "—"} tone="purple" icon={<Award className="w-4 h-4" />} />
+          </div>
+
+          <div className="mt-3 rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-[11px] font-bold text-slate-300">
+            Last updated: <span className="text-white">{lastSyncedText}</span>
           </div>
 
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -370,7 +393,8 @@ export default function Parent() {
           <div className="my-5 p-4 rounded-2xl bg-white/5 border border-white/10 flex flex-col gap-3 backdrop-blur-xs">
             <ReportRow label="Student" value={`${studentName} · ${classLabel}`} />
             <ReportRow label="Study Time" value={`${weeklyTotal} minutes across ${activeDays} active day(s)`} />
-            <ReportRow label="Accuracy" value={`${progress.practiceAccuracy}%`} />
+            <ReportRow label="Recent Accuracy" value={`${recentAccuracy}%`} />
+            <ReportRow label="Recent Questions" value={`${recentAttempts}`} />
             <ReportRow label="Needs Support" value={weakestSubject?.name || "Keep practising steadily"} />
             <ReportRow label="Latest Mock" value={progress.lastMockScore ? `${progress.lastMockScore}%` : "Not taken yet"} />
           </div>

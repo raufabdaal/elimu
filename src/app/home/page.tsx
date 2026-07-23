@@ -9,6 +9,7 @@ import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
+import SubscriptionNotice from "@/components/SubscriptionNotice";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
 import { ArrowRight, BookOpen, MessageSquareHeart, Heart, X } from "lucide-react";
 
@@ -106,6 +107,8 @@ export default function Home() {
         transition={{ duration: 0.35 }}
         className="flex flex-col gap-6 pt-4 px-1"
       >
+        <SubscriptionNotice />
+
         {/* Welcome Greeting & Parent Cheers Inbox Banner */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex flex-col">

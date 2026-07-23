@@ -7,6 +7,7 @@ import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
+import { queueAnswerEvent, syncNow } from "@/lib/sync";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import Celebration from "@/components/Celebration";
@@ -102,6 +103,23 @@ function PracticeContent() {
 
     setLocked(true);
     recordAnswer(q.topicId || "general-practice", correct, partial);
+    const subjectFromTopic = q.topicId?.split("-")[0];
+    const safeSubject = subjectFromTopic && ["math", "sst", "sci", "eng"].includes(subjectFromTopic)
+      ? subjectFromTopic
+      : activeSub !== "all"
+      ? activeSub
+      : undefined;
+    queueAnswerEvent({
+      questionId: q.id,
+      topicId: q.topicId || "general-practice",
+      subjectId: safeSubject,
+      classLevel: appState.profile.classLevel,
+      isCorrect: correct,
+      partialScore: partial,
+    });
+    if (typeof navigator !== "undefined" && navigator.onLine) {
+      void syncNow().catch(() => null);
+    }
     setAppState(loadState());
 
     if (correct) {
@@ -165,6 +183,9 @@ function PracticeContent() {
           mockExamsPassed: isMockMode ? (s.progress.mockExamsPassed || 0) + 1 : s.progress.mockExamsPassed,
         },
       });
+      if (typeof navigator !== "undefined" && navigator.onLine) {
+        void syncNow().catch(() => null);
+      }
       setCelebrate(false);
       setEncourage(0);
       setAppState(loadState());
