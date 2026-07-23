@@ -9,7 +9,7 @@ import { saveState, loadState } from "@/lib/store";
 import { getAccountSummary } from "@/lib/cloud-profile";
 import Streak from "./Streak";
 import SyncStatus from "./SyncStatus";
-import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X, LockKeyhole } from "lucide-react";
+import { BookOpen, GraduationCap, Heart, Menu, RefreshCw, ShieldCheck, UserRound, X, LockKeyhole, Smartphone } from "lucide-react";
 
 interface HeaderStatsProps {
   profile: Profile;
@@ -207,6 +207,11 @@ export default function HeaderStats({
                         />
                       )}
                       <MenuAction
+                        icon={<Smartphone className="w-4 h-4 text-emerald-600" />}
+                        title="Plans / Activate"
+                        onClick={() => closeAndGo("/pricing/")}
+                      />
+                      <MenuAction
                         icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}
                         title="Sign in / Sign out"
                         onClick={() => closeAndGo(`/auth/?role=learner&class=${profile.classLevel || "p5"}`)}
@@ -219,6 +224,11 @@ export default function HeaderStats({
                       icon={<UserRound className="w-4 h-4 text-purple-600" />}
                       title="Parent Dashboard"
                       onClick={() => closeAndGo("/parent/")}
+                    />
+                    <MenuAction
+                      icon={<Smartphone className="w-4 h-4 text-emerald-600" />}
+                      title="Plans / Activate"
+                      onClick={() => closeAndGo("/pricing/")}
                     />
                     <MenuAction
                       icon={<LockKeyhole className="w-4 h-4 text-slate-600" />}

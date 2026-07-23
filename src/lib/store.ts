@@ -94,10 +94,13 @@ export function updateStudyTime(minutes: number): void {
 
 export function recordAnswer(topicId: string, correct: boolean, partial = correct ? 1 : 0): void {
   const state = loadState();
-  const tp = state.topicProgress[topicId] || { accuracy: 0, attempts: 0, lastAttempt: new Date().toISOString() };
+  const now = new Date().toISOString();
+  const tp = state.topicProgress[topicId] || { accuracy: 0, attempts: 0, lastAttempt: now };
   const attempts = tp.attempts + 1;
   const correctSoFar = Math.round(tp.accuracy * tp.attempts) + partial;
   const accuracy = correctSoFar / attempts;
+  const weeklyMinutes = [...state.session.weeklyMinutes];
+  weeklyMinutes[weeklyMinutes.length - 1] = (weeklyMinutes[weeklyMinutes.length - 1] || 0) + 1;
 
   saveState({
     progress: {
@@ -105,15 +108,33 @@ export function recordAnswer(topicId: string, correct: boolean, partial = correc
       totalAttempts: state.progress.totalAttempts + 1,
       correctAnswers: state.progress.correctAnswers + (correct ? 1 : 0),
       practiceAccuracy: Math.round(
-        ((state.progress.correctAnswers + (correct ? 1 : 0)) /
+        ((state.progress.correctAnswers + partial) /
           (state.progress.totalAttempts + 1)) *
           100
       ),
       xp: state.progress.xp + Math.round((correct ? 10 : 2) + partial * 5),
     },
+    session: {
+      ...state.session,
+      todayMinutes: state.session.todayMinutes + 1,
+      weeklyMinutes,
+    },
     topicProgress: {
       ...state.topicProgress,
-      [topicId]: { accuracy, attempts, lastAttempt: new Date().toISOString() },
+      [topicId]: { accuracy, attempts, lastAttempt: now },
+    },
+  });
+}
+
+export function markLearningMilestone(): void {
+  const state = loadState();
+  const today = new Date().toISOString().split("T")[0];
+  const alreadyCountedToday = state.progress.lastStudyDate === today;
+  saveState({
+    progress: {
+      ...state.progress,
+      streakDays: alreadyCountedToday ? state.progress.streakDays : state.progress.streakDays + 1,
+      lastStudyDate: today,
     },
   });
 }

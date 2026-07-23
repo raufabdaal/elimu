@@ -54325,7 +54325,7 @@ const TOPICS: TopicData[] = [
         type: "multiple_choice",
         question: "Which river flows out of Lake Victoria?",
         options: [
-          { id: "a", text: "2, 4, 5, 3, 1", correct: true },
+          { id: "a", text: "River Nile", correct: true },
           { id: "b", text: "River Kagera", correct: false },
           { id: "c", text: "River Semliki", correct: false },
           { id: "d", text: "River Katonga", correct: false },
@@ -54349,7 +54349,7 @@ const TOPICS: TopicData[] = [
         options: [
           { id: "a", text: "Kenya", correct: false },
           { id: "b", text: "Tanzania", correct: false },
-          { id: "c", text: "A ∩ B", correct: true },
+          { id: "c", text: "Democratic Republic of Congo", correct: true },
           { id: "d", text: "Rwanda", correct: false },
         ],
         explanation: "Lake Albert is shared with the Democratic Republic of Congo.",

@@ -3,9 +3,9 @@
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Loader2, LogOut, Mail, UserPlus } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2, LogOut, Mail, Smartphone, UserPlus } from "lucide-react";
 import AppShell from "@/components/AppShell";
-import { signInWithEmail, signOut, signUpWithEmail } from "@/lib/auth";
+import { consumePendingAuthContext, markSignedInLocally, savePendingAuthContext, signInWithEmail, signOut, signUpWithEmail } from "@/lib/auth";
 import {
   AccountSummary,
   ensureCloudProfile,
@@ -90,9 +90,15 @@ function AuthContent() {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         try {
+          markSignedInLocally();
+          const pendingContext = consumePendingAuthContext();
           const existing = await getCloudProfile();
           if (!existing) {
-            await ensureCloudProfile({ role, fullName: fullName || local.profile.name || "Student", classLevel });
+            await ensureCloudProfile({
+              role: pendingContext?.role || role,
+              fullName: pendingContext?.fullName || fullName || local.profile.name || "Student",
+              classLevel: pendingContext?.classLevel || classLevel,
+            });
           } else {
             await ensureCloudProfile({
               role: existing.role,
@@ -116,7 +122,13 @@ function AuthContent() {
     const { data: authListener } = supabase?.auth.onAuthStateChange(async (event) => {
       if (event !== "SIGNED_IN") return;
       try {
-        await ensureCloudProfile({ role, fullName: fullName || local.profile.name || "Student", classLevel });
+        markSignedInLocally();
+        const pendingContext = consumePendingAuthContext();
+        await ensureCloudProfile({
+          role: pendingContext?.role || role,
+          fullName: pendingContext?.fullName || fullName || local.profile.name || "Student",
+          classLevel: pendingContext?.classLevel || classLevel,
+        });
         await syncLocalSnapshotToCloud().catch(() => null);
         const linkedName = await consumePendingPairCodeIfAny().catch(() => null);
         await refreshAccount();
@@ -135,12 +147,20 @@ function AuthContent() {
   }, []);
 
   const goAfterAuth = () => {
+    const cloudRole = account?.profile?.role || role;
     const next = searchParams.get("next");
-    if (next) {
+
+    if (cloudRole === "parent") {
+      router.push("/parent/");
+      return;
+    }
+
+    if (next && !next.startsWith("/parent")) {
       router.push(next);
       return;
     }
-    router.push(role === "parent" ? "/parent/" : "/home/");
+
+    router.push("/home/");
   };
 
   const handleEmailSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -211,6 +231,8 @@ function AuthContent() {
 
     const supabase = getSupabaseClient();
     if (!supabase) return;
+
+    savePendingAuthContext({ mode: mode === "signup" ? "signup" : "signin", role, fullName: fullName || local.profile.name || undefined, classLevel });
 
     const redirectTo = `${window.location.origin}/auth/?mode=${mode}&role=${role}&class=${classLevel}`;
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
@@ -303,6 +325,9 @@ function AuthContent() {
 
               <button type="button" onClick={goAfterAuth} className="btn btn-primary w-full py-3.5 font-black">
                 Continue to App <ArrowRight className="w-4 h-4" />
+              </button>
+              <button type="button" onClick={() => router.push("/pricing/")} className="btn btn-secondary w-full bg-white py-3.5 font-black">
+                <Smartphone className="w-4 h-4" /> Plans / Activate
               </button>
               <button type="button" onClick={handleSignOut} disabled={loading} className="btn w-full py-3.5 font-black bg-rose-50 text-rose-800 border border-rose-200">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}

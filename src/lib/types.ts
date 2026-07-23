@@ -166,7 +166,7 @@ export const DEFAULT_STATE: AppState = {
     maxHearts: 5,
     energy: 100,
     streakDays: 0,
-    lastStudyDate: new Date().toISOString().split("T")[0],
+    lastStudyDate: "",
     xp: 0,
     modulesDone: 0,
     practiceAccuracy: 0,

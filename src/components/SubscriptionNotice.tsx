@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Clock3, Smartphone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Clock3 } from "lucide-react";
 import { getAccountSummary, type AccountSummary } from "@/lib/cloud-profile";
 import { getSubscriptionLabel, shouldShowTrialReminder } from "@/lib/subscription";
 
 export default function SubscriptionNotice() {
+  const router = useRouter();
   const [account, setAccount] = useState<AccountSummary | null>(null);
 
   useEffect(() => {
@@ -31,10 +33,16 @@ export default function SubscriptionNotice() {
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-black text-amber-950">{getSubscriptionLabel(account.subscription)}</h3>
           <p className="mt-0.5 text-xs font-bold leading-relaxed text-amber-800">
-            We will remind you before access ends. Mobile money activation with MTN/Airtel is being prepared.
+            Your progress is safe. Choose an activation option before the trial ends to keep access open.
           </p>
+          <button
+            type="button"
+            onClick={() => router.push("/pricing/")}
+            className="mt-2 inline-flex items-center gap-1 rounded-xl bg-amber-600 px-3 py-1.5 text-xs font-black text-white active:scale-95"
+          >
+            View plans <ArrowRight className="h-3.5 w-3.5" />
+          </button>
         </div>
-        <Smartphone className="mt-1 h-4 w-4 shrink-0 text-amber-700" />
       </div>
     </section>
   );

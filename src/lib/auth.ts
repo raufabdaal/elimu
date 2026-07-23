@@ -2,6 +2,33 @@ import { getSupabaseClient } from "@/lib/supabase";
 import { ClassLevel, Role } from "@/lib/types";
 
 const SIGNED_OUT_KEY = "elimu_auth_signed_out";
+const PENDING_AUTH_CONTEXT_KEY = "elimu_pending_auth_context";
+
+export interface PendingAuthContext {
+  mode: "signin" | "signup";
+  role: Role;
+  fullName?: string;
+  classLevel?: ClassLevel;
+}
+
+export function savePendingAuthContext(context: PendingAuthContext): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(PENDING_AUTH_CONTEXT_KEY, JSON.stringify(context));
+  } catch {}
+}
+
+export function consumePendingAuthContext(): PendingAuthContext | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(PENDING_AUTH_CONTEXT_KEY);
+    if (!raw) return null;
+    localStorage.removeItem(PENDING_AUTH_CONTEXT_KEY);
+    return JSON.parse(raw) as PendingAuthContext;
+  } catch {
+    return null;
+  }
+}
 
 function rememberSignedOut(value: boolean) {
   if (typeof window === "undefined") return;

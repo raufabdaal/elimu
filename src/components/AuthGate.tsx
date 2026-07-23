@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { hasExplicitlySignedOut } from "@/lib/auth";
+import { getCloudProfile } from "@/lib/cloud-profile";
 import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
 
 const PUBLIC_PATHS = ["/auth", "/onboarding"];
@@ -49,6 +50,27 @@ export default function AuthGate({ children }: { children: ReactNode }) {
       if (!data.session) {
         const next = encodeURIComponent(pathname);
         router.replace(`/auth/?next=${next}`);
+        return;
+      }
+
+      const profile = await getCloudProfile().catch(() => null);
+      if (cancelled) return;
+
+      const parentOnlyPath = pathname.startsWith("/parent");
+      const learnerOnlyPath =
+        pathname === "/" ||
+        pathname.startsWith("/home") ||
+        pathname.startsWith("/subjects") ||
+        pathname.startsWith("/practice") ||
+        pathname.startsWith("/module");
+
+      if (profile?.role === "parent" && learnerOnlyPath) {
+        router.replace("/parent/");
+        return;
+      }
+
+      if (profile?.role === "learner" && parentOnlyPath) {
+        router.replace("/home/");
         return;
       }
 

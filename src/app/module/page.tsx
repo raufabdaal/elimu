@@ -2,9 +2,9 @@
 
 import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy } from "@/lib/store";
+import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy, markLearningMilestone } from "@/lib/store";
 import { getTopic, getModule, getSubjects } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
@@ -18,6 +18,7 @@ import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Award, ArrowRight, Sparkl
 import { Question } from "@/lib/types";
 
 function ModuleContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topic") || "p5-math-fractions";
   const moduleId = searchParams.get("moduleId") || undefined;
@@ -47,6 +48,7 @@ function ModuleContent() {
   const [finished, setFinished] = useState(false);
   const [appState, setAppState] = useState(loadState());
   const [shakeHearts, setShakeHearts] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   useEffect(() => {
     setAppState(loadState());
@@ -77,6 +79,43 @@ function ModuleContent() {
   };
 
   const q = questions[index];
+  const hasActiveLessonProgress = !finished && (index > 0 || locked || showExplanation);
+
+  useEffect(() => {
+    if (!hasActiveLessonProgress) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    const handlePopState = () => {
+      setShowExitConfirm(true);
+      window.history.pushState({ elimuLessonGuard: true }, "");
+    };
+
+    window.history.pushState({ elimuLessonGuard: true }, "");
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [hasActiveLessonProgress]);
+
+  const requestExit = () => {
+    if (hasActiveLessonProgress) {
+      setShowExitConfirm(true);
+      return;
+    }
+    router.push("/subjects/");
+  };
+
+  const confirmExit = () => {
+    setShowExitConfirm(false);
+    router.push("/subjects/");
+  };
 
   if (!topic || questions.length === 0) {
     return (
@@ -182,6 +221,7 @@ function ModuleContent() {
 
   const nextQuestion = () => {
     if (index >= questions.length - 1) {
+      markLearningMilestone();
       const s = loadState();
       const newModulesDone = s.progress.modulesDone + 1;
       const isMockRequired = newModulesDone % 4 === 0;
@@ -310,13 +350,14 @@ function ModuleContent() {
       {/* Minimal floating controls only: no topic bar, no steps bar, no progress bar. */}
       <div className="sticky top-0 z-40 pointer-events-none px-4 pt-3 sm:px-8 lg:px-12">
         <div className="mx-auto flex w-full max-w-[460px] md:max-w-2xl lg:max-w-3xl items-center justify-between">
-          <Link
-            href="/subjects/"
+          <button
+            type="button"
+            onClick={requestExit}
             className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white/90 text-slate-600 shadow-sm backdrop-blur-md transition-all hover:bg-slate-100 active:scale-95"
             aria-label="Back to subjects"
           >
             <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
-          </Link>
+          </button>
 
           <div className="pointer-events-auto flex items-center gap-2">
             <button
@@ -448,6 +489,37 @@ function ModuleContent() {
                 <span>{index === questions.length - 1 ? "Finish Step 🏁" : "Continue to Next →"}</span>
               </button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 12, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm rounded-[28px] border-2 border-amber-300 bg-white p-5 text-center shadow-2xl"
+            >
+              <h3 className="text-xl font-black text-slate-950">Leave this lesson?</h3>
+              <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+                Finish the step to count the full module reward, XP, and streak progress.
+              </p>
+              <div className="mt-5 grid grid-cols-1 gap-2.5">
+                <button type="button" onClick={() => setShowExitConfirm(false)} className="btn btn-primary w-full font-black">
+                  Stay and continue
+                </button>
+                <button type="button" onClick={confirmExit} className="btn btn-secondary w-full bg-white font-black">
+                  Leave lesson
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

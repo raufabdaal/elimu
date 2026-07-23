@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, loseHeart, recordAnswer } from "@/lib/store";
+import { loadState, saveState, loseHeart, recordAnswer, markLearningMilestone } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
@@ -40,6 +40,7 @@ function PracticeContent() {
   const [encourage, setEncourage] = useState(0);
   const [finished, setFinished] = useState(false);
   const [shakeHearts, setShakeHearts] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const q = questions[index];
 
@@ -55,6 +56,36 @@ function PracticeContent() {
     setLocked(false);
     setFinished(false);
   }, [isMockMode, batchSize]);
+
+  const hasActivePracticeProgress = !finished && (index > 0 || locked || showExplanation || score > 0);
+
+  useEffect(() => {
+    if (!hasActivePracticeProgress) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    const handlePopState = () => {
+      setShowExitConfirm(true);
+      window.history.pushState({ elimuPracticeGuard: true }, "");
+    };
+
+    window.history.pushState({ elimuPracticeGuard: true }, "");
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [hasActivePracticeProgress]);
+
+  const confirmExit = () => {
+    setShowExitConfirm(false);
+    router.push("/home/");
+  };
 
   const handleSelectSubject = (sub: "all" | SubjectId) => {
     if (isMockMode) return;
@@ -170,6 +201,7 @@ function PracticeContent() {
 
   const nextQuestion = () => {
     if (index >= questions.length - 1) {
+      markLearningMilestone();
       const s = loadState();
       const accuracy = Math.round((score / questions.length) * 100);
       const earnedXp = Math.round(score * 15 + (isMockMode ? 100 : 50));
@@ -511,6 +543,37 @@ function PracticeContent() {
                 <span>{index === questions.length - 1 ? "Finish Practice Review 🏆" : "Next Question →"}</span>
               </button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 12, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm rounded-[28px] border-2 border-amber-300 bg-white p-5 text-center shadow-2xl"
+            >
+              <h3 className="text-xl font-black text-slate-950">Leave this practice?</h3>
+              <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+                Finish the practice to count the full score, XP, and streak progress.
+              </p>
+              <div className="mt-5 grid grid-cols-1 gap-2.5">
+                <button type="button" onClick={() => setShowExitConfirm(false)} className="btn btn-primary w-full font-black">
+                  Stay and continue
+                </button>
+                <button type="button" onClick={confirmExit} className="btn btn-secondary w-full bg-white font-black">
+                  Leave practice
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
