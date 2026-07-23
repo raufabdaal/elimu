@@ -203,16 +203,6 @@ export default function HeaderStats({
                 )}
               </div>
 
-              <div className="pt-4 border-t border-slate-100 mt-4">
-                <button
-                  type="button"
-                  onClick={() => closeAndGo(isParent ? "/onboarding/?role=parent" : "/onboarding/")}
-                  className="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>{isParent ? "Reconnect Child" : "Edit Profile"}</span>
-                </button>
-              </div>
             </motion.div>
           </motion.div>
         )}

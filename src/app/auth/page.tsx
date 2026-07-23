@@ -53,7 +53,7 @@ function AuthContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const local = loadState();
-  const [mode, setMode] = useState<"signin" | "signup">((searchParams.get("mode") as "signin" | "signup") || "signup");
+  const [mode, setMode] = useState<"signin" | "signup">((searchParams.get("mode") as "signin" | "signup") || "signin");
   const [role, setRole] = useState<Role>((searchParams.get("role") as Role) || local.profile.role || "learner");
   const [classLevel, setClassLevel] = useState<ClassLevel>((searchParams.get("class") as ClassLevel) || local.profile.classLevel || "p5");
   const [fullName, setFullName] = useState(local.profile.name || "");
@@ -107,6 +107,24 @@ function AuthContent() {
       setCheckingSession(false);
     };
     init();
+
+    const supabase = getSupabaseClient();
+    const { data: authListener } = supabase?.auth.onAuthStateChange(async (event) => {
+      if (event !== "SIGNED_IN") return;
+      try {
+        await ensureCloudProfile({ role, fullName: fullName || local.profile.name || "Student", classLevel });
+        await syncLocalSnapshotToCloud().catch(() => null);
+        await refreshAccount();
+        setMessage("Account connected. Your progress can now sync when online.");
+        setError("");
+      } catch (e) {
+        setError(friendlyAuthError(e));
+      }
+    }) || { data: { subscription: null } };
+
+    return () => {
+      authListener.subscription?.unsubscribe();
+    };
     // Run once on page load to complete OAuth/email session setup after redirects.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -150,7 +168,7 @@ function AuthContent() {
           await refreshAccount();
           setMessage("Account created and connected.");
         } else {
-          setMessage("Check your email to verify your account, then return here to sign in.");
+          setMessage("If this is a new email, check your inbox to verify it. If you already created this account, switch to Sign In.");
         }
       } else {
         await signInWithEmail(email.trim(), password);
@@ -238,7 +256,7 @@ function AuthContent() {
               {account?.profile ? "Account Settings" : mode === "signup" ? "Create your account" : "Sign in to Elimu"}
             </h1>
             <p className="text-sm font-semibold text-slate-500 mt-1 leading-relaxed">
-              Save progress online, connect parent dashboards, and keep streaks safe across devices.
+              Sign in to use Elimu, save progress, and connect parent reports.
             </p>
           </div>
 
@@ -305,38 +323,49 @@ function AuthContent() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setRole("learner")}
-                  className={`p-3 rounded-2xl border-2 text-left transition-all ${role === "learner" ? "bg-emerald-50 border-emerald-500 text-emerald-950" : "bg-white border-slate-200 text-slate-600"}`}
-                >
-                  <div className="font-black text-sm">Student</div>
-                  <div className="text-[11px] font-semibold opacity-75">Learner account</div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole("parent")}
-                  className={`p-3 rounded-2xl border-2 text-left transition-all ${role === "parent" ? "bg-purple-50 border-purple-500 text-purple-950" : "bg-white border-slate-200 text-slate-600"}`}
-                >
-                  <div className="font-black text-sm">Parent</div>
-                  <div className="text-[11px] font-semibold opacity-75">Guardian account</div>
-                </button>
-              </div>
+              {mode === "signup" && (
+                <>
+                  <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
+                    <h2 className="text-sm font-black text-emerald-950">Start with a free trial</h2>
+                    <p className="text-xs font-bold text-emerald-800 mt-1 leading-relaxed">
+                      Create one account, try Elimu first, and we will show reminders before the trial ends.
+                    </p>
+                  </div>
 
-              {role === "learner" && (
-                <div className="grid grid-cols-4 gap-2">
-                  {(["p4", "p5", "p6", "p7"] as ClassLevel[]).map((cls) => (
+                  <div className="grid grid-cols-2 gap-2">
                     <button
-                      key={cls}
                       type="button"
-                      onClick={() => setClassLevel(cls)}
-                      className={`py-2 rounded-xl border text-xs font-black ${classLevel === cls ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-slate-600 border-slate-200"}`}
+                      onClick={() => setRole("learner")}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all ${role === "learner" ? "bg-emerald-50 border-emerald-500 text-emerald-950" : "bg-white border-slate-200 text-slate-600"}`}
                     >
-                      {cls.toUpperCase()}
+                      <div className="font-black text-sm">Student</div>
+                      <div className="text-[11px] font-semibold opacity-75">Learner account</div>
                     </button>
-                  ))}
-                </div>
+                    <button
+                      type="button"
+                      onClick={() => setRole("parent")}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all ${role === "parent" ? "bg-purple-50 border-purple-500 text-purple-950" : "bg-white border-slate-200 text-slate-600"}`}
+                    >
+                      <div className="font-black text-sm">Parent</div>
+                      <div className="text-[11px] font-semibold opacity-75">Guardian account</div>
+                    </button>
+                  </div>
+
+                  {role === "learner" && (
+                    <div className="grid grid-cols-4 gap-2">
+                      {(["p4", "p5", "p6", "p7"] as ClassLevel[]).map((cls) => (
+                        <button
+                          key={cls}
+                          type="button"
+                          onClick={() => setClassLevel(cls)}
+                          className={`py-2 rounded-xl border text-xs font-black ${classLevel === cls ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-slate-600 border-slate-200"}`}
+                        >
+                          {cls.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
 
               <form onSubmit={handleEmailSubmit} className="card bg-white p-4 border-2 border-slate-200/90 flex flex-col gap-3">
