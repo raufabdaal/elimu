@@ -1,5 +1,51 @@
 # Changelog
 
+## 2026-07-24 — Auth, Parent Linking, Sync, Subscription, Payment Readiness & Documentation Consolidation
+
+### Account/auth system
+- Added Supabase client and auth helpers.
+- Added `/auth/` with clean new/existing account flow.
+- Added onboarding-to-signup flow for new learners/parents.
+- Added Google OAuth context preservation.
+- Added signed-out state handling for PWA/offline consistency.
+- Added `AuthGate` with role routing:
+  - parent accounts route to `/parent/`
+  - learner accounts route to `/home/`
+- Added clean sign in/sign out path.
+
+### Parent-child linking
+- Added real Supabase parent-child pairing via `link_parent_to_student_by_code` RPC.
+- Student pairing code appears in Account page and student hamburger menu.
+- Parent can enter code and link to child account.
+- Parent dashboard loads linked child profile, progress snapshot, and recent answer events.
+
+### Sync/tracking
+- Added local offline answer event queue.
+- Added Supabase upload to `answer_events` using duplicate-safe `local_event_id`.
+- Added progress snapshot upload to `progress_snapshots`.
+- Added app-wide online sync bootstrap.
+- Added small student sync status icon.
+- Parent dashboard now uses recent answer events for recent questions, recent accuracy, and subject support.
+
+### Subscription/payment readiness
+- Added subscription/trial access helper.
+- Added subscription gate and trial reminder.
+- Added `/pricing/` page with UGX plans and MTN/Airtel selection.
+- Added pending payment transaction creation.
+- Added manual pilot activation SQL and workflow docs.
+- Added MTN/Airtel setup checklist for future Supabase Edge Function integration.
+
+### Content and assessment quality
+- Added multi-select partial credit.
+- Added lesson/practice exit confirmation.
+- Fixed corrupted SST options found during testing.
+- Added content corruption audit with current 0 findings.
+- Content audit currently has 0 critical and 0 high findings.
+
+### Documentation consolidation
+- Added current context, lessons learned, file push checklist, and updated handoff.
+- Copied stray `/home/user/docs/curriculum` files into `/home/user/elimu/docs/curriculum/` and removed the stray folder.
+
 ## 2026-07-20 — Progressive Web App (PWA) Offline Engine, App Manifest & Custom Favicons (`public/sw.js`, `manifest.json`, `PWAControls.tsx`, `layout.tsx`)
 
 ### 1. PWA Offline Service Worker & Asset Caching (`public/sw.js`)
