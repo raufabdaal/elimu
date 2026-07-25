@@ -112,7 +112,6 @@ export function recordAnswer(topicId: string, correct: boolean, partial = correc
           (state.progress.totalAttempts + 1)) *
           100
       ),
-      xp: state.progress.xp + Math.round((correct ? 10 : 2) + partial * 5),
     },
     session: {
       ...state.session,

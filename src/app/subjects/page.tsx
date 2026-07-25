@@ -9,7 +9,8 @@ import { AppState, ClassLevel, Subject, SubjectId, Topic } from "@/lib/types";
 import AppShell from "@/components/AppShell";
 import HeaderStats from "@/components/HeaderStats";
 import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
-import { CheckCircle2, Play, Filter, ArrowRight } from "lucide-react";
+import { getFirstUnlockedModule, isModuleCompleted, isModuleUnlocked, isTopicCompleted, isTopicUnlocked } from "@/lib/progression";
+import { CheckCircle2, Play, Filter, ArrowRight, LockKeyhole } from "lucide-react";
 
 export default function Subjects() {
   const router = useRouter();
@@ -58,13 +59,15 @@ export default function Subjects() {
 
   const weeklyMockDue = isWeeklyMockRequired(state);
 
-  const handleTopicClick = (topic: Topic) => {
+  const handleTopicClick = (subject: Subject, topic: Topic, topicIndex: number) => {
     if (weeklyMockDue) {
       router.push("/practice/?mode=mock");
       return;
     }
-    const firstMod = topic.modules?.[0]?.id || "";
-    router.push(`/module/?topic=${encodeURIComponent(topic.id)}${firstMod ? `&moduleId=${encodeURIComponent(firstMod)}` : ""}`);
+    if (!isTopicUnlocked(state, subject, topicIndex)) return;
+    const firstMod = getFirstUnlockedModule(state, subject, topicIndex);
+    const firstModId = firstMod?.id || topic.modules?.[0]?.id || "";
+    router.push(`/module/?topic=${encodeURIComponent(topic.id)}${firstModId ? `&moduleId=${encodeURIComponent(firstModId)}` : ""}`);
   };
 
   return (
@@ -133,7 +136,7 @@ export default function Subjects() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-3">
             {subjects.map((subject) => {
               const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
-              const completedTopics = subject.topics.filter((t) => t.completed).length;
+              const completedTopics = subject.topics.filter((t) => isTopicCompleted(state, subject.id, t)).length;
               const totalTopics = subject.topics.length;
               const pct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
 
@@ -186,7 +189,7 @@ export default function Subjects() {
 
             {filteredSubjects.map((subject) => {
               const theme = SUBJECT_THEMES[subject.id] || SUBJECT_THEMES.math;
-              const completedTopics = subject.topics.filter((t) => t.completed).length;
+              const completedTopics = subject.topics.filter((t) => isTopicCompleted(state, subject.id, t)).length;
               const totalTopics = subject.topics.length;
               const pct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
 
@@ -222,20 +225,25 @@ export default function Subjects() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     {subject.topics.map((topic, idx) => {
                       const shortSubName = topic.name.split(" (")[0];
-                      const isCompleted = topic.completed;
-                      const isInProgress = topic.inProgress || (!isCompleted && idx === 0);
+                      const isUnlocked = isTopicUnlocked(state, subject, idx);
+                      const isCompleted = isTopicCompleted(state, subject.id, topic);
+                      const isInProgress = isUnlocked && !isCompleted && idx === subject.topics.findIndex((candidate, candidateIdx) =>
+                        isTopicUnlocked(state, subject, candidateIdx) && !isTopicCompleted(state, subject.id, candidate)
+                      );
 
                       return (
                         <div
                           key={topic.id}
-                          onClick={() => handleTopicClick(topic)}
+                          onClick={() => handleTopicClick(subject, topic, idx)}
                           role="button"
-                          tabIndex={0}
+                          tabIndex={isUnlocked ? 0 : -1}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") handleTopicClick(topic);
+                            if (e.key === "Enter" || e.key === " ") handleTopicClick(subject, topic, idx);
                           }}
                           className={`w-full text-left p-4 rounded-[24px] border-2 transition-all flex flex-col justify-between gap-3 group cursor-pointer active:scale-[0.99] shadow-2xs ${
-                            isCompleted
+                            !isUnlocked
+                              ? "bg-slate-100/80 border-slate-200 opacity-70 cursor-not-allowed"
+                              : isCompleted
                               ? "bg-emerald-50/80 border-emerald-300 hover:border-emerald-500"
                               : isInProgress
                               ? "bg-amber-50/90 border-amber-300 hover:border-amber-500 shadow-sm"
@@ -245,14 +253,18 @@ export default function Subjects() {
                           <div className="flex items-start gap-3 w-full">
                             <div
                               className={`w-10 h-10 rounded-2xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-transform group-hover:scale-105 shadow-xs ${
-                                isCompleted
+                                !isUnlocked
+                                  ? "bg-slate-300 text-slate-500"
+                                  : isCompleted
                                   ? "bg-emerald-600 text-white"
                                   : isInProgress
                                   ? "bg-amber-500 text-white"
                                   : "bg-slate-100 text-slate-700 group-hover:bg-slate-900 group-hover:text-white"
                               }`}
                             >
-                              {isCompleted ? (
+                              {!isUnlocked ? (
+                                <LockKeyhole className="w-5 h-5 stroke-[2.6]" />
+                              ) : isCompleted ? (
                                 <CheckCircle2 className="w-5 h-5 stroke-[2.6]" />
                               ) : isInProgress ? (
                                 <Play className="w-[18px] h-[18px] fill-white ml-0.5" />
@@ -266,11 +278,18 @@ export default function Subjects() {
                                 <span className="font-black text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors shrink-0">
                                   Topic {idx + 1}
                                 </span>
-                                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-600 transition-colors shrink-0" />
+                                {isUnlocked ? (
+                                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-600 transition-colors shrink-0" />
+                                ) : (
+                                  <LockKeyhole className="w-4 h-4 text-slate-400 shrink-0" />
+                                )}
                               </div>
                               <p className="font-semibold text-xs sm:text-[13px] text-slate-500 leading-snug mt-0.5 line-clamp-2">
                                 {shortSubName}
                               </p>
+                              {!isUnlocked && (
+                                <p className="mt-1 text-[11px] font-black text-slate-400">Complete previous topic to unlock</p>
+                              )}
                             </div>
                           </div>
 
@@ -278,8 +297,11 @@ export default function Subjects() {
                           {topic.modules && topic.modules.length > 1 && (
                             <div className="flex items-center gap-1.5 pt-2 border-t border-slate-200/60 overflow-x-auto no-scrollbar w-full">
                               {topic.modules.map((mod, mIdx) => {
-                                const isModCompleted = mod.completed;
-                                const isModInProgress = mod.inProgress || (!isModCompleted && isInProgress && mIdx === 0);
+                                const isModUnlocked = isModuleUnlocked(state, subject, idx, mIdx);
+                                const isModCompleted = isModuleCompleted(state, subject.id, topic.id, mod.id);
+                                const isModInProgress = isModUnlocked && !isModCompleted && isInProgress && mIdx === topic.modules.findIndex((candidate, candidateIdx) =>
+                                  isModuleUnlocked(state, subject, idx, candidateIdx) && !isModuleCompleted(state, subject.id, topic.id, candidate.id)
+                                );
                                 return (
                                   <button
                                     key={mod.id}
@@ -290,18 +312,21 @@ export default function Subjects() {
                                         router.push("/practice/?mode=mock");
                                         return;
                                       }
+                                      if (!isModUnlocked) return;
                                       router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`);
                                     }}
                                     aria-label={`Open step ${mIdx + 1}`}
                                     className={`h-7 min-w-[1.75rem] rounded-full text-[11px] font-black transition-all shrink-0 border ${
-                                      isModCompleted
+                                      !isModUnlocked
+                                        ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                                        : isModCompleted
                                         ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
                                         : isModInProgress
                                         ? "bg-amber-500 text-white border-amber-500 shadow-2xs"
                                         : "bg-white text-slate-500 border-slate-300 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-400"
                                     }`}
                                   >
-                                    {isModCompleted ? "✓" : mIdx + 1}
+                                    {!isModUnlocked ? "🔒" : isModCompleted ? "✓" : mIdx + 1}
                                   </button>
                                 );
                               })}

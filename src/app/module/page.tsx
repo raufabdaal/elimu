@@ -4,11 +4,12 @@ import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy, markLearningMilestone, isWeeklyMockRequired } from "@/lib/store";
+import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy, markLearningMilestone, isWeeklyMockRequired, refillHearts } from "@/lib/store";
 import { getTopic, getModule, getSubjects } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
 import { queueAnswerEvent, syncNow } from "@/lib/sync";
+import { isModuleUnlocked, moduleProgressKey } from "@/lib/progression";
 import AppShell from "@/components/AppShell";
 import Celebration from "@/components/Celebration";
 import EncouragementToast from "@/components/EncouragementToast";
@@ -49,6 +50,7 @@ function ModuleContent() {
   const [appState, setAppState] = useState(loadState());
   const [shakeHearts, setShakeHearts] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showHeartsEmpty, setShowHeartsEmpty] = useState(false);
 
   useEffect(() => {
     setAppState(loadState());
@@ -76,6 +78,7 @@ function ModuleContent() {
     setCelebrate(false);
     setEncourage(0);
     setFinished(false);
+    setShowHeartsEmpty(false);
   };
 
   const q = questions[index];
@@ -116,6 +119,12 @@ function ModuleContent() {
   const confirmExit = () => {
     setShowExitConfirm(false);
     router.push("/subjects/");
+  };
+
+  const restartAfterHeartsEmpty = () => {
+    refillHearts();
+    handleReshuffleModule();
+    setAppState(loadState());
   };
 
   if (!topic || questions.length === 0) {
@@ -226,7 +235,11 @@ function ModuleContent() {
       setFeedbackType("bad");
       setShakeHearts(true);
       setTimeout(() => setShakeHearts(false), 600);
-      setAppState(loadState());
+      const afterHeartLoss = loadState();
+      setAppState(afterHeartLoss);
+      if (afterHeartLoss.progress.hearts <= 0) {
+        setTimeout(() => setShowHeartsEmpty(true), 450);
+      }
     }
 
     setShowExplanation(true);
@@ -246,6 +259,7 @@ function ModuleContent() {
       const s = loadState();
       const newModulesDone = s.progress.modulesDone + 1;
       const isMockRequired = newModulesDone % 4 === 0;
+      const progressKey = moduleProgressKey(topic.subjectId, topic.id, currentModule?.id);
       saveState({
         progress: {
           ...s.progress,
@@ -255,7 +269,20 @@ function ModuleContent() {
         },
         continue: {
           ...s.continue,
+          subject: topic.subjectId,
+          topicId: topic.id,
+          moduleId: currentModule?.id,
+          topic: topic.name.split(" (")[0],
+          subtopic: currentModule?.name,
           progress: Math.min(100, (s.continue?.progress || 0) + 25),
+        },
+        topicProgress: {
+          ...s.topicProgress,
+          [progressKey]: {
+            ...(s.topicProgress[progressKey] || { accuracy: 0, attempts: 0, lastAttempt: new Date().toISOString() }),
+            completed: true,
+            lastAttempt: new Date().toISOString(),
+          },
         },
       });
       if (typeof navigator !== "undefined" && navigator.onLine) {
@@ -286,6 +313,28 @@ function ModuleContent() {
   const modIdx = topic.modules ? topic.modules.findIndex((m) => m.id === currentModule?.id) : -1;
   const cleanTopicName = topicIdx >= 0 ? `Topic ${topicIdx + 1}` : topic.name.split(" (")[0];
   const cleanStepName = modIdx >= 0 ? `Step ${modIdx + 1}` : "Step 1";
+  const moduleLocked = currentSub && topicIdx >= 0 && modIdx >= 0
+    ? !isModuleUnlocked(appState, currentSub, topicIdx, modIdx)
+    : false;
+
+  if (moduleLocked) {
+    return (
+      <AppShell showTabBar={false} noScrollPad>
+        <div className="flex min-h-[80vh] items-center justify-center p-5 text-center">
+          <div className="w-full max-w-sm rounded-[32px] border-2 border-slate-200 bg-white p-6 shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-3xl">🔒</div>
+            <h1 className="text-2xl font-black text-slate-950">Step locked</h1>
+            <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+              Complete the previous step or topic first to unlock this lesson.
+            </p>
+            <button type="button" onClick={() => router.push("/subjects/")} className="btn btn-primary mt-5 w-full font-black">
+              Back to Subjects <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
 
   if (finished) {
     const nextModIdx = topic.modules?.findIndex((m) => m.id === currentModule?.id) ?? -1;
@@ -510,6 +559,40 @@ function ModuleContent() {
                 <span>{index === questions.length - 1 ? "Finish Step 🏁" : "Continue to Next →"}</span>
               </button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showHeartsEmpty && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[95] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 12, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm rounded-[28px] border-2 border-rose-300 bg-white p-5 text-center shadow-2xl"
+            >
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-3xl bg-rose-100 text-rose-600">
+                <Heart className="h-7 w-7 fill-rose-500" />
+              </div>
+              <h3 className="text-xl font-black text-slate-950">Out of hearts</h3>
+              <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+                This step needs another try. Restart it to rebuild confidence and earn the full reward.
+              </p>
+              <div className="mt-5 grid grid-cols-1 gap-2.5">
+                <button type="button" onClick={restartAfterHeartsEmpty} className="btn btn-primary w-full font-black">
+                  Restart Step
+                </button>
+                <button type="button" onClick={() => router.push("/subjects/")} className="btn btn-secondary w-full bg-white font-black">
+                  Back to Subjects
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, loseHeart, recordAnswer, markLearningMilestone, isWeeklyMockRequired, markWeeklyMockCompleted } from "@/lib/store";
+import { loadState, saveState, loseHeart, recordAnswer, markLearningMilestone, isWeeklyMockRequired, markWeeklyMockCompleted, refillHearts } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
@@ -57,6 +57,7 @@ function PracticeContent() {
   const [finished, setFinished] = useState(false);
   const [shakeHearts, setShakeHearts] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showHeartsEmpty, setShowHeartsEmpty] = useState(false);
 
   const q = questions[index];
 
@@ -70,6 +71,8 @@ function PracticeContent() {
     setIndex(0);
     setState(null);
     setLocked(false);
+    setScore(0);
+    setShowHeartsEmpty(false);
     setFinished(false);
   }, [isMockMode, batchSize, activeSub]);
 
@@ -103,6 +106,12 @@ function PracticeContent() {
     router.push("/home/");
   };
 
+  const restartAfterHeartsEmpty = () => {
+    refillHearts();
+    handleReshuffle();
+    setAppState(loadState());
+  };
+
   const handleSelectSubject = (sub: "all" | SubjectId) => {
     if (isMockMode) return;
     setActiveSub(sub);
@@ -127,6 +136,7 @@ function PracticeContent() {
     const pool = getPracticePool(isMockMode, activeSub);
     setQuestions(shuffleArray(pool).slice(0, batchSize));
     setIndex(0);
+    setScore(0);
     setState(null);
     setLocked(false);
     setFeedback("");
@@ -134,6 +144,7 @@ function PracticeContent() {
     setShowExplanation(false);
     setCelebrate(false);
     setEncourage(0);
+    setShowHeartsEmpty(false);
   };
 
   const weeklyMockDue = !isMockMode && isWeeklyMockRequired(appState);
@@ -217,7 +228,11 @@ function PracticeContent() {
       playHeartLossSound();
       setShakeHearts(true);
       setTimeout(() => setShakeHearts(false), 600);
-      setAppState(loadState());
+      const afterHeartLoss = loadState();
+      setAppState(afterHeartLoss);
+      if (afterHeartLoss.progress.hearts <= 0) {
+        setTimeout(() => setShowHeartsEmpty(true), 450);
+      }
     }
 
     setShowExplanation(true);
@@ -575,6 +590,40 @@ function PracticeContent() {
                 <span>{index === questions.length - 1 ? "Finish Practice Review 🏆" : "Next Question →"}</span>
               </button>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showHeartsEmpty && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[95] flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 12, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-sm rounded-[28px] border-2 border-rose-300 bg-white p-5 text-center shadow-2xl"
+            >
+              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-3xl bg-rose-100 text-rose-600">
+                ♥
+              </div>
+              <h3 className="text-xl font-black text-slate-950">Out of hearts</h3>
+              <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+                This practice needs another try. Restart to rebuild confidence and earn the full score.
+              </p>
+              <div className="mt-5 grid grid-cols-1 gap-2.5">
+                <button type="button" onClick={restartAfterHeartsEmpty} className="btn btn-primary w-full font-black">
+                  Restart Practice
+                </button>
+                <button type="button" onClick={() => router.push("/home/")} className="btn btn-secondary w-full bg-white font-black">
+                  Back Home
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

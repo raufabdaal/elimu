@@ -4,7 +4,7 @@ import { getSupabaseClient } from "@/lib/supabase";
 export type PaymentProvider = "airtel_money" | "manual";
 
 export interface PaymentPlan {
-  id: "family_monthly" | "family_term" | "school_contact";
+  id: "family_monthly" | "family_yearly" | "school_contact";
   name: string;
   amountUgx: number;
   interval: string;
@@ -27,17 +27,17 @@ export const PAYMENT_PLANS: PaymentPlan[] = [
     id: "family_monthly",
     name: "Family Monthly",
     amountUgx: 20000,
-    interval: "per month",
-    description: "Best for one household during normal school weeks.",
+    interval: "per student / month",
+    description: "Simple monthly access for one learner.",
     features: ["Student learning access", "Parent dashboard", "Weekly report card", "Offline PWA learning"],
   },
   {
-    id: "family_term",
-    name: "Family Term",
-    amountUgx: 50000,
-    interval: "per school term",
-    description: "Better value for a full school term of practice.",
-    features: ["Everything in monthly", "Term-long access", "Mock checkpoint tracking", "Priority for new features"],
+    id: "family_yearly",
+    name: "Family Yearly",
+    amountUgx: 192000,
+    interval: "per student / year",
+    description: "Pay yearly and save 20% compared to monthly.",
+    features: ["Everything in monthly", "12 months access", "20% yearly saving", "Mock checkpoint tracking"],
   },
   {
     id: "school_contact",
@@ -72,11 +72,13 @@ export async function createPendingPaymentTransaction({
   provider = "airtel_money",
   phoneNumber,
   manualReference,
+  teacherReferralCode,
 }: {
   planId: PaymentPlan["id"];
   provider?: PaymentProvider;
   phoneNumber?: string;
   manualReference?: string;
+  teacherReferralCode?: string;
 }) {
   const supabase = getSupabaseClient();
   if (!supabase) throw new Error("Supabase is not configured.");
@@ -109,6 +111,7 @@ export async function createPendingPaymentTransaction({
         account_name: MANUAL_PAYMENT_DETAILS.accountName,
         support_whatsapp: MANUAL_PAYMENT_DETAILS.supportWhatsapp,
         activation_time: MANUAL_PAYMENT_DETAILS.activationTime,
+        teacher_referral_code: teacherReferralCode?.trim().toUpperCase() || null,
         note: "Manual Airtel Money payment. Admin confirms payment and activates subscription.",
       },
     })

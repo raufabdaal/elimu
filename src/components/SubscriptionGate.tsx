@@ -7,7 +7,7 @@ import { getAccountSummary, type AccountSummary } from "@/lib/cloud-profile";
 import { hasSupabaseConfig } from "@/lib/supabase";
 import { canAccessLearning, getSubscriptionLabel } from "@/lib/subscription";
 
-const PUBLIC_PATHS = ["/auth", "/onboarding", "/pricing"];
+const PUBLIC_PATHS = ["/auth", "/onboarding", "/pricing", "/teacher"];
 const SUBSCRIPTION_CACHE_KEY = "elimu_subscription_cache_v1";
 
 function isPublicPath(pathname: string): boolean {

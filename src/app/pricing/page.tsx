@@ -29,6 +29,7 @@ interface PaymentRow {
 export default function PricingPage() {
   const [account, setAccount] = useState<AccountSummary | null>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [teacherCode, setTeacherCode] = useState("");
   const [selectedPlanId, setSelectedPlanId] = useState<PaymentPlan["id"] | null>("family_monthly");
   const [manualReference, setManualReference] = useState(generateManualPaymentReference());
   const [loading, setLoading] = useState(false);
@@ -79,6 +80,7 @@ export default function PricingPage() {
         provider: MANUAL_PAYMENT_DETAILS.provider,
         phoneNumber,
         manualReference,
+        teacherReferralCode: teacherCode,
       });
       setMessage(`Payment submitted for review. Reference: ${payment.external_reference}. Activation is ${MANUAL_PAYMENT_DETAILS.activationTime}.`);
       setManualReference(generateManualPaymentReference());
@@ -180,6 +182,12 @@ export default function PricingPage() {
                 inputMode="tel"
                 placeholder="Phone number used to pay e.g. 0757 656 297"
                 className="answer-input mt-4 text-base bg-white"
+              />
+              <input
+                value={teacherCode}
+                onChange={(e) => setTeacherCode(e.target.value.toUpperCase())}
+                placeholder="Teacher referral code (optional)"
+                className="answer-input mt-3 text-base bg-white uppercase"
               />
 
               {error && <p className="mt-3 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-700">{error}</p>}
