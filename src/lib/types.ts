@@ -1,4 +1,4 @@
-export type Role = "learner" | "parent";
+export type Role = "learner" | "parent" | "teacher";
 
 export type ClassLevel = "p4" | "p5" | "p6" | "p7";
 

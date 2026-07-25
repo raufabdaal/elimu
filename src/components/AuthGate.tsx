@@ -49,12 +49,19 @@ export default function AuthGate({ children }: { children: ReactNode }) {
           pathname.startsWith("/practice") ||
           pathname.startsWith("/module");
 
-        if (localRole === "parent" && learnerOnlyPath) {
+        const teacherOnlyPath = pathname.startsWith("/teacher");
+
+        if (localRole === "parent" && (learnerOnlyPath || teacherOnlyPath)) {
           router.replace("/parent/");
           return;
         }
 
-        if (localRole === "learner" && parentOnlyPath) {
+        if (localRole === "teacher" && !teacherOnlyPath && !pathname.startsWith("/pricing")) {
+          router.replace("/teacher/");
+          return;
+        }
+
+        if (localRole === "learner" && (parentOnlyPath || teacherOnlyPath)) {
           router.replace("/home/");
           return;
         }
@@ -89,12 +96,19 @@ export default function AuthGate({ children }: { children: ReactNode }) {
         pathname.startsWith("/practice") ||
         pathname.startsWith("/module");
 
-      if (profile?.role === "parent" && learnerOnlyPath) {
+      const teacherOnlyPath = pathname.startsWith("/teacher");
+
+      if (profile?.role === "parent" && (learnerOnlyPath || teacherOnlyPath)) {
         router.replace("/parent/");
         return;
       }
 
-      if (profile?.role === "learner" && parentOnlyPath) {
+      if (profile?.role === "teacher" && !teacherOnlyPath && !pathname.startsWith("/pricing")) {
+        router.replace("/teacher/");
+        return;
+      }
+
+      if (profile?.role === "learner" && (parentOnlyPath || teacherOnlyPath)) {
         router.replace("/home/");
         return;
       }

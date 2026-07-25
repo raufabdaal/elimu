@@ -10,7 +10,7 @@ export default function EntryRedirect() {
   useEffect(() => {
     if (hasCompletedOnboarding()) {
       const state = loadState();
-      router.replace(state.profile.role === "parent" ? "/parent/" : "/home/");
+      router.replace(state.profile.role === "parent" ? "/parent/" : state.profile.role === "teacher" ? "/teacher/" : "/home/");
     } else {
       router.replace("/onboarding/");
     }

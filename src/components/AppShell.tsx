@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { Role } from "@/lib/types";
 import TabBar from "./TabBar";
 
 interface AppShellProps {
@@ -8,7 +9,7 @@ interface AppShellProps {
   activeTab?: "home" | "subjects" | "practice" | "parent" | "pair";
   showTabBar?: boolean;
   noScrollPad?: boolean;
-  role?: "learner" | "parent";
+  role?: Role;
 }
 
 export default function AppShell({
@@ -22,7 +23,7 @@ export default function AppShell({
     <div className="app-shell">
       <div className="app-container">
         <div className={noScrollPad ? "scroll no-tab" : "scroll"}>{children}</div>
-        {showTabBar && activeTab && <TabBar active={activeTab} role={role} />}
+        {showTabBar && activeTab && <TabBar active={activeTab} role={role === "parent" ? "parent" : "learner"} />}
       </div>
     </div>
   );

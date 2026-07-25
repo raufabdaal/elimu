@@ -8,7 +8,7 @@ import { getAccountSummary, linkParentToStudentByCode } from "@/lib/cloud-profil
 import { CLASS_LABELS } from "@/lib/data";
 import { ClassLevel, Role } from "@/lib/types";
 import AppShell from "@/components/AppShell";
-import { User, GraduationCap, ArrowRight, ShieldCheck, ArrowLeft, BookOpen } from "lucide-react";
+import { User, GraduationCap, ArrowRight, ShieldCheck, ArrowLeft, BookOpen, Users } from "lucide-react";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -209,6 +209,27 @@ export default function Onboarding() {
                       </div>
                       <p className="text-xs sm:text-[13px] font-semibold text-slate-500 mt-1 leading-relaxed">
                         Pair with your child&apos;s device to review study minutes, track accuracy, and send live motivation.
+                      </p>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => router.push("/auth/?mode=signup&role=teacher")}
+                    className="relative overflow-hidden group p-6 rounded-[28px] border-2 border-slate-200/90 bg-gradient-to-br from-white via-white to-indigo-50/40 hover:border-indigo-500 hover:bg-indigo-50/80 transition-all text-left flex items-start gap-4 shadow-sm hover:shadow-md"
+                  >
+                    <div className="w-14 h-14 rounded-2xl bg-indigo-100 group-hover:bg-indigo-600 text-indigo-700 group-hover:text-white flex items-center justify-center transition-colors shrink-0 shadow-inner">
+                      <Users className="w-7 h-7 stroke-[2.3]" />
+                    </div>
+                    <div className="grow min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-black text-lg sm:text-xl text-slate-900 group-hover:text-indigo-950">
+                          I am a Teacher / Partner
+                        </h3>
+                        <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-600 transition-transform group-hover:translate-x-1 shrink-0" />
+                      </div>
+                      <p className="text-xs sm:text-[13px] font-semibold text-slate-500 mt-1 leading-relaxed">
+                        Get a referral code, track referred payments, and grow Elimu with your learners.
                       </p>
                     </div>
                   </button>

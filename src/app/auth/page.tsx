@@ -57,7 +57,8 @@ function AuthContent() {
   const local = loadState();
   const initialMode = (searchParams.get("mode") as AuthMode | null) || "landing";
   const [mode, setMode] = useState<AuthMode>(["landing", "signin", "signup"].includes(initialMode) ? initialMode : "landing");
-  const [role, setRole] = useState<Role>((searchParams.get("role") as Role) || local.profile.role || "learner");
+  const requestedRole = searchParams.get("role") as Role | null;
+  const [role, setRole] = useState<Role>(requestedRole && ["learner", "parent", "teacher"].includes(requestedRole) ? requestedRole : local.profile.role || "learner");
   const [classLevel, setClassLevel] = useState<ClassLevel>((searchParams.get("class") as ClassLevel) || local.profile.classLevel || "p5");
   const [fullName, setFullName] = useState(searchParams.get("name") || local.profile.name || "");
   const [email, setEmail] = useState("");
@@ -155,7 +156,12 @@ function AuthContent() {
       return;
     }
 
-    if (next && !next.startsWith("/parent")) {
+    if (cloudRole === "teacher") {
+      router.push("/teacher/");
+      return;
+    }
+
+    if (next && !next.startsWith("/parent") && !next.startsWith("/teacher")) {
       router.push(next);
       return;
     }
@@ -314,7 +320,7 @@ function AuthContent() {
 
               <div className="grid grid-cols-1 gap-2.5">
                 <AccountRow label="Name" value={account.profile.full_name || "Not set"} />
-                <AccountRow label="Role" value={account.profile.role === "parent" ? "Parent / Guardian" : "Student"} />
+                <AccountRow label="Role" value={account.profile.role === "parent" ? "Parent / Guardian" : account.profile.role === "teacher" ? "Teacher Partner" : "Student"} />
                 {account.profile.role === "learner" && <AccountRow label="Class" value={(account.profile.class_level || classLevel).toUpperCase()} />}
                 {account.profile.role === "learner" && <AccountRow label="Parent Code" value={account.student?.pairing_code || "Generating..."} />}
                 <AccountRow label="Plan" value={subscriptionLabel} />
@@ -368,7 +374,7 @@ function AuthContent() {
                     Create one account, try Elimu first, and we will show reminders before the trial ends.
                   </p>
                   <p className="text-[11px] font-bold text-emerald-700 mt-2">
-                    {role === "parent" ? "Parent account" : `Student account · ${classLevel.toUpperCase()}`} {fullName ? `· ${fullName}` : ""}
+                    {role === "parent" ? "Parent account" : role === "teacher" ? "Teacher Partner account" : `Student account · ${classLevel.toUpperCase()}`} {fullName ? `· ${fullName}` : ""}
                   </p>
                 </div>
               )}
@@ -379,7 +385,7 @@ function AuthContent() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder={role === "parent" ? "Parent name" : "Student name"}
+                    placeholder={role === "parent" ? "Parent name" : role === "teacher" ? "Teacher / partner name" : "Student name"}
                     className="answer-input text-base bg-white"
                   />
                 )}

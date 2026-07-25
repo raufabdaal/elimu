@@ -160,7 +160,7 @@ export async function ensureCloudProfile(input?: Partial<CloudProfileInput>): Pr
     metadata.full_name ||
     metadata.name ||
     local.profile.name ||
-    (role === "parent" ? "Parent" : "Student");
+    (role === "parent" ? "Parent" : role === "teacher" ? "Teacher Partner" : "Student");
   const classLevel = (input?.classLevel || metadata.class_level || local.profile.classLevel || "p5") as ClassLevel;
 
   const existingProfile = await getCloudProfile();
