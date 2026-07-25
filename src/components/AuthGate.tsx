@@ -3,9 +3,10 @@
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { hasExplicitlySignedOut } from "@/lib/auth";
+import { hasExplicitlySignedOut, hasKnownSignedInSession } from "@/lib/auth";
 import { getCloudProfile } from "@/lib/cloud-profile";
 import { getSupabaseClient, hasSupabaseConfig } from "@/lib/supabase";
+import { loadState } from "@/lib/store";
 
 const PUBLIC_PATHS = ["/auth", "/onboarding"];
 
@@ -29,11 +30,31 @@ export default function AuthGate({ children }: { children: ReactNode }) {
       }
 
       if (typeof navigator !== "undefined" && !navigator.onLine) {
-        if (hasExplicitlySignedOut()) {
+        if (hasExplicitlySignedOut() || !hasKnownSignedInSession()) {
           const next = encodeURIComponent(pathname);
           router.replace(`/auth/?next=${next}`);
           return;
         }
+
+        const localRole = loadState().profile.role;
+        const parentOnlyPath = pathname.startsWith("/parent");
+        const learnerOnlyPath =
+          pathname === "/" ||
+          pathname.startsWith("/home") ||
+          pathname.startsWith("/subjects") ||
+          pathname.startsWith("/practice") ||
+          pathname.startsWith("/module");
+
+        if (localRole === "parent" && learnerOnlyPath) {
+          router.replace("/parent/");
+          return;
+        }
+
+        if (localRole === "learner" && parentOnlyPath) {
+          router.replace("/home/");
+          return;
+        }
+
         if (!cancelled) setChecking(false);
         return;
       }

@@ -6,6 +6,8 @@ This is the first free-tier subscription gate.
 
 The app reads the signed-in user's Supabase `subscriptions` row.
 
+Current launch trial length: **7 days**.
+
 Access is allowed when:
 
 - `status = trialing` and `trial_ends_at` is still in the future

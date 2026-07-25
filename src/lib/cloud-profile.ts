@@ -135,7 +135,7 @@ async function ensureTrialSubscription(profileId: string): Promise<CloudSubscrip
 
   const { data, error } = await supabase
     .from("subscriptions")
-    .insert({ profile_id: profileId, plan: "trial", status: "trialing" })
+    .insert({ profile_id: profileId, plan: "trial", status: "trialing", trial_ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() })
     .select("id, profile_id, plan, status, trial_started_at, trial_ends_at, current_period_ends_at")
     .single();
 

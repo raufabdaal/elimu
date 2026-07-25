@@ -70,7 +70,7 @@ create table if not exists public.subscriptions (
   plan text not null default 'trial' check (plan in ('trial', 'family', 'school', 'manual_comp')),
   status text not null default 'trialing' check (status in ('trialing', 'active', 'past_due', 'expired', 'cancelled', 'manual_comp')),
   trial_started_at timestamptz not null default now(),
-  trial_ends_at timestamptz not null default (now() + interval '14 days'),
+  trial_ends_at timestamptz not null default (now() + interval '7 days'),
   current_period_ends_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
