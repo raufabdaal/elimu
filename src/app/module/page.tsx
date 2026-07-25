@@ -4,7 +4,7 @@ import { useState, Suspense, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy, markLearningMilestone } from "@/lib/store";
+import { loadState, saveState, recordAnswer, loseHeart, consumeEnergy, markLearningMilestone, isWeeklyMockRequired } from "@/lib/store";
 import { getTopic, getModule, getSubjects } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
@@ -79,6 +79,7 @@ function ModuleContent() {
   };
 
   const q = questions[index];
+  const weeklyMockDue = isWeeklyMockRequired(appState);
   const hasActiveLessonProgress = !finished && (index > 0 || locked || showExplanation);
 
   useEffect(() => {
@@ -135,6 +136,26 @@ function ModuleContent() {
             >
               <ArrowLeft className="w-4 h-4" /> <span>Explore Subjects</span>
             </Link>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (weeklyMockDue) {
+    return (
+      <AppShell showTabBar={false} noScrollPad>
+        <div className="flex min-h-[80vh] items-center justify-center p-5 text-center">
+          <div className="w-full max-w-sm rounded-[32px] border-2 border-emerald-300 bg-white p-6 shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-3xl">🎓</div>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-800">Sunday Checkpoint</span>
+            <h1 className="mt-3 text-2xl font-black text-slate-950">Weekly mock is due</h1>
+            <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+              Complete this checkpoint based on what you have learned so far before continuing lessons.
+            </p>
+            <button type="button" onClick={() => router.push("/practice/?mode=mock")} className="btn btn-primary mt-5 w-full font-black">
+              Start Weekly Mock <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </AppShell>

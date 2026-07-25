@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState, saveState, loseHeart, recordAnswer, markLearningMilestone } from "@/lib/store";
+import { loadState, saveState, loseHeart, recordAnswer, markLearningMilestone, isWeeklyMockRequired, markWeeklyMockCompleted } from "@/lib/store";
 import { PRACTICE_QUESTIONS } from "@/lib/data";
 import { checkAnswer, shuffleArray } from "@/lib/scoring";
 import { playWrongSound, playHeartLossSound, playCorrectSound } from "@/lib/sounds";
@@ -17,6 +17,23 @@ import { SubjectIcon, SUBJECT_THEMES } from "@/components/SubjectIcons";
 import { CheckCircle2, XCircle, HelpCircle, ArrowRight, Sparkles, Zap, SkipForward, Shuffle, Filter, Award } from "lucide-react";
 import { Question, SubjectId } from "@/lib/types";
 
+function getPracticePool(isMockMode: boolean, activeSub: "all" | SubjectId = "all"): Question[] {
+  const all = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
+  if (isMockMode) {
+    const state = loadState();
+    const practicedKeys = Object.keys(state.topicProgress || {});
+    const focused = all.filter((question) =>
+      practicedKeys.some((key) => question.topicId && (key.startsWith(question.topicId) || question.topicId.startsWith(key)))
+    );
+    return focused.length >= 8 ? focused : all;
+  }
+
+  if (activeSub === "all") return all;
+  return all.filter((item) =>
+    item.topicId?.startsWith(`${activeSub}-`) || item.topicId?.includes(`-${activeSub}-`) || item.id.startsWith(activeSub)
+  );
+}
+
 function PracticeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,8 +43,7 @@ function PracticeContent() {
   const [appState, setAppState] = useState(loadState());
   const [activeSub, setActiveSub] = useState<"all" | SubjectId>("all");
   const [questions, setQuestions] = useState<Question[]>(() => {
-    const pool = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
-    return shuffleArray(pool).slice(0, batchSize);
+    return shuffleArray(getPracticePool(isMockMode)).slice(0, batchSize);
   });
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -49,13 +65,13 @@ function PracticeContent() {
   }, [index, locked]);
 
   useEffect(() => {
-    const pool = PRACTICE_QUESTIONS.length > 0 ? PRACTICE_QUESTIONS : [];
+    const pool = getPracticePool(isMockMode, activeSub);
     setQuestions(shuffleArray(pool).slice(0, batchSize));
     setIndex(0);
     setState(null);
     setLocked(false);
     setFinished(false);
-  }, [isMockMode, batchSize]);
+  }, [isMockMode, batchSize, activeSub]);
 
   const hasActivePracticeProgress = !finished && (index > 0 || locked || showExplanation || score > 0);
 
@@ -90,10 +106,7 @@ function PracticeContent() {
   const handleSelectSubject = (sub: "all" | SubjectId) => {
     if (isMockMode) return;
     setActiveSub(sub);
-    const pool = PRACTICE_QUESTIONS.filter((item) => {
-      if (sub === "all") return true;
-      return item.topicId?.startsWith(`${sub}-`) || item.topicId?.includes(`-${sub}-`) || item.id.startsWith(sub);
-    });
+    const pool = getPracticePool(false, sub);
     setQuestions(shuffleArray(pool).slice(0, batchSize));
     setIndex(0);
     setState(null);
@@ -111,10 +124,7 @@ function PracticeContent() {
   }
 
   const handleReshuffle = () => {
-    const pool = PRACTICE_QUESTIONS.filter((item) => {
-      if (activeSub === "all" || isMockMode) return true;
-      return item.topicId?.startsWith(`${activeSub}-`) || item.topicId?.includes(`-${activeSub}-`) || item.id.startsWith(activeSub);
-    });
+    const pool = getPracticePool(isMockMode, activeSub);
     setQuestions(shuffleArray(pool).slice(0, batchSize));
     setIndex(0);
     setState(null);
@@ -125,6 +135,28 @@ function PracticeContent() {
     setCelebrate(false);
     setEncourage(0);
   };
+
+  const weeklyMockDue = !isMockMode && isWeeklyMockRequired(appState);
+
+  if (weeklyMockDue) {
+    return (
+      <AppShell showTabBar={false} noScrollPad>
+        <div className="flex min-h-[80vh] items-center justify-center p-5 text-center">
+          <div className="w-full max-w-sm rounded-[32px] border-2 border-emerald-300 bg-white p-6 shadow-xl">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-3xl">🎓</div>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-800">Sunday Checkpoint</span>
+            <h1 className="mt-3 text-2xl font-black text-slate-950">Weekly mock is due</h1>
+            <p className="mt-2 text-sm font-bold leading-relaxed text-slate-500">
+              Complete this checkpoint based on what you have practised so far before continuing normal practice.
+            </p>
+            <button type="button" onClick={() => router.push("/practice/?mode=mock")} className="btn btn-primary mt-5 w-full font-black">
+              Start Weekly Mock <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
 
   const handleCheck = () => {
     if (locked || !q || !isAnswered(q, state)) return;
@@ -208,13 +240,13 @@ function PracticeContent() {
       saveState({
         progress: {
           ...s.progress,
-          streakDays: s.progress.streakDays + 1,
           xp: s.progress.xp + earnedXp,
           pendingMockExam: isMockMode ? false : s.progress.pendingMockExam,
-          lastMockScore: isMockMode ? accuracy : s.progress.lastMockScore,
-          mockExamsPassed: isMockMode ? (s.progress.mockExamsPassed || 0) + 1 : s.progress.mockExamsPassed,
         },
       });
+      if (isMockMode) {
+        markWeeklyMockCompleted(accuracy);
+      }
       if (typeof navigator !== "undefined" && navigator.onLine) {
         void syncNow().catch(() => null);
       }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadState } from "@/lib/store";
+import { isWeeklyMockRequired, loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject } from "@/lib/types";
 import AppShell from "@/components/AppShell";
@@ -66,6 +66,7 @@ export default function Home() {
   if (!state) return null;
 
   const { profile, progress, continue: continueState } = state;
+  const weeklyMockDue = isWeeklyMockRequired(state);
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const storedTopic = continueState.topicId
@@ -131,7 +132,7 @@ export default function Home() {
         </div>
 
         {/* Weekly Mock Exam Gate Banner */}
-        {progress.pendingMockExam && (
+        {weeklyMockDue && (
           <div
             onClick={() => router.push("/practice/?mode=mock")}
             role="button"
@@ -144,7 +145,7 @@ export default function Home() {
               </div>
               <div className="min-w-0">
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-200 block">
-                  Required Weekly Checkpoint
+                  Required Sunday Checkpoint
                 </span>
                 <h3 className="text-base sm:text-lg font-black text-white truncate">
                   Launch 20-Question Mock Exam
@@ -159,11 +160,11 @@ export default function Home() {
 
         {/* Clean, Simple Continue Bar (`Dead Simple & High Action`) */}
         <section
-          onClick={() => router.push(continueLink)}
+          onClick={() => router.push(weeklyMockDue ? "/practice/?mode=mock" : continueLink)}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") router.push(continueLink);
+            if (e.key === "Enter" || e.key === " ") router.push(weeklyMockDue ? "/practice/?mode=mock" : continueLink);
           }}
           className="bg-white hover:bg-emerald-50/60 border-2 border-emerald-600/80 rounded-[28px] p-5 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-sm hover:shadow-md group"
         >

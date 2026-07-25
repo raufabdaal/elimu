@@ -36,6 +36,9 @@ function rememberAuthState({ signedOut, knownSignedIn }: { signedOut: boolean; k
   try {
     localStorage.setItem(SIGNED_OUT_KEY, signedOut ? "true" : "false");
     localStorage.setItem(KNOWN_SIGNED_IN_KEY, knownSignedIn ? "true" : "false");
+    if (signedOut) {
+      localStorage.removeItem("elimu_subscription_cache_v1");
+    }
   } catch {}
 }
 

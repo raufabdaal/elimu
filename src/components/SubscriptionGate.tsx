@@ -8,9 +8,27 @@ import { hasSupabaseConfig } from "@/lib/supabase";
 import { canAccessLearning, getSubscriptionLabel } from "@/lib/subscription";
 
 const PUBLIC_PATHS = ["/auth", "/onboarding", "/pricing"];
+const SUBSCRIPTION_CACHE_KEY = "elimu_subscription_cache_v1";
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
+function readCachedAccount(): AccountSummary | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(SUBSCRIPTION_CACHE_KEY);
+    return raw ? (JSON.parse(raw) as AccountSummary) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedAccount(account: AccountSummary | null): void {
+  if (typeof window === "undefined" || !account?.profile) return;
+  try {
+    localStorage.setItem(SUBSCRIPTION_CACHE_KEY, JSON.stringify(account));
+  } catch {}
 }
 
 export default function SubscriptionGate({ children }: { children: ReactNode }) {
@@ -29,9 +47,21 @@ export default function SubscriptionGate({ children }: { children: ReactNode }) 
         return;
       }
 
-      const summary = await getAccountSummary().catch(() => null);
+      setChecking(true);
+
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        const cached = readCachedAccount();
+        if (!cancelled) {
+          setAccount(cached);
+          setChecking(false);
+        }
+        return;
+      }
+
+      const summary = await getAccountSummary().catch(() => readCachedAccount());
       if (cancelled) return;
       setAccount(summary);
+      writeCachedAccount(summary);
       setChecking(false);
     };
 
@@ -74,9 +104,9 @@ export default function SubscriptionGate({ children }: { children: ReactNode }) 
             <div className="flex items-start gap-3">
               <Smartphone className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
               <div>
-                <h2 className="text-sm font-black text-emerald-950">Mobile money activation is next</h2>
+                <h2 className="text-sm font-black text-emerald-950">Airtel Money manual activation</h2>
                 <p className="mt-1 text-xs font-bold leading-relaxed text-emerald-800">
-                  We are preparing MTN Mobile Money and Airtel Money activation. For pilot accounts, activation can be handled manually first.
+                  Pay by Airtel Money, submit the reference, and activation is usually within 1 hour after confirmation.
                 </p>
               </div>
             </div>

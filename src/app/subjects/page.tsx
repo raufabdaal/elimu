@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { loadState } from "@/lib/store";
+import { isWeeklyMockRequired, loadState } from "@/lib/store";
 import { getSubjects } from "@/lib/data";
 import { AppState, ClassLevel, Subject, SubjectId, Topic } from "@/lib/types";
 import AppShell from "@/components/AppShell";
@@ -56,7 +56,13 @@ export default function Subjects() {
     ? subjects
     : subjects.filter((s) => s.id === activeFilter);
 
+  const weeklyMockDue = isWeeklyMockRequired(state);
+
   const handleTopicClick = (topic: Topic) => {
+    if (weeklyMockDue) {
+      router.push("/practice/?mode=mock");
+      return;
+    }
     const firstMod = topic.modules?.[0]?.id || "";
     router.push(`/module/?topic=${encodeURIComponent(topic.id)}${firstMod ? `&moduleId=${encodeURIComponent(firstMod)}` : ""}`);
   };
@@ -280,6 +286,10 @@ export default function Subjects() {
                                     type="button"
                                     onClick={(e) => {
                                       e.stopPropagation();
+                                      if (weeklyMockDue) {
+                                        router.push("/practice/?mode=mock");
+                                        return;
+                                      }
                                       router.push(`/module/?topic=${encodeURIComponent(topic.id)}&moduleId=${encodeURIComponent(mod.id)}`);
                                     }}
                                     aria-label={`Open step ${mIdx + 1}`}

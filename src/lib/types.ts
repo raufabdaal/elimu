@@ -148,6 +148,7 @@ export interface AppState {
     pendingMockExam?: boolean;
     lastMockScore?: number;
     mockExamsPassed?: number;
+    lastWeeklyMockWeek?: string;
   };
   continue: ContinueState;
   session: SessionStats;
@@ -175,6 +176,7 @@ export const DEFAULT_STATE: AppState = {
     pendingMockExam: false,
     lastMockScore: 0,
     mockExamsPassed: 0,
+    lastWeeklyMockWeek: "",
   },
   continue: {},
   session: {

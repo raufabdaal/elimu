@@ -25,12 +25,15 @@ export default function Onboarding() {
     const init = async () => {
       const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
       const wantsParentPairing = searchParams?.get("role") === "parent";
-      const isNewUserFlow = searchParams?.get("new") === "1";
       const account = await getAccountSummary().catch(() => null);
 
-      if (account?.profile && !wantsParentPairing && !isNewUserFlow) {
-        router.replace(account.profile.role === "parent" ? "/parent/" : "/home/");
-        return;
+      if (account?.profile) {
+        if (wantsParentPairing && account.profile.role === "parent") {
+          // Allow signed-in parents to pair another child.
+        } else {
+          router.replace(account.profile.role === "parent" ? "/parent/" : "/home/");
+          return;
+        }
       }
 
       setMounted(true);

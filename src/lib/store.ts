@@ -225,3 +225,40 @@ function mergeState(partial: Partial<AppState>): AppState {
     topicProgress: { ...DEFAULT_STATE.topicProgress, ...(partial.topicProgress || {}) },
   };
 }
+
+export function getCurrentWeeklyMockKey(date = new Date()): string {
+  const d = new Date(date);
+  const day = d.getDay(); // Sunday = 0
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - day);
+  return d.toISOString().split("T")[0];
+}
+
+export function isWeeklyMockDay(date = new Date()): boolean {
+  return date.getDay() === 0;
+}
+
+export function hasWeeklyLearningActivity(state: AppState = loadState()): boolean {
+  const weeklyMinutes = state.session.weeklyMinutes.reduce((sum, minutes) => sum + minutes, 0);
+  return weeklyMinutes > 0 || state.progress.totalAttempts > 0 || state.progress.modulesDone > 0;
+}
+
+export function isWeeklyMockRequired(state: AppState = loadState(), date = new Date()): boolean {
+  if (state.progress.pendingMockExam) return true;
+  if (!isWeeklyMockDay(date)) return false;
+  if (!hasWeeklyLearningActivity(state)) return false;
+  return state.progress.lastWeeklyMockWeek !== getCurrentWeeklyMockKey(date);
+}
+
+export function markWeeklyMockCompleted(score: number): void {
+  const state = loadState();
+  saveState({
+    progress: {
+      ...state.progress,
+      pendingMockExam: false,
+      lastMockScore: score,
+      mockExamsPassed: (state.progress.mockExamsPassed || 0) + 1,
+      lastWeeklyMockWeek: getCurrentWeeklyMockKey(),
+    },
+  });
+}

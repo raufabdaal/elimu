@@ -24,6 +24,10 @@ export default function AuthGate({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     const check = async () => {
+      if (!publicPath && hasSupabaseConfig()) {
+        setChecking(true);
+      }
+
       if (publicPath || !hasSupabaseConfig()) {
         if (!cancelled) setChecking(false);
         return;
