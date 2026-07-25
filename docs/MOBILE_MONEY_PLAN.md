@@ -2,12 +2,23 @@
 
 Elimu will prioritize Ugandan mobile money payments instead of Stripe.
 
+## Current launch choice
+
+For the immediate launch/pilot, Elimu will use **manual Airtel Money activation only**:
+
+- Airtel number: `0757656297`
+- Account name: `Ssenyonga Sudais`
+- Support WhatsApp: `0701098494`
+- Activation: usually within 1 hour after confirmation
+
+MTN can be added later, but keeping one payment rail first reduces launch friction.
+
 ## Why mobile money first
 
 For Uganda, parents are more likely to pay with:
 
-- MTN Mobile Money
-- Airtel Money
+- Airtel Money now
+- MTN Mobile Money later
 
 Stripe can remain optional later for card/international payments, but it should not be the primary launch path.
 

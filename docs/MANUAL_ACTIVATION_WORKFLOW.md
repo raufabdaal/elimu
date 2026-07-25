@@ -23,14 +23,14 @@ The app creates a pending row in:
 public.payment_transactions
 ```
 
-No real mobile money collection happens yet. You manually verify payment outside the app, then activate the subscription in Supabase.
+No automatic mobile money collection happens yet. The parent manually sends Airtel Money to `0757656297` under account name `Ssenyonga Sudais`, then submits the request in the app. You manually verify payment outside the app, then activate the subscription in Supabase.
 
 ## Step 1: Parent requests activation
 
-Parent enters mobile money number and clicks:
+Parent follows the Airtel Money instructions, sends payment manually, enters the phone number used to pay, and clicks:
 
 ```text
-Request Activation
+I Have Paid
 ```
 
 This creates a pending transaction.
